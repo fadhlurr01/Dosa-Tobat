@@ -4,7 +4,7 @@
  */
 
 import { useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { useStore } from './store/useStore';
 import AppLayout from './components/layout/AppLayout';
 import AdminLayout from './components/layout/AdminLayout';
@@ -42,7 +42,7 @@ export default function App() {
   }, [theme]);
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <ConfettiCelebration />
       <Routes>
         {/* Landing & Public Pages */}
@@ -81,6 +81,6 @@ export default function App() {
           <Route path="/premium" element={<SubscriptionView />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
