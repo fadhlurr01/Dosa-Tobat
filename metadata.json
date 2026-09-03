@@ -1,0 +1,8 @@
+{
+  "name": "Dosa \u0026 Tobat",
+  "description": "Aplikasi pendamping personal untuk mencegah dosa, bertaubat, dan kembali kepada Allah.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
