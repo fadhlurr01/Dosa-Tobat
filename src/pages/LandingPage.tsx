@@ -191,16 +191,16 @@ export default function LandingPage() {
       
       {/* 1. TOP ANNOUNCEMENT & NAVIGATION HEADER */}
       <header 
-        className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
           isScrolled 
             ? 'bg-white/85 dark:bg-slate-950/85 backdrop-blur-xl border-b border-slate-200/70 dark:border-emerald-500/15 shadow-md shadow-emerald-950/5 py-2.5' 
-            : 'bg-transparent border-b border-transparent py-4'
+            : 'bg-[#FDFBF7]/90 dark:bg-slate-950/90 backdrop-blur-sm border-b border-transparent py-3.5'
         }`}
       >
-        <div className="w-full max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-10 flex items-center justify-between gap-4">
+        <div className="w-full px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
           
           {/* Sisi Kiri: Logo Brand & Menu Navigasi */}
-          <div className="flex items-center gap-6 lg:gap-10">
+          <div className="flex items-center gap-4 lg:gap-8">
             {/* Logo */}
             <Link 
               to="/" 
@@ -226,28 +226,28 @@ export default function LandingPage() {
             </Link>
 
             {/* Menu Navigasi di Sisi Kiri Bersebelahan dengan Logo */}
-            <nav className="hidden lg:flex items-center gap-5 xl:gap-6 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
-              <a href="#metode-5r" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
+            <nav className="hidden lg:flex items-center gap-4 xl:gap-5 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+              <a href="#metode-5r" onClick={() => soundFx.playTap()} className="flex items-center gap-1 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
                 <Layers className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span>Metode 5R</span>
               </a>
-              <a href="#fitur" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
+              <a href="#fitur" onClick={() => soundFx.playTap()} className="flex items-center gap-1 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
                 <Zap className="w-3.5 h-3.5 text-amber-500" />
                 <span>Fitur</span>
               </a>
-              <a href="#katalog" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
+              <a href="#katalog" onClick={() => soundFx.playTap()} className="flex items-center gap-1 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
                 <BookOpen className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span>Katalog Dosa</span>
               </a>
-              <a href="#testimoni" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
+              <a href="#testimoni" onClick={() => soundFx.playTap()} className="flex items-center gap-1 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
                 <Heart className="w-3.5 h-3.5 text-rose-500" />
                 <span>Kisah Taubat</span>
               </a>
-              <a href="#faq" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
+              <a href="#faq" onClick={() => soundFx.playTap()} className="flex items-center gap-1 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
                 <HelpCircle className="w-3.5 h-3.5 text-indigo-500" />
                 <span>FAQ</span>
               </a>
-              <a href="#infaq" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
+              <a href="#infaq" onClick={() => soundFx.playTap()} className="flex items-center gap-1 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                 <span>Infaq</span>
               </a>
@@ -284,7 +284,7 @@ export default function LandingPage() {
             <Link
               to="/login"
               onClick={() => soundFx.playTap()}
-              className="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-emerald-700 dark:hover:text-emerald-400 px-3 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors"
+              className="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-emerald-700 dark:hover:text-emerald-400 px-2.5 sm:px-3 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors"
             >
               Masuk / Demo
             </Link>
@@ -293,7 +293,7 @@ export default function LandingPage() {
             <Link
               to={isAuthenticated ? "/app" : "/login"}
               onClick={() => soundFx.playSuccess()}
-              className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-900/20 hover:shadow-emerald-900/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center gap-1.5 px-3.5 sm:px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-900/20 hover:shadow-emerald-900/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <span>{isAuthenticated ? 'Buka Dashboard' : 'Mulai Sekarang'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -303,7 +303,7 @@ export default function LandingPage() {
       </header>
 
       {/* 2. HERO SECTION */}
-      <section className="relative overflow-hidden pt-12 pb-20 sm:pt-20 sm:pb-28">
+      <section className="relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-28">
         {/* Subtle background glow */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-emerald-500/10 via-teal-500/10 to-amber-500/10 blur-3xl pointer-events-none rounded-full" />
 
