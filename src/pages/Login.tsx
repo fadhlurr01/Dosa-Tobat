@@ -129,16 +129,16 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col justify-center items-center p-3 sm:p-6 transition-colors duration-300 relative overflow-x-hidden">
+    <div className="min-h-screen w-full bg-[#FDFBF7] dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col transition-colors duration-300 relative">
       
       {/* Background Decorative Blur Orbs */}
       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-emerald-500/10 dark:bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-amber-500/10 dark:bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Top Navbar Header */}
-      <header className="w-full max-w-5xl flex items-center justify-between gap-4 mb-4 sm:mb-6 z-10 px-2">
-        <Link to="/" onClick={() => soundFx.playTap()} className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-800 text-white flex items-center justify-center font-black text-sm shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform">
+      {/* Top Navbar Header Full Screen */}
+      <header className="w-full px-4 sm:px-8 lg:px-12 py-3.5 flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md sticky top-0 z-30">
+        <Link to="/" onClick={() => soundFx.playTap()} className="flex items-center gap-2.5 group">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-800 text-white flex items-center justify-center font-black text-sm shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform">
             DT
           </div>
           <div>
@@ -149,13 +149,14 @@ export default function Login() {
           </div>
         </Link>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link
             to="/"
             onClick={() => soundFx.playTap()}
-            className="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl shadow-xs transition-colors hidden xs:inline"
+            className="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3.5 py-2 rounded-xl shadow-xs transition-colors hidden sm:inline-flex items-center gap-1.5"
           >
-            ← Kembali ke Landing
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Kembali ke Landing</span>
           </Link>
           
           <button
@@ -163,7 +164,7 @@ export default function Login() {
               soundFx.playTap();
               setTheme(theme === 'dark' ? 'light' : 'dark');
             }}
-            className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors shadow-2xs"
+            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors shadow-2xs"
             title="Ganti Tema"
           >
             {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
@@ -174,7 +175,7 @@ export default function Login() {
               toggleSound();
               soundFx.playTap();
             }}
-            className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors shadow-2xs"
+            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors shadow-2xs"
             title={soundEnabled ? 'Matikan Suara Audio' : 'Nyalakan Suara Audio'}
           >
             {soundEnabled ? <Volume2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
@@ -182,17 +183,14 @@ export default function Login() {
         </div>
       </header>
 
-      {/* Main Dual-Frame Split Screen Card */}
-      <motion.div 
-        layout
-        className="w-full max-w-5xl bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xl overflow-hidden relative z-10 flex flex-col md:flex-row min-h-[620px]"
-      >
+      {/* Main Dual-Frame Split Screen (Full Page Bleed) */}
+      <div className="flex-1 w-full flex flex-col md:flex-row min-h-[calc(100vh-65px)]">
         
         {/* ======================= FRAME 1: WEBSITE COVER HERO ======================= */}
         <motion.div 
           layout
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className={`w-full md:w-1/2 p-6 sm:p-10 text-white relative overflow-hidden flex flex-col justify-between ${
+          className={`w-full md:w-5/12 lg:w-5/12 p-8 sm:p-12 lg:p-16 text-white relative overflow-hidden flex flex-col justify-between ${
             authMode === 'signup' 
               ? 'md:order-2 bg-gradient-to-br from-amber-700 via-amber-800 to-slate-950' 
               : 'md:order-1 bg-gradient-to-br from-[#065F46] via-emerald-800 to-teal-950'
@@ -273,21 +271,22 @@ export default function Login() {
         <motion.div 
           layout
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className={`w-full md:w-1/2 p-6 sm:p-10 flex flex-col justify-center bg-white dark:bg-slate-900 ${
+          className={`w-full md:w-7/12 lg:w-7/12 p-6 sm:p-10 lg:p-16 flex flex-col justify-center bg-white dark:bg-slate-900 border-l border-slate-200/60 dark:border-slate-800/60 ${
             authMode === 'signup' ? 'md:order-1' : 'md:order-2'
           }`}
         >
-          <AnimatePresence mode="wait">
-            {authMode === 'login' ? (
-              /* ================= LOGIN FORM VIEW ================= */
-              <motion.div
-                key="login-form"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-5"
-              >
+          <div className="max-w-xl mx-auto w-full">
+            <AnimatePresence mode="wait">
+              {authMode === 'login' ? (
+                /* ================= LOGIN FORM VIEW ================= */
+                <motion.div
+                  key="login-form"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-5"
+                >
                 <div>
                   <h3 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
                     Masuk ke Akun Anda
@@ -586,11 +585,12 @@ export default function Login() {
               </motion.div>
             )}
           </AnimatePresence>
+          </div>
         </motion.div>
-      </motion.div>
+      </div>
 
       {/* Footer info */}
-      <footer className="mt-6 text-center text-xs text-slate-400 dark:text-slate-500">
+      <footer className="py-4 text-center text-xs text-slate-400 dark:text-slate-500 border-t border-slate-200/50 dark:border-slate-800/50 bg-white/60 dark:bg-slate-950/60">
         © {new Date().getFullYear()} Dosa & Tobat™. Privasi dan kerahasiaan data dijamin aman.
       </footer>
     </div>
