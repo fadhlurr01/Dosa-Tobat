@@ -31,7 +31,9 @@ import {
   Users,
   Award,
   BookMarked,
-  ArrowUpRight
+  ArrowUpRight,
+  Menu,
+  X
 } from 'lucide-react';
 import { useStore, DEMO_ACCOUNTS } from '../store/useStore';
 import { soundFx } from '../lib/soundFx';
@@ -45,6 +47,7 @@ export default function LandingPage() {
   const [miniTasbihCount, setMiniTasbihCount] = useState(7);
   const [activeCategoryDemo, setActiveCategoryDemo] = useState<'mata' | 'lisan' | 'hati' | 'ibadah'>('mata');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -187,21 +190,21 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-emerald-500 selection:text-white transition-colors duration-300 overflow-x-hidden">
+    <div className="min-h-screen bg-[#FDFBF7] dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-emerald-500 selection:text-white transition-colors duration-300">
       
       {/* 1. TOP ANNOUNCEMENT & NAVIGATION HEADER */}
       <header 
         className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
           isScrolled 
-            ? 'bg-white/85 dark:bg-slate-950/85 backdrop-blur-xl border-b border-slate-200/70 dark:border-emerald-500/15 shadow-md shadow-emerald-950/5 py-2.5' 
-            : 'bg-[#FDFBF7]/90 dark:bg-slate-950/90 backdrop-blur-sm border-b border-transparent py-3.5'
+            ? 'bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-emerald-500/15 shadow-lg shadow-emerald-950/5 py-2.5' 
+            : 'bg-[#FDFBF7] dark:bg-slate-950 border-b border-slate-200/40 dark:border-slate-800/40 py-3.5'
         }`}
       >
-        <div className="w-full px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
+        <div className="w-full px-4 sm:px-6 lg:px-10 flex items-center justify-between">
           
-          {/* Sisi Kiri: Logo Brand & Menu Navigasi */}
-          <div className="flex items-center gap-4 lg:gap-8">
-            {/* Logo */}
+          {/* Sisi Kiri Full Pojok: Logo Brand & Menu Navigasi Berdampingan */}
+          <div className="flex items-center gap-6 xl:gap-10">
+            {/* Logo Brand */}
             <Link 
               to="/" 
               onClick={() => soundFx.playTap()}
@@ -219,43 +222,43 @@ export default function LandingPage() {
                     Platform
                   </span>
                 </div>
-                <p className="text-[10px] text-slate-400 dark:text-slate-500 font-serif italic hidden sm:block">
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 font-serif italic hidden md:block">
                   Sistem Pemulihan & Taubat Berbasis Sunnah
                 </p>
               </div>
             </Link>
 
-            {/* Menu Navigasi di Sisi Kiri Bersebelahan dengan Logo */}
-            <nav className="hidden lg:flex items-center gap-4 xl:gap-5 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
-              <a href="#metode-5r" onClick={() => soundFx.playTap()} className="flex items-center gap-1 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
+            {/* Menu Navigasi di Sisi Kiri dengan Jarak Profesional */}
+            <nav className="hidden lg:flex items-center gap-5 xl:gap-7 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+              <a href="#metode-5r" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
                 <Layers className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span>Metode 5R</span>
               </a>
-              <a href="#fitur" onClick={() => soundFx.playTap()} className="flex items-center gap-1 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
+              <a href="#fitur" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
                 <Zap className="w-3.5 h-3.5 text-amber-500" />
                 <span>Fitur</span>
               </a>
-              <a href="#katalog" onClick={() => soundFx.playTap()} className="flex items-center gap-1 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
+              <a href="#katalog" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
                 <BookOpen className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span>Katalog Dosa</span>
               </a>
-              <a href="#testimoni" onClick={() => soundFx.playTap()} className="flex items-center gap-1 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
+              <a href="#testimoni" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
                 <Heart className="w-3.5 h-3.5 text-rose-500" />
                 <span>Kisah Taubat</span>
               </a>
-              <a href="#faq" onClick={() => soundFx.playTap()} className="flex items-center gap-1 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
+              <a href="#faq" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
                 <HelpCircle className="w-3.5 h-3.5 text-indigo-500" />
                 <span>FAQ</span>
               </a>
-              <a href="#infaq" onClick={() => soundFx.playTap()} className="flex items-center gap-1 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
+              <a href="#infaq" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                 <span>Infaq</span>
               </a>
             </nav>
           </div>
 
-          {/* Sisi Kanan: Action Toolbar, Switcher & Button */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Sisi Kanan Full Pojok: Action Toolbar & Primary CTA Button */}
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             {/* Quick sound toggle */}
             <button
               onClick={() => {
@@ -284,7 +287,7 @@ export default function LandingPage() {
             <Link
               to="/login"
               onClick={() => soundFx.playTap()}
-              className="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-emerald-700 dark:hover:text-emerald-400 px-2.5 sm:px-3 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors"
+              className="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-emerald-700 dark:hover:text-emerald-400 px-3 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors hidden sm:inline-block"
             >
               Masuk / Demo
             </Link>
@@ -293,14 +296,143 @@ export default function LandingPage() {
             <Link
               to={isAuthenticated ? "/app" : "/login"}
               onClick={() => soundFx.playSuccess()}
-              className="inline-flex items-center gap-1.5 px-3.5 sm:px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-900/20 hover:shadow-emerald-900/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-900/20 hover:shadow-emerald-900/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <span>{isAuthenticated ? 'Buka Dashboard' : 'Mulai Sekarang'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
+
+            {/* Hamburger Button on Mobile View (< lg) */}
+            <button
+              onClick={() => {
+                soundFx.playTap();
+                setMobileMenuOpen(true);
+              }}
+              className="lg:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:text-emerald-600 focus:outline-none"
+              title="Buka Menu"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </header>
+
+      {/* Mobile Navigation Drawer / Sidebar */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            {/* Backdrop Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm lg:hidden"
+            />
+            
+            {/* Sliding Sidebar Panel */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+              className="fixed top-0 right-0 bottom-0 z-50 w-80 max-w-[85vw] bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800 p-6 flex flex-col justify-between shadow-2xl lg:hidden overflow-y-auto"
+            >
+              <div>
+                {/* Header with Brand & Close Button */}
+                <div className="flex items-center justify-between pb-5 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-700 text-white flex items-center justify-center font-black text-sm shadow-sm">
+                      DT
+                    </div>
+                    <div>
+                      <span className="font-black text-sm text-[#065F46] dark:text-emerald-400 block">DOSA & TOBAT™</span>
+                      <span className="text-[10px] text-slate-400 font-serif italic">Menu Mobile</span>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      soundFx.playTap();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="p-2 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Navigation Items in Sidebar */}
+                <div className="py-5 space-y-1.5">
+                  <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2 px-1">Menu Utama</p>
+                  {[
+                    { href: '#metode-5r', icon: Layers, label: 'Metode 5R' },
+                    { href: '#fitur', icon: Zap, label: 'Fitur Unggulan' },
+                    { href: '#katalog', icon: BookOpen, label: 'Katalog Dosa Shahih' },
+                    { href: '#testimoni', icon: Heart, label: 'Kisah Taubat' },
+                    { href: '#faq', icon: HelpCircle, label: 'Tanya Jawab (FAQ)' },
+                    { href: '#infaq', icon: Sparkles, label: 'Infaq & Dukungan' },
+                  ].map((item, idx) => {
+                    const Icon = item.icon;
+                    return (
+                      <a
+                        key={idx}
+                        href={item.href}
+                        onClick={() => {
+                          soundFx.playTap();
+                          setMobileMenuOpen(false);
+                        }}
+                        className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors"
+                      >
+                        <Icon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                        <span>{item.label}</span>
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Bottom Quick Tools & Auth */}
+              <div className="pt-5 border-t border-slate-100 dark:border-slate-800 space-y-3">
+                <div className="flex items-center justify-between px-2 py-1 bg-slate-50 dark:bg-slate-900/60 rounded-xl">
+                  <span className="text-xs font-bold text-slate-500">Audio & Tema</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => { toggleSound(); soundFx.playTap(); }}
+                      className="p-2 rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 shadow-sm"
+                      title="Suara"
+                    >
+                      {soundEnabled ? <Volume2 className="w-4 h-4 text-emerald-600" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
+                    </button>
+                    <button
+                      onClick={() => { soundFx.playTap(); setTheme(theme === 'dark' ? 'light' : 'dark'); }}
+                      className="p-2 rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 shadow-sm"
+                      title="Tema"
+                    >
+                      {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+                
+                <Link
+                  to="/login"
+                  onClick={() => { soundFx.playTap(); setMobileMenuOpen(false); }}
+                  className="block w-full text-center py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900"
+                >
+                  Masuk / Demo
+                </Link>
+                
+                <Link
+                  to={isAuthenticated ? "/app" : "/login"}
+                  onClick={() => { soundFx.playSuccess(); setMobileMenuOpen(false); }}
+                  className="block w-full text-center py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs sm:text-sm font-bold shadow-md shadow-emerald-900/20"
+                >
+                  {isAuthenticated ? 'Buka Dashboard' : 'Mulai Sekarang'}
+                </Link>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* 2. HERO SECTION */}
       <section className="relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-28">
