@@ -97,27 +97,27 @@ export default function Directory() {
         <p className="text-[#065F46] dark:text-emerald-500 opacity-80 italic font-serif mt-1">Kenali apa yang ingin kamu tinggalkan.</p>
       </header>
 
-      {/* Baris Pencarian, Urutkan & View Mode (Sejajar) */}
-      <div className="flex flex-col sm:flex-row items-center gap-3">
-        {/* Kolom Pencarian (Mengisi sisa ruang secara dinamis) */}
-        <div className="relative w-full flex-1">
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none">
-            <Search className="w-4 h-4" />
-          </div>
+      {/* Baris Kontrol Utama: Cari (Icon Kanan), Urutkan, & Grid/List View (Sejajar Sempurna Sesuai Desain) */}
+      <div className="flex items-center gap-2 sm:gap-3 w-full">
+        {/* 1. Input Pencarian (Flex-1 dengan Ikon Kaca Pembesar di Sisi Kanan & Placeholder 'Cari...') */}
+        <div className="relative flex-1 min-w-0">
           <input 
             type="text" 
-            placeholder="Cari nama dosa, pemicu, atau kategori..."
+            placeholder="Cari..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-11 pr-10 py-3 bg-white dark:bg-slate-900 rounded-2xl text-sm border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-[#065F46] dark:focus:ring-emerald-500 outline-none transition-all dark:text-slate-200 shadow-xs"
+            className="w-full h-11 pl-4 pr-10 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl text-xs sm:text-sm border border-slate-200 dark:border-slate-800 focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all shadow-xs"
           />
+          <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none">
+            <Search className="w-4 h-4" />
+          </div>
           {searchQuery && (
             <button
               onClick={() => {
                 soundFx.playTap();
                 setSearchQuery('');
               }}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="absolute right-9 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs font-bold w-4 h-4 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               title="Hapus pencarian"
             >
               ✕
@@ -125,54 +125,58 @@ export default function Directory() {
           )}
         </div>
 
-        {/* Kolom Sebelah Kanan: Urutkan & Grid/List View Toggle (Sejajar Berdampingan) */}
-        <div className="flex items-center gap-2.5 w-full sm:w-auto shrink-0 justify-between sm:justify-end">
-          {/* Dropdown Urutkan */}
+        {/* 2. Dropdown Urutkan (Tinggi Seragam, Border Rounded-XL, Panah Bawah) */}
+        <div className="relative shrink-0">
           <select
             value={sortOption}
             onChange={(e) => {
               soundFx.playTap();
               setSortOption(e.target.value);
             }}
-            className="flex-1 sm:flex-initial px-4 py-3 bg-white dark:bg-slate-900 rounded-2xl text-xs sm:text-sm border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-[#065F46] dark:focus:ring-emerald-500 outline-none transition-all dark:text-slate-200 font-bold cursor-pointer shadow-xs"
+            className="h-11 pl-3.5 pr-8 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 rounded-xl text-xs sm:text-sm font-semibold border border-slate-200 dark:border-slate-800 focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all cursor-pointer appearance-none shadow-xs"
           >
             <option value="az">Urutkan: A - Z</option>
             <option value="za">Urutkan: Z - A</option>
           </select>
-
-          {/* Toggle Grid View & List View */}
-          <div className="flex bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-1 shrink-0 shadow-xs">
-            <button
-              type="button"
-              onClick={() => {
-                soundFx.playTap();
-                setViewMode('grid');
-              }}
-              className={`p-2 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
-                viewMode === 'grid' 
-                  ? 'bg-emerald-700 text-white shadow-sm font-bold' 
-                  : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60'
-              }`}
-              title="Tampilan Grid (Kotak)"
-            >
-              <LayoutGrid className="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                soundFx.playTap();
-                setViewMode('list');
-              }}
-              className={`p-2 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
-                viewMode === 'list' 
-                  ? 'bg-emerald-700 text-white shadow-sm font-bold' 
-                  : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60'
-              }`}
-              title="Tampilan List (Daftar Baris)"
-            >
-              <List className="w-4 h-4" />
-            </button>
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
+              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+            </svg>
           </div>
+        </div>
+
+        {/* 3. Tombol Segmented Grid View & List View (Tinggi Seragam, Desain Modern Card) */}
+        <div className="h-11 flex items-center bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-1 shrink-0 shadow-xs">
+          <button
+            type="button"
+            onClick={() => {
+              soundFx.playTap();
+              setViewMode('grid');
+            }}
+            className={`h-full px-2.5 sm:px-3 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
+              viewMode === 'grid' 
+                ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 dark:border-emerald-500/40 shadow-xs' 
+                : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60'
+            }`}
+            title="Tampilan Grid (Kotak)"
+          >
+            <LayoutGrid className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              soundFx.playTap();
+              setViewMode('list');
+            }}
+            className={`h-full px-2.5 sm:px-3 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
+              viewMode === 'list' 
+                ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 dark:border-emerald-500/40 shadow-xs' 
+                : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60'
+            }`}
+            title="Tampilan List (Daftar Baris)"
+          >
+            <List className="w-4 h-4" />
+          </button>
         </div>
       </div>
 
