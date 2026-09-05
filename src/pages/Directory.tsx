@@ -180,26 +180,37 @@ export default function Directory() {
         </div>
       </div>
 
+      {/* Kategori Filter Tabs (Huruf Kapital Semua & Bold Modern) */}
       <div className="flex overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 gap-2 hide-scrollbar scroll-smooth">
         <button
+          type="button"
           onClick={() => {
             soundFx.playTap();
             setActiveTab('semua');
           }}
-          className={`whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shadow-xs shrink-0 ${activeTab === 'semua' ? 'bg-[#065F46] dark:bg-emerald-600 text-white' : 'bg-white dark:bg-slate-900 text-gray-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
+          className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-black tracking-wider uppercase transition-all shadow-xs shrink-0 cursor-pointer ${
+            activeTab === 'semua' 
+              ? 'bg-[#065F46] dark:bg-emerald-600 text-white shadow-md' 
+              : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
+          }`}
         >
-          Semua ({SINS.length})
+          SEMUA ({SINS.length})
         </button>
 
         <button
+          type="button"
           onClick={() => {
             soundFx.playTap();
             setActiveTab('bookmarks');
           }}
-          className={`whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shadow-xs shrink-0 flex items-center gap-1.5 ${activeTab === 'bookmarks' ? 'bg-amber-600 text-white' : 'bg-white dark:bg-slate-900 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50 hover:bg-amber-50'}`}
+          className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-black tracking-wider uppercase transition-all shadow-xs shrink-0 flex items-center gap-1.5 cursor-pointer ${
+            activeTab === 'bookmarks' 
+              ? 'bg-amber-600 text-white shadow-md' 
+              : 'bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50 hover:bg-amber-50 dark:hover:bg-amber-950/40'
+          }`}
         >
           <Bookmark className="w-3.5 h-3.5" />
-          Tersimpan ({(bookmarks || []).length})
+          TERSIMPAN ({(bookmarks || []).length})
         </button>
 
         {CATEGORIES.map(cat => {
@@ -207,13 +218,18 @@ export default function Directory() {
           return (
             <button
               key={cat.id}
+              type="button"
               onClick={() => {
                 soundFx.playTap();
                 setActiveTab(cat.id);
               }}
-              className={`whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shadow-xs shrink-0 ${activeTab === cat.id ? 'bg-[#065F46] dark:bg-emerald-600 text-white' : 'bg-white dark:bg-slate-900 text-gray-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
+              className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-black tracking-wider uppercase transition-all shadow-xs shrink-0 cursor-pointer ${
+                activeTab === cat.id 
+                  ? 'bg-[#065F46] dark:bg-emerald-600 text-white shadow-md' 
+                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
+              }`}
             >
-              {cat.name} {count > 0 ? `(${count})` : ''}
+              {cat.name.toUpperCase()} {count > 0 ? `(${count})` : ''}
             </button>
           );
         })}
