@@ -89,13 +89,13 @@ export default function Profile() {
       className="p-4 sm:p-6 max-w-2xl mx-auto space-y-8 pb-24"
     >
       {/* Header Profile Card */}
-      <div className="bg-gradient-to-br from-white to-emerald-50/50 dark:from-slate-900 dark:to-emerald-950/20 rounded-3xl p-6 border border-emerald-500/20 shadow-sm relative overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm relative overflow-hidden">
         <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
           <div className="relative">
             <img
               src={currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80'}
               alt={currentUser.name}
-              className="w-20 h-20 rounded-2xl object-cover border-2 border-white dark:border-slate-800 shadow-md ring-4 ring-emerald-500/20"
+              className="w-20 h-20 rounded-2xl object-cover border border-slate-200 dark:border-slate-700 shadow-xs"
             />
             {isPremium && (
               <div className="absolute -top-2 -right-2 bg-amber-500 text-white rounded-full p-1 shadow-md">
@@ -109,14 +109,14 @@ export default function Profile() {
               <h1 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight truncate">
                 {currentUser.name}
               </h1>
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700">
                 {currentUser.role === 'SUPER_ADMIN' ? 'Super Admin' : currentUser.role === 'CONTENT_ADMIN' ? 'Ustadz / Content Admin' : isPremium ? 'PRO Member' : 'Basic Member'}
               </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{currentUser.email || 'Akun Lokal'}</p>
 
             <div className="flex items-center justify-center sm:justify-start gap-3 mt-3">
-              <span className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1 rounded-xl border border-amber-200 dark:border-amber-800/40">
+              <span className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1 rounded-xl border border-slate-200 dark:border-slate-800">
                 <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
                 Streak: {currentUser.streakDays || 5} Hari
               </span>
@@ -125,7 +125,7 @@ export default function Profile() {
 
           <button
             onClick={handleLogout}
-            className="px-3.5 py-2 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 border border-rose-200 dark:border-rose-900 transition-colors flex items-center gap-1.5"
+            className="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 border border-slate-200 dark:border-slate-800 transition-colors flex items-center gap-1.5 cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
             Keluar
