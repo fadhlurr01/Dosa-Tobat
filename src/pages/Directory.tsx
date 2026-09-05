@@ -97,56 +97,78 @@ export default function Directory() {
         <p className="text-[#065F46] dark:text-emerald-500 opacity-80 italic font-serif mt-1">Kenali apa yang ingin kamu tinggalkan.</p>
       </header>
 
-      <div className="flex flex-col gap-3">
-        <div className="relative w-full">
+      {/* Baris Pencarian, Urutkan & View Mode (Sejajar) */}
+      <div className="flex flex-col sm:flex-row items-center gap-3">
+        {/* Kolom Pencarian (Mengisi sisa ruang secara dinamis) */}
+        <div className="relative w-full flex-1">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none">
+            <Search className="w-4 h-4" />
+          </div>
           <input 
             type="text" 
             placeholder="Cari nama dosa, pemicu, atau kategori..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-4 pr-12 py-3 bg-white dark:bg-slate-900 rounded-2xl text-sm border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-[#065F46] dark:focus:ring-emerald-500 outline-none transition-all dark:text-slate-200 shadow-xs"
+            className="w-full pl-11 pr-10 py-3 bg-white dark:bg-slate-900 rounded-2xl text-sm border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-[#065F46] dark:focus:ring-emerald-500 outline-none transition-all dark:text-slate-200 shadow-xs"
           />
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500">
-            <Search className="w-4 h-4" />
-          </div>
+          {searchQuery && (
+            <button
+              onClick={() => {
+                soundFx.playTap();
+                setSearchQuery('');
+              }}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              title="Hapus pencarian"
+            >
+              ✕
+            </button>
+          )}
         </div>
 
-        <div className="flex items-center justify-between gap-2.5">
+        {/* Kolom Sebelah Kanan: Urutkan & Grid/List View Toggle (Sejajar Berdampingan) */}
+        <div className="flex items-center gap-2.5 w-full sm:w-auto shrink-0 justify-between sm:justify-end">
+          {/* Dropdown Urutkan */}
           <select
             value={sortOption}
-            onChange={(e) => setSortOption(e.target.value)}
-            className="flex-1 sm:flex-initial px-3.5 py-2.5 bg-white dark:bg-slate-900 rounded-xl text-xs sm:text-sm border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-[#065F46] dark:focus:ring-emerald-500 outline-none transition-all dark:text-slate-200 font-medium cursor-pointer shadow-xs"
+            onChange={(e) => {
+              soundFx.playTap();
+              setSortOption(e.target.value);
+            }}
+            className="flex-1 sm:flex-initial px-4 py-3 bg-white dark:bg-slate-900 rounded-2xl text-xs sm:text-sm border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-[#065F46] dark:focus:ring-emerald-500 outline-none transition-all dark:text-slate-200 font-bold cursor-pointer shadow-xs"
           >
             <option value="az">Urutkan: A - Z</option>
             <option value="za">Urutkan: Z - A</option>
           </select>
 
-          <div className="flex bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shrink-0 shadow-xs">
+          {/* Toggle Grid View & List View */}
+          <div className="flex bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-1 shrink-0 shadow-xs">
             <button
+              type="button"
               onClick={() => {
                 soundFx.playTap();
                 setViewMode('grid');
               }}
-              className={`px-3 py-2 flex items-center justify-center transition-colors ${
+              className={`p-2 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
                 viewMode === 'grid' 
-                  ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 font-bold' 
-                  : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                  ? 'bg-emerald-700 text-white shadow-sm font-bold' 
+                  : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60'
               }`}
-              title="Grid View"
+              title="Tampilan Grid (Kotak)"
             >
               <LayoutGrid className="w-4 h-4" />
             </button>
             <button
+              type="button"
               onClick={() => {
                 soundFx.playTap();
                 setViewMode('list');
               }}
-              className={`px-3 py-2 flex items-center justify-center transition-colors border-l border-slate-200 dark:border-slate-800 ${
+              className={`p-2 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
                 viewMode === 'list' 
-                  ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 font-bold' 
-                  : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                  ? 'bg-emerald-700 text-white shadow-sm font-bold' 
+                  : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60'
               }`}
-              title="List View"
+              title="Tampilan List (Daftar Baris)"
             >
               <List className="w-4 h-4" />
             </button>
