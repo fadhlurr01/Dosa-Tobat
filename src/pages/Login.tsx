@@ -136,7 +136,7 @@ export default function Login() {
       <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-amber-500/10 dark:bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Top Navbar Header Full Screen */}
-      <header className="w-full px-4 sm:px-8 lg:px-12 py-3.5 flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md sticky top-0 z-30">
+      <header className="w-full px-4 sm:px-8 lg:px-12 py-3 flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md sticky top-0 z-30 h-16 shrink-0">
         <Link to="/" onClick={() => soundFx.playTap()} className="flex items-center gap-2.5 group">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-800 text-white flex items-center justify-center font-black text-sm shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform">
             DT
@@ -153,10 +153,11 @@ export default function Login() {
           <Link
             to="/"
             onClick={() => soundFx.playTap()}
-            className="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3.5 py-2 rounded-xl shadow-xs transition-colors hidden sm:inline-flex items-center gap-1.5"
+            className="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl shadow-xs transition-colors inline-flex items-center gap-1.5"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Kembali ke Landing</span>
+            <span className="hidden sm:inline">Kembali ke Landing</span>
+            <span className="sm:hidden">Landing</span>
           </Link>
           
           <button
@@ -184,13 +185,13 @@ export default function Login() {
       </header>
 
       {/* Main Dual-Frame Split Screen (Full Page Bleed) */}
-      <div className="flex-1 w-full flex flex-col md:flex-row min-h-[calc(100vh-65px)]">
+      <div className="flex-1 w-full flex flex-col md:flex-row min-h-[calc(100vh-64px)]">
         
-        {/* ======================= FRAME 1: WEBSITE COVER HERO ======================= */}
+        {/* ======================= FRAME 1: WEBSITE COVER HERO (Desktop Only) ======================= */}
         <motion.div 
           layout
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className={`w-full md:w-5/12 lg:w-5/12 p-8 sm:p-12 lg:p-16 text-white relative overflow-hidden flex flex-col justify-between ${
+          className={`hidden md:flex md:w-5/12 lg:w-5/12 p-8 lg:p-12 text-white relative overflow-hidden flex-col justify-between shrink-0 ${
             authMode === 'signup' 
               ? 'md:order-2 bg-gradient-to-br from-amber-700 via-amber-800 to-slate-950' 
               : 'md:order-1 bg-gradient-to-br from-[#065F46] via-emerald-800 to-teal-950'
@@ -209,7 +210,7 @@ export default function Login() {
               {authMode === 'signup' ? 'Daftar Perjalanan Hijrah' : 'Portal Muhasabah & Taubat'}
             </div>
 
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight mb-3">
+            <h2 className="text-2xl lg:text-3xl font-black tracking-tight leading-tight mb-3">
               {authMode === 'signup' ? (
                 <>Mulai Langkah Baru <br /><span className="text-amber-300">Menuju Ridha-Nya.</span></>
               ) : (
@@ -217,7 +218,7 @@ export default function Login() {
               )}
             </h2>
 
-            <p className="text-sm sm:text-base text-white/80 leading-relaxed font-light">
+            <p className="text-sm text-white/80 leading-relaxed font-light">
               {authMode === 'signup' ? (
                 'Bergabunglah bersama ribuan pejuang istiqomah. Catat muhasabah harian, pelajari panduan taubat syar\'i, dan bangun kebiasaan taat tanpa rasa malu.'
               ) : (
@@ -267,15 +268,39 @@ export default function Login() {
           </div>
         </motion.div>
 
-        {/* ======================= FRAME 2: INTERACTIVE FORM ======================= */}
+        {/* ======================= FRAME 2: INTERACTIVE FORM (Responsive on all screens) ======================= */}
         <motion.div 
           layout
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className={`w-full md:w-7/12 lg:w-7/12 p-6 sm:p-10 lg:p-16 flex flex-col justify-center bg-white dark:bg-slate-900 border-l border-slate-200/60 dark:border-slate-800/60 ${
+          className={`w-full md:w-7/12 lg:w-7/12 p-4 sm:p-8 lg:p-12 flex flex-col justify-center items-center bg-white dark:bg-slate-900 md:border-l border-slate-200/60 dark:border-slate-800/60 ${
             authMode === 'signup' ? 'md:order-1' : 'md:order-2'
           }`}
         >
-          <div className="max-w-xl mx-auto w-full">
+          <div className="max-w-md w-full py-4">
+            {/* Mobile Mode Switcher Banner */}
+            <div className="md:hidden flex p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl mb-6 gap-1">
+              <button
+                onClick={() => toggleAuthMode('login')}
+                className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all text-center ${
+                  authMode === 'login'
+                    ? 'bg-white dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 shadow-xs'
+                    : 'text-slate-500 dark:text-slate-400'
+                }`}
+              >
+                Masuk Akun
+              </button>
+              <button
+                onClick={() => toggleAuthMode('signup')}
+                className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all text-center ${
+                  authMode === 'signup'
+                    ? 'bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400 shadow-xs'
+                    : 'text-slate-500 dark:text-slate-400'
+                }`}
+              >
+                Daftar Baru
+              </button>
+            </div>
+
             <AnimatePresence mode="wait">
               {authMode === 'login' ? (
                 /* ================= LOGIN FORM VIEW ================= */
