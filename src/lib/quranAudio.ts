@@ -137,6 +137,7 @@ function cleanText(txt: string): string {
     .toLowerCase()
     .replace(/[‘'’`]/g, "'")
     .replace(/[-_]/g, ' ')
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
@@ -179,13 +180,15 @@ export function getEveryAyahAudioUrl(surah: number, ayah: number, reciter: strin
  * "QS. Az-Zumar: 53"
  * "QS. At-Tahrim: 8"
  * "QS. An-Nur: 30"
- * "QS. Al-Ma'un: 4-5"
+ * "QS. Al-Ma'un: 4-6"
+ * "QS. Ibrahim: 40"
+ * "Surat Al-Baqarah: 286"
  */
 export function parseQuranReference(referenceText?: string): QuranReferenceResult | null {
   if (!referenceText) return null;
 
-  // Regex pattern matching QS/Q.S/Surah followed by Surah Name and Verse Number(s)
-  const regex = /(?:QS\.?|Q\.S\.?|Surah|Surat)\s+([A-Za-z\s'‘’-]+)[:\s]+(\d+)(?:-\d+)?/i;
+  // Pattern matching: QS / Q.S / Surah / Surat followed by Surah Name and Verse Number
+  const regex = /(?:QS\.?|Q\.S\.?|Surah|Surat|Al-Qur['’]an)\s+([A-Za-z\s'‘’-]+)(?:[:\s,]+|\s+ayat\s+)(\d+)(?:-\d+)?/i;
   const match = referenceText.match(regex);
 
   if (match) {

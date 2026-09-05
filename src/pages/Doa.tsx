@@ -18,55 +18,91 @@ const DOAS = [
     id: 'doa-nabi-adam',
     title: 'Doa Taubat Nabi Adam AS & Siti Hawa',
     category: 'Penyesalan Dosa',
-    arabic: 'رَبَّنَا ظَلَمْنَا أَنْفُسَنَا وَإِنْ لَمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ',
-    latin: 'Robbana dholamna anfusana wa inlam taghfirlana watarhamna lanakuunanna minal khosiriin.',
-    translation: 'Ya Tuhan kami, kami telah menzalimi diri kami sendiri. Jika Engkau tidak mengampuni kami dan memberi rahmat kepada kami, niscaya kami termasuk orang-orang yang rugi.',
+    arabic: 'قَالَا رَبَّنَا ظَلَمْنَا أَنْفُسَنَا وَإِنْ لَمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ',
+    latin: 'Qoolaa Robbanaa dholamnaa anfusanaa wa illam taghfir lanaa wa tarhamnaa lanakuunanna minal khoosiriin.',
+    translation: 'Keduanya berkata: "Ya Tuhan kami, kami telah menzalimi diri kami sendiri. Jika Engkau tidak mengampuni kami dan memberi rahmat kepada kami, niscaya kami termasuk orang-orang yang rugi."',
     reference: 'QS. Al-A\'raf: 23'
   },
   {
     id: 'doa-nabi-yunus',
     title: 'Doa Nabi Yunus AS (Pelepas Kesulitan & Taubat)',
     category: 'Pelepas Kesulitan & Dosa',
-    arabic: 'لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ',
-    latin: 'Laa ilaha illa anta subhaanaka innii kuntu minadh dholimiin.',
-    translation: 'Tidak ada Tuhan selain Engkau, Maha Suci Engkau, sesungguhnya aku termasuk orang-orang yang berbuat zalim.',
+    arabic: 'وَذَا النُّونِ إِذْ ذَهَبَ مُغَاضِبًا فَظَنَّ أَنْ لَنْ نَقْدِرَ عَلَيْهِ فَنَادَىٰ فِي الظُّلُمَاتِ أَنْ لَا إِلَٰهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ',
+    latin: 'Wa dzan-nuuni idz dzahaba mughoodhiban fazhonna al lan naqdira \'alaihi fa naadaa fizh-zhulumaati al laa ilaaha illaa anta subhaanaka innii kuntu minazh-zhaalimiin.',
+    translation: 'Dan (ingatlah kisah) Dzun Nun (Yunus), ketika dia pergi dalam keadaan marah, lalu dia menyangka bahwa Kami tidak akan menyulitkannya, maka dia berdoa dalam kegelapan: "Tidak ada Tuhan selain Engkau, Maha Suci Engkau, sungguh aku termasuk orang-orang yang berbuat zalim."',
     reference: 'QS. Al-Anbiya: 87'
   },
   {
     id: 'doa-ali-imran-8',
     title: 'Doa Keteguhan Iman Setelah Hidayah',
     category: 'Pencegahan Maksiat',
-    arabic: 'رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً إِنَّكَ أَنْتَ الْوَهَّابُ',
+    arabic: 'رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً ۚ إِنَّكَ أَنْتَ الْوَهَّابُ',
     latin: 'Robbanaa laa tuzigh quluubanaa ba\'da idz hadaitanaa wa hab lanaa mil ladunka rohmah, innaka antal wahhaab.',
-    translation: 'Ya Tuhan kami, janganlah Engkau jadikan hati kami condong kepada kesesatan sesudah Engkau beri petunjuk kepada kami, dan karuniakanlah kepada kami rahmat dari sisi-Mu.',
+    translation: '(Mereka berdoa): "Ya Tuhan kami, janganlah Engkau condongkan hati kami kepada kesesatan setelah Engkau berikan petunjuk kepada kami, dan karuniakanlah kepada kami rahmat dari sisi-Mu. Sesungguhnya Engkau Maha Pemberi."',
     reference: 'QS. Ali \'Imran: 8'
   },
   {
     id: 'doa-ali-imran-16',
     title: 'Doa Pengakuan Iman & Permohonan Ampun',
     category: 'Penghapus Dosa',
-    arabic: 'رَبَّنَا إِنَّنَا آمَنَّا فَاغْفِرْ لَنَا ذُنُوبَنَا وَقِنَا عَذَابَ النَّارِ',
-    latin: 'Robbanaa innanaa aamannaa faghfir lanaa dzunuubanaa waqinaa \'adzaaban naar.',
-    translation: 'Ya Tuhan kami, sesungguhnya kami telah beriman, maka ampunilah segala dosa kami dan peliharalah kami dari siksa neraka.',
+    arabic: 'الَّذِينَ يَقُولُونَ رَبَّنَا إِنَّنَا آمَنَّا فَاغْفِرْ لَنَا ذُنُوبَنَا وَقِنَا عَذَابَ النَّارِ',
+    latin: 'Alladziina yaquuluuna Robbanaa innanaa aamannaa faghfir lanaa dzunuubanaa waqinaa \'adzaaban naar.',
+    translation: '(Yaitu) orang-orang yang berdoa: "Ya Tuhan kami, sesungguhnya kami telah beriman, maka ampunilah dosa-dosa kami dan selamatkanlah kami dari siksa neraka."',
     reference: 'QS. Ali \'Imran: 16'
   },
   {
     id: 'doa-sapu-jagad',
     title: 'Doa Sapu Jagad (Kebaikan Dunia & Akhirat)',
     category: 'Kebaikan Menyeluruh',
-    arabic: 'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ',
-    latin: 'Robbanaa aatinaa fid dunyaa hasanah wa fil aakhiroti hasanah wa qinaa \'adzaaban naar.',
-    translation: 'Ya Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat dan peliharalah kami dari siksa neraka.',
+    arabic: 'وَمِنْهُمْ مَنْ يَقُولُ رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ',
+    latin: 'Wa minhum may yaquulu Robbanaa aatinaa fid dunyaa hasanatan wa fil aakhiroti hasanatan wa qinaa \'adzaaban naar.',
+    translation: 'Dan di antara mereka ada yang berdoa: "Ya Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat, dan lindungilah kami dari azab neraka."',
     reference: 'QS. Al-Baqarah: 201'
   },
   {
     id: 'doa-hasyr-10',
     title: 'Doa Pembersih Hati dari Kedengkian',
     category: 'Pembersih Hati',
-    arabic: 'رَبَّنَا اغْفِرْ لَنَا وَلِإِخْوَانِنَا الَّذِينَ سَبَقُونَا بِالْإِيمَانِ وَلَا تَجْعَلْ فِي قُلُوبِنَا غِلًّا لِلَّذِينَ آمَنُوا رَبَّنَا إِنَّكَ رَءُوفٌ رَحِيمٌ',
-    latin: 'Robbanaghfir lanaa wa li-ikhwaaninal ladziina sabaquunaa bil iimaan, wa laa taj\'al fii quluubinaa ghillal lilladziina aamanuu robbanaa innaka ro-uufur rohiim.',
-    translation: 'Ya Tuhan kami, ampunilah kami dan saudara-saudara kami yang telah beriman lebih dahulu dari kami, dan janganlah Engkau tanamkan kedengkian dalam hati kami terhadap orang-orang yang beriman.',
+    arabic: 'وَالَّذِينَ جَاءُوا مِنْ بَعْدِهِمْ يَقُولُونَ رَبَّنَا اغْفِرْ لَنَا وَلِإِخْوَانِنَا الَّذِينَ سَبَقُونَا بِالْإِيمَانِ وَلَا تَجْعَلْ فِي قُلُوبِنَا غِلًّا لِلَّذِينَ آمَنُوا رَبَّنَا إِنَّكَ رَءُوفٌ رَحِيمٌ',
+    latin: 'Walladziina jaa-uu mim ba\'dihim yaquuluuna Robbanaghfir lanaa wa li-ikhwaaninal ladziina sabaquunaa bil iimaan, wa laa taj\'al fii quluubinaa ghillal lilladziina aamanuu Robbanaa innaka Ro-uufur Rohiim.',
+    translation: 'Dan orang-orang yang datang sesudah mereka berdoa: "Ya Tuhan kami, ampunilah kami dan saudara-saudara kami yang telah beriman lebih dahulu dari kami, dan janganlah Engkau tanamkan kedengkian dalam hati kami terhadap orang-orang yang beriman. Ya Tuhan kami, sungguh Engkau Maha Penyantun lagi Maha Penyayang."',
     reference: 'QS. Al-Hasyr: 10'
+  },
+  {
+    id: 'doa-ibrahim-40',
+    title: 'Doa Menjaga Shalat Diri & Keturunan',
+    category: 'Kekuatan Ibadah',
+    arabic: 'رَبِّ اجْعَلْنِي مُقِيمَ الصَّلَاةِ وَمِنْ ذُرِّيَّتِي ۚ رَبَّنَا وَتَقَبَّلْ دُعَاءِ',
+    latin: 'Robbij\'alnii muqiimash sholaati wa min dzurriyyatii, Robbanaa wa taqobbal du\'aa\'.',
+    translation: '"Ya Tuhanku, jadikanlah aku dan anak cucuku orang-orang yang tetap mendirikan shalat, ya Tuhan kami, perkenankanlah doaku."',
+    reference: 'QS. Ibrahim: 40'
+  },
+  {
+    id: 'doa-musa-25',
+    title: 'Doa Kelapangan Hati & Kemudahan Urusan',
+    category: 'Penenang Jiwa',
+    arabic: 'قَالَ رَبِّ اشْرَحْ لِي صَدْرِي',
+    latin: 'Qoola Robbisroh lii shodrii.',
+    translation: 'Dia (Musa) berkata: "Ya Tuhanku, lapangkanlah dadaku."',
+    reference: 'QS. Taha: 25'
+  },
+  {
+    id: 'doa-muminun-118',
+    title: 'Doa Permohonan Ampunan & Rahmat',
+    category: 'Penghapus Dosa',
+    arabic: 'وَقُلْ رَبِّ اغْفِرْ وَارْحَمْ وَأَنْتَ خَيْرُ الرَّاحِمِينَ',
+    latin: 'Wa qur robbighfir warham wa anta khoirur roohimiin.',
+    translation: 'Dan katakanlah: "Ya Tuhanku, berilah ampunan dan berilah rahmat, dan Engkau adalah sebaik-baik Pemberi rahmat."',
+    reference: 'QS. Al-Mu\'minun: 118'
+  },
+  {
+    id: 'doa-baqarah-286',
+    title: 'Doa Perlindungan dari Kesalahan & Beban Berat',
+    category: 'Perlindungan Total',
+    arabic: 'رَبَّنَا لَا تُؤَاخِذْنَا إِنْ نَسِينَا أَوْ أَخْطَأْنَا ۚ رَبَّنَا وَلَا تَحْمِلْ عَلَيْنَا إِصْرًا كَمَا حَمَلْتَهُ عَلَى الَّذِينَ مِنْ قَبْلِنَا ۚ رَبَّنَا وَلَا تُحَمِّلْنَا مَا لَا طَاقَةَ لَنَا بِهِ ۖ وَاعْفُ عَنَّا وَاغْفِرْ لَنَا وَارْحَمْنَا ۚ أَنْتَ مَوْلَانَا فَانْصُرْنَا عَلَى الْقَوْمِ الْكَافِرِينَ',
+    latin: 'Robbanaa laa tu-aakhidznaa in nasiinaa aw akhtho\'naa, Robbanaa wa laa tahmil \'alainaa ishron kamaa hamaltahuu \'alal ladziina min qoblinaa, Robbanaa wa laa tuhammilnaa maa laa thooqata lanaa bih, wa\'fu \'annaa waghfir lanaa warhamnaa, Anta mawlaanaa fanshurnaa \'alal qawmil kaafiriin.',
+    translation: '"Ya Tuhan kami, janganlah Engkau hukum kami jika kami lupa atau kami melakukan kesalahan. Ya Tuhan kami, janganlah Engkau bebankan kepada kami beban yang berat sebagaimana Engkau bebankan kepada orang-orang sebelum kami. Ya Tuhan kami, janganlah Engkau pikulkan kepada kami apa yang tak sanggup kami memikulnya. Maafkanlah kami; ampunilah kami; dan rahmatilah kami. Engkaulah penolong kami."',
+    reference: 'QS. Al-Baqarah: 286'
   },
   {
     id: 'doa-keteguhan-hati',
@@ -126,7 +162,7 @@ export default function Doa() {
           Kumpulan Doa & Munajat
         </h1>
         <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm font-serif italic">
-          Lantunkan doa tulus untuk memohon ampunan, keteguhan hati, dan pembersihan jiwa dengan audio tilawah resmi.
+          Lantunkan doa tulus untuk memohon ampunan, keteguhan hati, dan pembersihan jiwa dengan teks dan audio tilawah resmi yang tersinkronisasi.
         </p>
       </header>
 

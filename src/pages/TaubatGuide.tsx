@@ -23,9 +23,9 @@ export default function TaubatGuide() {
       verse: {
         type: 'AYAT' as const,
         title: 'Perintah Taubat Nasuha',
-        arabic: 'يَا أَيُّهَا الَّذِينَ آمَنُوا تُوبُوا إِلَى اللَّهِ تَوْبَةً نَصُوحًا',
-        latin: 'Yaa ayyuhal ladziina aamanuu tuubuu ilallaahi taubatan nashuuhaa.',
-        translation: 'Wahai orang-orang yang beriman! Bertaubatlah kepada Allah dengan taubat yang semurni-murninya (taubat nasuha).',
+        arabic: 'يَا أَيُّهَا الَّذِينَ آمَنُوا تُوبُوا إِلَى اللَّهِ تَوْبَةً نَصُوحًا عَسَىٰ رَبُّكُمْ أَنْ يُكَفِّرَ عَنْكُمْ سَيِّئَاتِكُمْ وَيُدْخِلَكُمْ جَنَّاتٍ تَجْرِي مِنْ تَحْتِهَا الْأَنْهَارُ',
+        latin: 'Yaa ayyuhal ladziina aamanuu tuubuu ilallaahi taubatan nashuuhaa, \'asaa robbukum ay yukaffiro \'ankum sayyi-aatikum wa yudkhilakum jannaatin tajrii min tahtihal anhaar.',
+        translation: 'Wahai orang-orang yang beriman! Bertaubatlah kepada Allah dengan taubat yang semurni-murninya (taubat nasuha), mudah-mudahan Tuhan kamu akan menghapus kesalahan-kesalahanmu dan memasukkan kamu ke dalam surga-surga yang mengalir di bawahnya sungai-sungai.',
         reference: 'QS. At-Tahrim: 8'
       }
     },
@@ -54,11 +54,11 @@ export default function TaubatGuide() {
       advice: "Buat batasan pencegahan dan tutup seluruh pintu akses menuju godaan tersebut.",
       verse: {
         type: 'AYAT' as const,
-        title: 'Panggilan Keselamatan & Keberuntungan',
-        arabic: 'وَتُوبُوا إِلَى اللَّهِ جَمِيعًا أَيُّهَ الْمُؤْمِنُونَ لَعَلَّكُمْ تُفْلِحُونَ',
-        latin: 'Wa tuubuu ilallaahi jamii\'an ayyuhal mu\'minuuna la\'allakum tuflihuun.',
-        translation: 'Dan bertaubatlah kamu sekalian kepada Allah, hai orang-orang yang beriman supaya kamu beruntung.',
-        reference: 'QS. An-Nur: 31'
+        title: 'Penerimaan Taubat yang Sempurna',
+        arabic: 'أَلَمْ يَعْلَمُوا أَنَّ اللَّهَ هُوَ يَقْبَلُ التَّوْبَةَ عَنْ عِبَادِهِ وَيَأْخُذُ الصَّدَقَاتِ وَأَنَّ اللَّهَ هُوَ التَّوَّابُ الرَّحِيمُ',
+        latin: 'Alam ya\'lamuu annallaaha Huwa yaqbalut taubata \'an \'ibaadihii wa ya\'khudzush shodaqaati wa annallaaha Huwat Tawwaabur Rohiim.',
+        translation: 'Tidakkah mereka mengetahui, bahwa Allah menerima taubat dari hamba-hamba-Nya dan menerima sedekah, dan bahwasanya Allah Maha Penerima Taubat lagi Maha Penyayang?',
+        reference: 'QS. At-Taubah: 104'
       }
     },
     {
@@ -68,9 +68,9 @@ export default function TaubatGuide() {
       verse: {
         type: 'AYAT' as const,
         title: 'Kebaikan Menghapus Dosa',
-        arabic: 'إِنَّ الْحَسَنَاتِ يُذْهِبْنَ السَّيِّئَاتِ ذَٰلِكَ ذِكْرَىٰ لِلذَّاكِرِينَ',
-        latin: 'Innal hasanaati yudz-hibnas sayyi-aat, dzaalika dzikroo lidz-dzaakiriin.',
-        translation: 'Sesungguhnya perbuatan-perbuatan yang baik itu menghapuskan (dosa) perbuatan-perbuatan yang buruk. Itulah peringatan bagi orang-orang yang ingat.',
+        arabic: 'وَأَقِمِ الصَّلَاةَ طَرَفَيِ النَّهَارِ وَزُلَفًا مِنَ اللَّيْلِ ۚ إِنَّ الْحَسَنَاتِ يُذْهِبْنَ السَّيِّئَاتِ ۚ ذَٰلِكَ ذِكْرَىٰ لِلذَّاكِرِينَ',
+        latin: 'Wa aqimish sholaata thorofayin nahaari wa zulafam minal layl, innal hasanaati yudz-hibnas sayyi-aat, dzaalika dzikroo lidz-dzaakiriin.',
+        translation: 'Dan dirikanlah shalat itu pada kedua tepi siang (pagi dan petang) dan pada bahagian permulaan daripada malam. Sesungguhnya perbuatan-perbuatan yang baik itu menghapuskan perbuatan-perbuatan yang buruk. Itulah peringatan bagi orang-orang yang ingat.',
         reference: 'QS. Hud: 114'
       }
     }

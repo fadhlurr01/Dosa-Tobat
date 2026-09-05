@@ -165,6 +165,7 @@ export default function ReligiousCard({
   };
 
   const currentTheme = theme[type as keyof typeof theme] || theme.DEFAULT;
+  const hasAudioSupport = Boolean(finalAudioUrl || arabic);
 
   return (
     <motion.div 
@@ -199,15 +200,17 @@ export default function ReligiousCard({
           </div>
 
           {/* Audio Reciter Tag */}
-          {finalAudioUrl && (
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/60 dark:border-emerald-800/40 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
+          {hasAudioSupport && (
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/60 dark:border-emerald-800/40 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
               <Music2 className="w-3 h-3 text-emerald-500" />
-              <span>{reciterLabel}</span>
+              <span className="hidden sm:inline">{reciterLabel}</span>
+              <span className="sm:hidden">Audio Murottal</span>
             </div>
           )}
         </div>
 
-        {arabic && (
+        {/* Arabic Display with in-card audio button */}
+        {arabic ? (
           <div className={`mb-6 p-6 sm:p-8 rounded-2xl ${currentTheme.bg} border ${currentTheme.border} backdrop-blur-sm relative group transition-all`}>
             {/* Audio Playing Equalizer Header */}
             {isPlaying && (
@@ -219,7 +222,7 @@ export default function ReligiousCard({
                     <span className="w-1 bg-emerald-500 rounded-full animate-bounce h-3.5" style={{ animationDelay: '300ms' }} />
                     <span className="w-1 bg-emerald-500 rounded-full animate-bounce h-1.5" style={{ animationDelay: '450ms' }} />
                   </div>
-                  <span className="text-[11px] font-bold tracking-wide">Memutar Murottal Resmi</span>
+                  <span className="text-[11px] font-bold tracking-wide">Memutar Tilawah Syaikh Misyari Al-Afasy</span>
                 </div>
                 <span className="text-[10px] opacity-80">{reciterLabel}</span>
               </div>
@@ -264,6 +267,43 @@ export default function ReligiousCard({
               </button>
             </div>
           </div>
+        ) : finalAudioUrl && (
+          /* Standalone Audio Bar when arabic text is not provided but audioUrl is resolved */
+          <div className="mb-6 p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/60 dark:border-emerald-800/40 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <button 
+                onClick={toggleAudio}
+                disabled={isLoadingAudio}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all active:scale-95 cursor-pointer"
+                title={isPlaying ? "Hentikan" : "Putar Tilawah Syaikh Misyari Al-Afasy"}
+              >
+                {isLoadingAudio ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : isPlaying ? (
+                  <Square className="w-4 h-4 fill-current animate-pulse text-rose-200" />
+                ) : (
+                  <Volume2 className="w-4 h-4" />
+                )}
+              </button>
+              <div>
+                <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                  {isPlaying ? "Sedang Memutar Tilawah..." : "Dengarkan Tilawah Ayat"}
+                </p>
+                <span className="text-[10px] text-emerald-700 dark:text-emerald-400">
+                  {reciterLabel}
+                </span>
+              </div>
+            </div>
+
+            {isPlaying && (
+              <div className="flex items-end gap-0.5 h-3 pr-2">
+                <span className="w-1 bg-emerald-500 rounded-full animate-bounce h-3" style={{ animationDelay: '0ms' }} />
+                <span className="w-1 bg-emerald-500 rounded-full animate-bounce h-2" style={{ animationDelay: '150ms' }} />
+                <span className="w-1 bg-emerald-500 rounded-full animate-bounce h-3.5" style={{ animationDelay: '300ms' }} />
+                <span className="w-1 bg-emerald-500 rounded-full animate-bounce h-1.5" style={{ animationDelay: '450ms' }} />
+              </div>
+            )}
+          </div>
         )}
         
         {(latin || translation || reference) && (
@@ -285,7 +325,7 @@ export default function ReligiousCard({
                 </p>
                 {finalAudioUrl && (
                   <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">
-                    Audio CDN: Bebas Royalti / Resmi
+                    Audio CDN Resmi: Syaikh Misyari Rasyid Al-Afasy
                   </span>
                 )}
               </div>
