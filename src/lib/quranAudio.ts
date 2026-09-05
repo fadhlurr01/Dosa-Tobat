@@ -1,13 +1,15 @@
 /**
- * Quran Audio Helper & CDN Resolver
+ * Quran & Dua Audio Helper & CDN Resolver
  * Uses official, copyright-free / open Islamic public domain audio sources
- * Default reciter: Syaikh Mishary Rashid Al-Afasy (EveryAyah.com & Quran.com audio CDN)
+ * Default reciters:
+ * - Syaikh Mishary Rashid Al-Afasy (EveryAyah.com & Quran.com audio CDN for Quranic Verses)
+ * - Syaikh Arab / Hisnul Muslim Database (for authentic Hadith Duas like Sayyidul Istighfar)
  */
 
-export interface QuranReferenceResult {
-  surahNumber: number;
-  surahName: string;
-  ayahNumber: number;
+export interface AudioResolveResult {
+  surahNumber?: number;
+  surahName?: string;
+  ayahNumber?: number;
   audioUrl: string;
   reciterName: string;
 }
@@ -184,7 +186,7 @@ export function getEveryAyahAudioUrl(surah: number, ayah: number, reciter: strin
  * "QS. Ibrahim: 40"
  * "Surat Al-Baqarah: 286"
  */
-export function parseQuranReference(referenceText?: string): QuranReferenceResult | null {
+export function parseQuranReference(referenceText?: string): AudioResolveResult | null {
   if (!referenceText) return null;
 
   // Pattern matching: QS / Q.S / Surah / Surat followed by Surah Name and Verse Number
@@ -205,6 +207,63 @@ export function parseQuranReference(referenceText?: string): QuranReferenceResul
         reciterName: 'Syaikh Misyari Rasyid Al-Afasy'
       };
     }
+  }
+
+  return null;
+}
+
+/**
+ * Resolves both Quranic verses and known authentic Arab Sheikh Hadith Duas
+ * (e.g. Sayyidul Istighfar, Kafaratul Majlis, Doa Syirik)
+ */
+export function resolveIslamicAudio(
+  reference?: string, 
+  title?: string, 
+  arabicText?: string
+): AudioResolveResult | null {
+  // 1. Check Quran reference first
+  const quranMatch = parseQuranReference(reference);
+  if (quranMatch) return quranMatch;
+
+  const refStr = (reference || '').toLowerCase();
+  const titleStr = (title || '').toLowerCase();
+  const arabStr = arabicText || '';
+
+  // 2. Check Sayyidul Istighfar (Sahih Bukhari #6306 / Hisnul Muslim #79)
+  if (
+    titleStr.includes('sayyidul') || 
+    titleStr.includes('istighfar') || 
+    refStr.includes('6306') || 
+    arabStr.includes('خَلَقْتَنِي وَأَنَا عَبْدُكَ') ||
+    arabStr.includes('اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ')
+  ) {
+    return {
+      audioUrl: 'https://cdn.jsdelivr.net/gh/sheikhhanif/Hisnul_Muslim_Database@master/audio/79hm.mp3',
+      reciterName: 'Syaikh Arab (Hisnul Muslim)'
+    };
+  }
+
+  // 3. Check Kafaratul Majlis (Hisnul Muslim #196)
+  if (
+    titleStr.includes('kafarat') || 
+    refStr.includes('kafarat') || 
+    arabStr.includes('سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ')
+  ) {
+    return {
+      audioUrl: 'https://cdn.jsdelivr.net/gh/sheikhhanif/Hisnul_Muslim_Database@master/audio/196hm.mp3',
+      reciterName: 'Syaikh Arab (Hisnul Muslim)'
+    };
+  }
+
+  // 4. Check Doa Perlindungan dari Syirik (Hisnul Muslim #203 / HR Ahmad)
+  if (
+    arabStr.includes('أَنْ أُشْرِكَ بِكَ وَأَنَا أَعْلَمُ') || 
+    titleStr.includes('syirik')
+  ) {
+    return {
+      audioUrl: 'https://cdn.jsdelivr.net/gh/sheikhhanif/Hisnul_Muslim_Database@master/audio/203hm.mp3',
+      reciterName: 'Syaikh Arab (Hisnul Muslim)'
+    };
   }
 
   return null;

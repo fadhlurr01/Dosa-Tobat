@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BookOpen, Sparkles, Heart, Quote, Volume2, Square, Loader2, Music2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import { parseQuranReference } from '../../lib/quranAudio';
+import { resolveIslamicAudio } from '../../lib/quranAudio';
 
 export interface ReligiousCardProps {
   key?: React.Key;
@@ -32,10 +32,10 @@ export default function ReligiousCard({
   const [audioProgress, setAudioProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Auto-detect Quran audio URL from reference if not explicitly supplied
-  const detectedQuran = parseQuranReference(reference);
-  const finalAudioUrl = customAudioUrl || detectedQuran?.audioUrl;
-  const reciterLabel = customReciter || detectedQuran?.reciterName || 'Lafaz Arab Asli';
+  // Auto-detect Quran or authentic Hadith Dua audio URL from reference/title/arabic
+  const detectedAudio = resolveIslamicAudio(reference, title, arabic);
+  const finalAudioUrl = customAudioUrl || detectedAudio?.audioUrl;
+  const reciterLabel = customReciter || detectedAudio?.reciterName || 'Lafaz Arab Asli';
 
   // Stop audio on unmount
   useEffect(() => {
