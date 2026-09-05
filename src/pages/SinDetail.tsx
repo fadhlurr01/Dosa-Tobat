@@ -138,22 +138,22 @@ export default function SinDetail() {
 
       <header className="space-y-3">
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+          <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/90 dark:border-slate-700">
             {sin.category}
           </span>
           {isActive && (
-            <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+            <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 border border-slate-200/90 dark:border-slate-700">
               Perjalanan Aktif
             </span>
           )}
         </div>
 
-        <h1 className="text-2xl sm:text-4xl font-black text-[#065F46] dark:text-emerald-400 tracking-tight leading-tight">
+        <h1 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-tight">
           {sin.name}
         </h1>
 
-        <div className="p-4 bg-emerald-50/70 dark:bg-emerald-950/30 rounded-2xl border border-emerald-200/70 dark:border-emerald-800/40">
-          <p className="text-slate-700 dark:text-emerald-200 leading-relaxed text-xs sm:text-sm">{sin.definition}</p>
+        <div className="p-4 sm:p-5 bg-slate-50/80 dark:bg-slate-900/60 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+          <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-xs sm:text-sm">{sin.definition}</p>
         </div>
       </header>
 
@@ -162,29 +162,29 @@ export default function SinDetail() {
         <Link 
           to={`/sos?sin=${sin.id}`}
           onClick={() => soundFx.playTap()}
-          className="flex flex-col items-center justify-center p-3.5 sm:p-4 bg-rose-50/90 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 rounded-2xl text-rose-700 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-all active:scale-98 text-center shadow-xs"
+          className="flex flex-col items-center justify-center p-3.5 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all active:scale-98 text-center shadow-xs group"
         >
-          <ShieldAlert className="w-5 h-5 mb-1 text-rose-600 dark:text-rose-400" />
+          <ShieldAlert className="w-5 h-5 mb-1 text-rose-500 group-hover:scale-110 transition-transform" />
           <span className="text-xs font-bold uppercase tracking-wider">Sedang Tergoda</span>
-          <span className="text-[10px] text-rose-500/80 dark:text-rose-400/70">SOS 90-Detik</span>
+          <span className="text-[10px] text-slate-400">SOS 90-Detik</span>
         </Link>
 
         <Link 
           to={`/taubat-guide/${sin.id}`}
           onClick={() => soundFx.playTap()}
-          className="flex flex-col items-center justify-center p-3.5 sm:p-4 bg-emerald-50/90 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 rounded-2xl text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-all active:scale-98 text-center shadow-xs"
+          className="flex flex-col items-center justify-center p-3.5 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all active:scale-98 text-center shadow-xs group"
         >
-          <HeartHandshake className="w-5 h-5 mb-1 text-emerald-600 dark:text-emerald-400" />
+          <HeartHandshake className="w-5 h-5 mb-1 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
           <span className="text-xs font-bold uppercase tracking-wider">Baru Terjatuh</span>
-          <span className="text-[10px] text-emerald-600/80 dark:text-emerald-400/70">Panduan Taubat</span>
+          <span className="text-[10px] text-slate-400">Panduan Taubat</span>
         </Link>
 
         <Link 
           to="/jurnal"
           onClick={() => soundFx.playTap()}
-          className="col-span-2 sm:col-span-1 flex flex-col items-center justify-center p-3.5 sm:p-4 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all active:scale-98 text-center shadow-xs"
+          className="col-span-2 sm:col-span-1 flex flex-col items-center justify-center p-3.5 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all active:scale-98 text-center shadow-xs group"
         >
-          <PenSquare className="w-5 h-5 mb-1 text-indigo-500" />
+          <PenSquare className="w-5 h-5 mb-1 text-indigo-500 group-hover:scale-110 transition-transform" />
           <span className="text-xs font-bold uppercase tracking-wider">Catat Jurnal</span>
           <span className="text-[10px] text-slate-400">Evaluasi Diri</span>
         </Link>
@@ -220,23 +220,23 @@ export default function SinDetail() {
             <h2>Tanda & Pemicu</h2>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
-            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-xs">
               <h3 className="font-medium text-slate-800 dark:text-slate-300 mb-3 text-sm uppercase tracking-wider">Tanda Awal</h3>
               <ul className="space-y-2">
                 {sin.signs.map((sign, i) => (
                   <li key={i} className="flex items-start text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 mr-2 flex-shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500 mt-2 mr-2 flex-shrink-0" />
                     {sign}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-xs">
               <h3 className="font-medium text-slate-800 dark:text-slate-300 mb-3 text-sm uppercase tracking-wider">Pemicu Umum</h3>
               <ul className="space-y-2">
                 {sin.triggers.map((trigger, i) => (
                   <li key={i} className="flex items-start text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    <span className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-2 mr-2 flex-shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500 mt-2 mr-2 flex-shrink-0" />
                     {trigger}
                   </li>
                 ))}
@@ -250,11 +250,11 @@ export default function SinDetail() {
             <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             <h2>Cara Mencegah</h2>
           </div>
-          <div className="bg-emerald-700 dark:bg-emerald-900/40 dark:border dark:border-emerald-500/20 text-white p-5 rounded-2xl shadow-sm">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-800 dark:text-slate-200 p-5 rounded-2xl shadow-xs">
             <ul className="space-y-3">
               {sin.prevention.map((prev, i) => (
-                <li key={i} className="flex items-start text-sm md:text-base leading-relaxed dark:text-emerald-100">
-                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-600 dark:bg-emerald-500/30 text-xs font-bold mr-3 flex-shrink-0 mt-0.5">
+                <li key={i} className="flex items-start text-sm md:text-base leading-relaxed text-slate-700 dark:text-slate-300">
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold mr-3 flex-shrink-0 mt-0.5">
                     {i + 1}
                   </span>
                   {prev}
@@ -288,9 +288,9 @@ export default function SinDetail() {
                 soundFx.playTap();
                 navigate(`/dosa/${prevSin.id}`);
               }}
-              className="flex items-center gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 dark:hover:border-emerald-500/50 hover:shadow-md transition-all text-left cursor-pointer group"
+              className="flex items-center gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md transition-all text-left cursor-pointer group"
             >
-              <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:-translate-x-1 transition-transform shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 group-hover:-translate-x-1 transition-transform shrink-0">
                 <ChevronLeft className="w-5 h-5" />
               </div>
               <div className="min-w-0 flex-1">
@@ -316,13 +316,13 @@ export default function SinDetail() {
                 soundFx.playTap();
                 navigate(`/dosa/${nextSin.id}`);
               }}
-              className="flex items-center justify-between gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 dark:hover:border-emerald-500/50 hover:shadow-md transition-all text-right cursor-pointer group"
+              className="flex items-center justify-between gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md transition-all text-right cursor-pointer group"
             >
               <div className="min-w-0 flex-1">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Topik Selanjutnya</span>
                 <p className="font-bold text-sm text-slate-800 dark:text-slate-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 truncate">{nextSin.name}</p>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 group-hover:translate-x-1 transition-transform shrink-0">
                 <ChevronRight className="w-5 h-5" />
               </div>
             </button>

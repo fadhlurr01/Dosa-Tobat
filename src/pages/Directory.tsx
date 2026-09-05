@@ -244,9 +244,9 @@ export default function Directory() {
             const thumbUrl = (sin as any).imageUrl || getThumbnailUrl(sin.categoryId);
             
             return (
-            <Link key={sin.id} to={`/dosa/${sin.id}`} className={`relative overflow-hidden bg-gradient-to-br from-white to-[#FDFBF7] dark:from-slate-900 dark:to-slate-800 rounded-2xl border border-[#065F46]/10 dark:border-emerald-500/20 hover:shadow-md hover:border-[#065F46]/30 dark:hover:border-emerald-500/50 transition-all group flex ${viewMode === 'list' ? 'flex-row items-center h-32 sm:h-40' : 'flex-col'}`}>
-              <div className={`${viewMode === 'list' ? 'w-1/3 sm:w-48 h-full shrink-0' : 'w-full h-32 sm:h-40'} bg-slate-200 dark:bg-slate-800 relative overflow-hidden`}>
-                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors z-10" />
+            <Link key={sin.id} to={`/dosa/${sin.id}`} className={`relative overflow-hidden bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all group flex ${viewMode === 'list' ? 'flex-row items-center h-32 sm:h-40' : 'flex-col'}`}>
+              <div className={`${viewMode === 'list' ? 'w-1/3 sm:w-48 h-full shrink-0' : 'w-full h-32 sm:h-40'} bg-slate-100 dark:bg-slate-800 relative overflow-hidden`}>
+                <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors z-10" />
                 <img 
                   src={thumbUrl} 
                   alt={sin.name}
@@ -256,28 +256,28 @@ export default function Directory() {
                   }}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute top-3 right-3 z-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm p-2 rounded-full shadow-sm text-emerald-600 dark:text-emerald-400">
-                  <IconComponent className="w-5 h-5" />
+                <div className="absolute top-3 right-3 z-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm p-2 rounded-full shadow-xs text-slate-700 dark:text-slate-200">
+                  <IconComponent className="w-4 h-4" />
                 </div>
               </div>
               
               <div className={`p-4 sm:p-5 flex flex-col flex-1 relative z-10 ${viewMode === 'list' ? 'justify-center h-full' : ''}`}>
                 <div className="absolute bottom-0 right-0 p-4 opacity-[0.03] group-hover:scale-125 transition-transform duration-500 pointer-events-none">
-                  <IconComponent className="w-24 h-24 text-emerald-500" />
+                  <IconComponent className="w-24 h-24 text-slate-400" />
                 </div>
                 
-                <span className="text-[10px] font-bold tracking-widest uppercase text-[#065F46] dark:text-emerald-400 bg-[#E7F5EF] dark:bg-emerald-500/10 px-3 py-1 rounded-full mb-3 inline-flex w-fit items-center gap-1 border border-[#065F46]/5 dark:border-emerald-500/20">
+                <span className="text-[10px] font-bold tracking-widest uppercase text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full mb-2.5 inline-flex w-fit items-center gap-1 border border-slate-200/80 dark:border-slate-700">
                   {CATEGORIES.find(c => c.id === sin.categoryId)?.name}
                 </span>
                 
-                <h3 className="font-bold text-[#1F2937] dark:text-slate-200 text-base sm:text-lg group-hover:text-[#065F46] dark:group-hover:text-emerald-400 transition-colors leading-tight mb-2">{sin.name}</h3>
+                <h3 className="font-bold text-slate-900 dark:text-slate-100 text-base sm:text-lg group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors leading-tight mb-1.5">{sin.name}</h3>
                 
-                <p className={`text-xs sm:text-sm text-gray-500 dark:text-slate-400 leading-relaxed flex-1 ${viewMode === 'list' ? 'line-clamp-1 sm:line-clamp-2' : 'line-clamp-2'}`}>{sin.definition}</p>
+                <p className={`text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed flex-1 ${viewMode === 'list' ? 'line-clamp-1 sm:line-clamp-2' : 'line-clamp-2'}`}>{sin.definition}</p>
                 
                 {viewMode === 'grid' && (
-                  <div className="mt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-3">
-                    <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Lihat Detail</span>
-                    <ChevronRight className="w-4 h-4 text-emerald-600/50 dark:text-emerald-400/50 group-hover:text-[#065F46] dark:group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" />
+                  <div className="mt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80 pt-3">
+                    <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 uppercase tracking-widest transition-colors">Lihat Detail</span>
+                    <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" />
                   </div>
                 )}
               </div>

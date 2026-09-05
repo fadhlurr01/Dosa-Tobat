@@ -131,36 +131,32 @@ export default function ReligiousCard({
 
   const theme = {
     AYAT: {
-      border: 'border-emerald-200 dark:border-emerald-900/50',
-      bg: 'bg-emerald-50/50 dark:bg-emerald-950/20',
-      gradient: 'from-emerald-600 via-emerald-400 to-emerald-600',
+      border: 'border-slate-200/80 dark:border-slate-800',
+      bg: 'bg-slate-50/60 dark:bg-slate-950/40',
       icon: <BookOpen className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
       textAccent: 'text-emerald-700 dark:text-emerald-400',
-      bgAccent: 'bg-emerald-100 dark:bg-emerald-900/30'
+      bgAccent: 'bg-slate-100 dark:bg-slate-800'
     },
     HADIS: {
-      border: 'border-amber-200 dark:border-amber-900/50',
-      bg: 'bg-amber-50/50 dark:bg-amber-950/20',
-      gradient: 'from-amber-600 via-amber-400 to-amber-600',
+      border: 'border-slate-200/80 dark:border-slate-800',
+      bg: 'bg-slate-50/60 dark:bg-slate-950/40',
       icon: <Sparkles className="w-5 h-5 text-amber-600 dark:text-amber-400" />,
       textAccent: 'text-amber-700 dark:text-amber-400',
-      bgAccent: 'bg-amber-100 dark:bg-amber-900/30'
+      bgAccent: 'bg-slate-100 dark:bg-slate-800'
     },
     DOA: {
-      border: 'border-indigo-200 dark:border-indigo-900/50',
-      bg: 'bg-indigo-50/50 dark:bg-indigo-950/20',
-      gradient: 'from-indigo-600 via-indigo-400 to-indigo-600',
+      border: 'border-slate-200/80 dark:border-slate-800',
+      bg: 'bg-slate-50/60 dark:bg-slate-950/40',
       icon: <Heart className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />,
       textAccent: 'text-indigo-700 dark:text-indigo-400',
-      bgAccent: 'bg-indigo-100 dark:bg-indigo-900/30'
+      bgAccent: 'bg-slate-100 dark:bg-slate-800'
     },
     DEFAULT: {
-      border: 'border-slate-200 dark:border-slate-800',
-      bg: 'bg-slate-50/50 dark:bg-slate-950/20',
-      gradient: 'from-slate-600 via-slate-400 to-slate-600',
+      border: 'border-slate-200/80 dark:border-slate-800',
+      bg: 'bg-slate-50/60 dark:bg-slate-950/40',
       icon: <Quote className="w-5 h-5 text-slate-600 dark:text-slate-400" />,
       textAccent: 'text-slate-700 dark:text-slate-400',
-      bgAccent: 'bg-slate-100 dark:bg-slate-900/30'
+      bgAccent: 'bg-slate-100 dark:bg-slate-800'
     }
   };
 
@@ -171,11 +167,8 @@ export default function ReligiousCard({
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`relative rounded-3xl overflow-hidden border ${currentTheme.border} bg-white dark:bg-slate-900 shadow-sm ${className}`}
+      className={`relative rounded-3xl overflow-hidden border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs ${className}`}
     >
-      {/* Top Gradient Border */}
-      <div className={`absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r ${currentTheme.gradient}`}></div>
-      
       {/* Watermark Icon */}
       <div className={`absolute top-0 right-0 -mt-8 -mr-8 opacity-[0.03] dark:opacity-[0.02] rotate-12 pointer-events-none`}>
         <Quote className="w-48 h-48" />
@@ -201,7 +194,7 @@ export default function ReligiousCard({
 
           {/* Audio Reciter Tag */}
           {hasAudioSupport && (
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/60 dark:border-emerald-800/40 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-[10px] font-bold text-slate-700 dark:text-slate-300">
               <Music2 className="w-3 h-3 text-emerald-500" />
               <span className="hidden sm:inline">{reciterLabel}</span>
               <span className="sm:hidden">Audio Murottal</span>
@@ -211,10 +204,10 @@ export default function ReligiousCard({
 
         {/* Arabic Display with in-card audio button */}
         {arabic ? (
-          <div className={`mb-6 p-6 sm:p-8 rounded-2xl ${currentTheme.bg} border ${currentTheme.border} backdrop-blur-sm relative group transition-all`}>
+          <div className={`mb-6 p-6 sm:p-8 rounded-2xl bg-slate-50/70 dark:bg-slate-950/40 border border-slate-200/80 dark:border-slate-800 backdrop-blur-sm relative group transition-all`}>
             {/* Audio Playing Equalizer Header */}
             {isPlaying && (
-              <div className="flex items-center justify-between pb-3 mb-3 border-b border-emerald-200/50 dark:border-emerald-800/40 text-xs font-semibold text-emerald-700 dark:text-emerald-400 animate-fadeIn">
+              <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200/60 dark:border-slate-800/60 text-xs font-semibold text-emerald-700 dark:text-emerald-400 animate-fadeIn">
                 <div className="flex items-center gap-2">
                   <div className="flex items-end gap-0.5 h-3">
                     <span className="w-1 bg-emerald-500 rounded-full animate-bounce h-3" style={{ animationDelay: '0ms' }} />
@@ -238,7 +231,7 @@ export default function ReligiousCard({
 
             {/* Audio Progress Line if playing */}
             {isPlaying && audioProgress > 0 && (
-              <div className="w-full bg-emerald-200/50 dark:bg-emerald-950 h-1 rounded-full overflow-hidden mt-4">
+              <div className="w-full bg-slate-200 dark:bg-slate-800 h-1 rounded-full overflow-hidden mt-4">
                 <div 
                   className="bg-emerald-600 dark:bg-emerald-400 h-full transition-all duration-200" 
                   style={{ width: `${audioProgress}%` }}
@@ -251,7 +244,7 @@ export default function ReligiousCard({
               <button 
                 onClick={toggleAudio}
                 disabled={isLoadingAudio}
-                className={`flex items-center gap-2 px-3 py-2 rounded-full bg-white dark:bg-slate-800 shadow-md border ${currentTheme.border} ${currentTheme.textAccent} hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 cursor-pointer`}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-full bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 ${currentTheme.textAccent} hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 cursor-pointer`}
                 title={isPlaying ? "Berhenti" : "Dengarkan Audio Murottal Asli"}
               >
                 {isLoadingAudio ? (
@@ -269,7 +262,7 @@ export default function ReligiousCard({
           </div>
         ) : finalAudioUrl && (
           /* Standalone Audio Bar when arabic text is not provided but audioUrl is resolved */
-          <div className="mb-6 p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/60 dark:border-emerald-800/40 flex items-center justify-between gap-3">
+          <div className="mb-6 p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-950/40 border border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
               <button 
                 onClick={toggleAudio}
@@ -289,7 +282,7 @@ export default function ReligiousCard({
                 <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
                   {isPlaying ? "Sedang Memutar Tilawah..." : "Dengarkan Tilawah Ayat"}
                 </p>
-                <span className="text-[10px] text-emerald-700 dark:text-emerald-400">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400">
                   {reciterLabel}
                 </span>
               </div>
@@ -307,19 +300,19 @@ export default function ReligiousCard({
         )}
         
         {(latin || translation || reference) && (
-          <div className="px-2 space-y-4">
+          <div className="space-y-3 pt-1">
             {latin && (
-              <p className="italic text-slate-700 dark:text-slate-300 text-sm sm:text-base leading-relaxed border-l-2 border-emerald-200 dark:border-emerald-800/50 pl-3">
+              <p className="text-slate-600 dark:text-slate-400 font-medium text-sm sm:text-base leading-relaxed">
                 {latin}
               </p>
             )}
             {translation && (
-              <p className="text-slate-600 dark:text-slate-300 font-serif italic text-lg sm:text-xl leading-relaxed">
+              <p className="text-slate-800 dark:text-slate-200 font-serif italic text-lg sm:text-xl leading-relaxed">
                 "{translation}"
               </p>
             )}
             {reference && (
-              <div className="flex items-center justify-between pt-1">
+              <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
                 <p className={`text-xs font-bold uppercase tracking-wider ${currentTheme.textAccent}`}>
                   — {reference}
                 </p>
