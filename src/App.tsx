@@ -80,6 +80,9 @@ export default function App() {
           <Route path="/profil" element={<Profile />} />
           <Route path="/premium" element={<SubscriptionView />} />
         </Route>
+
+        {/* Fallback route to prevent any blank page */}
+        <Route path="*" element={<LandingPage />} />
       </Routes>
     </HashRouter>
   );

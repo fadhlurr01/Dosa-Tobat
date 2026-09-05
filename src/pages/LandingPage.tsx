@@ -57,6 +57,17 @@ export default function LandingPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const scrollToSection = (sectionId: string) => {
+    soundFx.playTap();
+    setMobileMenuOpen(false);
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const yOffset = -85; // accounts for fixed navbar height
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
   const handleTasbihTap = () => {
     const nextCount = miniTasbihCount + 1;
     setMiniTasbihCount(nextCount);
@@ -228,32 +239,50 @@ export default function LandingPage() {
               </div>
             </Link>
 
-            {/* Menu Navigasi di Sisi Kiri dengan Jarak Profesional */}
-            <nav className="hidden lg:flex items-center gap-5 xl:gap-7 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
-              <a href="#metode-5r" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
-                <Layers className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                <span>Metode 5R</span>
-              </a>
-              <a href="#fitur" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
-                <Zap className="w-3.5 h-3.5 text-amber-500" />
-                <span>Fitur</span>
-              </a>
-              <a href="#katalog" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
-                <BookOpen className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                <span>Katalog Dosa</span>
-              </a>
-              <a href="#testimoni" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
-                <Heart className="w-3.5 h-3.5 text-rose-500" />
-                <span>Kisah Taubat</span>
-              </a>
-              <a href="#faq" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
-                <HelpCircle className="w-3.5 h-3.5 text-indigo-500" />
-                <span>FAQ</span>
-              </a>
-              <a href="#infaq" onClick={() => soundFx.playTap()} className="flex items-center gap-1.5 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1">
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                <span>Infaq</span>
-              </a>
+            {/* Menu Navigasi di Sisi Kiri dengan Desain Modern, Elegan & Bersih Tanpa Ikon */}
+            <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+              <button 
+                type="button" 
+                onClick={() => scrollToSection('metode-5r')} 
+                className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 cursor-pointer font-bold"
+              >
+                Metode 5R
+              </button>
+              <button 
+                type="button" 
+                onClick={() => scrollToSection('fitur')} 
+                className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 cursor-pointer font-bold"
+              >
+                Fitur
+              </button>
+              <button 
+                type="button" 
+                onClick={() => scrollToSection('katalog')} 
+                className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 cursor-pointer font-bold"
+              >
+                Katalog Dosa
+              </button>
+              <button 
+                type="button" 
+                onClick={() => scrollToSection('testimoni')} 
+                className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 cursor-pointer font-bold"
+              >
+                Kisah Taubat
+              </button>
+              <button 
+                type="button" 
+                onClick={() => scrollToSection('faq')} 
+                className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 cursor-pointer font-bold"
+              >
+                FAQ
+              </button>
+              <button 
+                type="button" 
+                onClick={() => scrollToSection('infaq')} 
+                className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 cursor-pointer font-bold"
+              >
+                Infaq
+              </button>
             </nav>
           </div>
 
@@ -362,32 +391,25 @@ export default function LandingPage() {
                 </div>
 
                 {/* Navigation Items in Sidebar */}
-                <div className="py-5 space-y-1.5">
+                <div className="py-5 space-y-2">
                   <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2 px-1">Menu Utama</p>
                   {[
-                    { href: '#metode-5r', icon: Layers, label: 'Metode 5R' },
-                    { href: '#fitur', icon: Zap, label: 'Fitur Unggulan' },
-                    { href: '#katalog', icon: BookOpen, label: 'Katalog Dosa Shahih' },
-                    { href: '#testimoni', icon: Heart, label: 'Kisah Taubat' },
-                    { href: '#faq', icon: HelpCircle, label: 'Tanya Jawab (FAQ)' },
-                    { href: '#infaq', icon: Sparkles, label: 'Infaq & Dukungan' },
-                  ].map((item, idx) => {
-                    const Icon = item.icon;
-                    return (
-                      <a
-                        key={idx}
-                        href={item.href}
-                        onClick={() => {
-                          soundFx.playTap();
-                          setMobileMenuOpen(false);
-                        }}
-                        className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors"
-                      >
-                        <Icon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                        <span>{item.label}</span>
-                      </a>
-                    );
-                  })}
+                    { id: 'metode-5r', label: 'Metode 5R' },
+                    { id: 'fitur', label: 'Fitur Unggulan' },
+                    { id: 'katalog', label: 'Katalog Dosa Shahih' },
+                    { id: 'testimoni', label: 'Kisah Taubat' },
+                    { id: 'faq', label: 'Tanya Jawab (FAQ)' },
+                    { id: 'infaq', label: 'Infaq & Dukungan' },
+                  ].map((item, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => scrollToSection(item.id)}
+                      className="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors cursor-pointer"
+                    >
+                      {item.label}
+                    </button>
+                  ))}
                 </div>
               </div>
 
@@ -625,7 +647,13 @@ export default function LandingPage() {
       </section>
 
       {/* 3. KEY METRICS & RECOVERY IMPACT */}
-      <section className="py-12 bg-white dark:bg-slate-900 border-y border-slate-200/80 dark:border-slate-800">
+      <motion.section 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.6 }}
+        className="py-12 bg-white dark:bg-slate-900 border-y border-slate-200/80 dark:border-slate-800"
+      >
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
             
@@ -671,10 +699,17 @@ export default function LandingPage() {
 
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* 4. THE 5R METHODOLOGY DEEP-DIVE */}
-      <section id="metode-5r" className="py-20 max-w-5xl mx-auto px-4 sm:px-6 space-y-12">
+      <motion.section 
+        id="metode-5r" 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6 }}
+        className="py-20 max-w-5xl mx-auto px-4 sm:px-6 space-y-12"
+      >
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
             Metodologi Pemulihan Jiwa
@@ -780,10 +815,17 @@ export default function LandingPage() {
           </div>
 
         </div>
-      </section>
+      </motion.section>
 
       {/* 5. INTERACTIVE KATALOG DOSA & SOLUSI PREVIEW */}
-      <section id="katalog" className="py-20 bg-white dark:bg-slate-900 border-y border-slate-200/80 dark:border-slate-800">
+      <motion.section 
+        id="katalog" 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6 }}
+        className="py-20 bg-white dark:bg-slate-900 border-y border-slate-200/80 dark:border-slate-800"
+      >
         <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-10">
           
           <div className="text-center space-y-3 max-w-2xl mx-auto">
@@ -878,10 +920,17 @@ export default function LandingPage() {
           </div>
 
         </div>
-      </section>
+      </motion.section>
 
       {/* 6. COMPREHENSIVE FEATURES BENTO GRID */}
-      <section id="fitur" className="py-20 max-w-5xl mx-auto px-4 sm:px-6 space-y-12">
+      <motion.section 
+        id="fitur" 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6 }}
+        className="py-20 max-w-5xl mx-auto px-4 sm:px-6 space-y-12"
+      >
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
             Fitur Utama Aplikasi
@@ -990,10 +1039,17 @@ export default function LandingPage() {
           </div>
 
         </div>
-      </section>
+      </motion.section>
 
       {/* 7. REAL STORIES / TESTIMONIALS */}
-      <section id="testimoni" className="py-20 bg-white dark:bg-slate-900 border-y border-slate-200/80 dark:border-slate-800">
+      <motion.section 
+        id="testimoni" 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6 }}
+        className="py-20 bg-white dark:bg-slate-900 border-y border-slate-200/80 dark:border-slate-800"
+      >
         <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-12">
           
           <div className="text-center space-y-3 max-w-2xl mx-auto">
@@ -1037,10 +1093,17 @@ export default function LandingPage() {
           </div>
 
         </div>
-      </section>
+      </motion.section>
 
       {/* 8. INFAQ & MEMBER PACKAGES */}
-      <section id="infaq" className="py-20 max-w-5xl mx-auto px-4 sm:px-6 space-y-12">
+      <motion.section 
+        id="infaq" 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6 }}
+        className="py-20 max-w-5xl mx-auto px-4 sm:px-6 space-y-12"
+      >
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
             Dukungan Dakwah
@@ -1140,10 +1203,17 @@ export default function LandingPage() {
           </div>
 
         </div>
-      </section>
+      </motion.section>
 
       {/* 9. FAQ ACCORDION */}
-      <section id="faq" className="py-20 bg-white dark:bg-slate-900 border-y border-slate-200/80 dark:border-slate-800">
+      <motion.section 
+        id="faq" 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6 }}
+        className="py-20 bg-white dark:bg-slate-900 border-y border-slate-200/80 dark:border-slate-800"
+      >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-10">
           
           <div className="text-center space-y-3 max-w-2xl mx-auto">
@@ -1196,10 +1266,16 @@ export default function LandingPage() {
           </div>
 
         </div>
-      </section>
+      </motion.section>
 
       {/* 10. FINAL COMPASSIONATE CALL TO ACTION */}
-      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-emerald-800 via-emerald-900 to-teal-950 text-white text-center">
+      <motion.section 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6 }}
+        className="py-20 relative overflow-hidden bg-gradient-to-br from-emerald-800 via-emerald-900 to-teal-950 text-white text-center"
+      >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 space-y-6">
           <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto shadow-inner">
             <HeartHandshake className="w-8 h-8 text-emerald-200" />
@@ -1235,7 +1311,7 @@ export default function LandingPage() {
             </Link>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* 11. FOOTER */}
       <footer className="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 py-12 text-slate-500 dark:text-slate-400 text-xs">
