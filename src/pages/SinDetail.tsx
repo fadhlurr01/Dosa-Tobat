@@ -98,87 +98,14 @@ export default function SinDetail() {
       transition={{ duration: 0.3 }}
       className="space-y-6 pb-12 max-w-3xl mx-auto"
     >
-      {/* Top Navigation Bar: Previous (Kiri), Direktori (Tengah), Next (Kanan) */}
-      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-2 sm:p-2.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center justify-between gap-2">
-        {/* Tombol Kiri (Preview / Sebelumnya) */}
-        {prevSin ? (
-          <button
-            onClick={() => {
-              soundFx.playTap();
-              navigate(`/dosa/${prevSin.id}`);
-            }}
-            className="group flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:border-emerald-500/40 dark:hover:border-emerald-500/40 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 transition-all cursor-pointer min-w-0 max-w-[130px] sm:max-w-[200px]"
-            title={`Sebelumnya: ${prevSin.name}`}
-          >
-            <ChevronLeft className="w-4 h-4 text-emerald-600 dark:text-emerald-400 group-hover:-translate-x-0.5 transition-transform shrink-0" />
-            <div className="flex flex-col items-start min-w-0 text-left">
-              <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 leading-tight">Sebelumnya</span>
-              <span className="truncate text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 w-full block">
-                {prevSin.name}
-              </span>
-            </div>
-          </button>
-        ) : (
-          <button
-            disabled
-            className="flex items-center gap-1 px-2.5 sm:px-3 py-2 rounded-xl bg-slate-100/50 dark:bg-slate-800/30 border border-slate-200/50 dark:border-slate-800/50 text-slate-300 dark:text-slate-600 cursor-not-allowed text-[11px] font-semibold"
-          >
-            <ChevronLeft className="w-4 h-4 shrink-0" />
-            <span className="hidden sm:inline">Awal Daftar</span>
-          </button>
-        )}
-
-        {/* Tombol Tengah (Direct Direktori & Posisi Index) */}
-        <Link
-          to="/direktori"
-          onClick={() => soundFx.playTap()}
-          className="flex flex-col items-center justify-center px-3 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors text-center shrink-0 cursor-pointer"
-          title="Buka Semua Direktori"
-        >
-          <div className="flex items-center gap-1 text-xs font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
-            <LayoutGrid className="w-3.5 h-3.5" /> Direktori
-          </div>
-          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold mt-0.5">
-            {currentIndex + 1} dari {SINS.length}
-          </span>
-        </Link>
-
-        {/* Tombol Kanan (Direct Selanjutnya) */}
-        {nextSin ? (
-          <button
-            onClick={() => {
-              soundFx.playTap();
-              navigate(`/dosa/${nextSin.id}`);
-            }}
-            className="group flex items-center justify-end gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:border-emerald-500/40 dark:hover:border-emerald-500/40 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 transition-all cursor-pointer min-w-0 max-w-[130px] sm:max-w-[200px]"
-            title={`Selanjutnya: ${nextSin.name}`}
-          >
-            <div className="flex flex-col items-end min-w-0 text-right">
-              <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 leading-tight">Selanjutnya</span>
-              <span className="truncate text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 w-full block">
-                {nextSin.name}
-              </span>
-            </div>
-            <ChevronRight className="w-4 h-4 text-emerald-600 dark:text-emerald-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
-          </button>
-        ) : (
-          <button
-            disabled
-            className="flex items-center gap-1 px-2.5 sm:px-3 py-2 rounded-xl bg-slate-100/50 dark:bg-slate-800/30 border border-slate-200/50 dark:border-slate-800/50 text-slate-300 dark:text-slate-600 cursor-not-allowed text-[11px] font-semibold"
-          >
-            <span className="hidden sm:inline">Akhir Daftar</span>
-            <ChevronRight className="w-4 h-4 shrink-0" />
-          </button>
-        )}
-      </div>
-
-      {/* Sub Header Bar: Status Badge, Bookmark & Share */}
+      {/* Top Header Bar: Back to Directory, Bookmark & Share */}
       <div className="flex items-center justify-between">
         <Link 
           to="/direktori" 
-          className="flex items-center text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors cursor-pointer"
+          onClick={() => soundFx.playTap()}
+          className="flex items-center text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors cursor-pointer group"
         >
-          <ArrowLeft className="w-3.5 h-3.5 mr-1" /> Kembali ke Daftar Direktori
+          <ArrowLeft className="w-4 h-4 mr-1.5 group-hover:-translate-x-0.5 transition-transform" /> Kembali ke Direktori
         </Link>
 
         <div className="flex items-center gap-2">
@@ -187,7 +114,7 @@ export default function SinDetail() {
               soundFx.playTap();
               toggleBookmark(sin.id);
             }}
-            className={`p-2 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+            className={`p-2 sm:px-3 sm:py-2 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs ${
               isBookmarked
                 ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-400'
                 : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-500 hover:text-emerald-600'
@@ -200,7 +127,7 @@ export default function SinDetail() {
 
           <button
             onClick={handleShare}
-            className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-emerald-600 transition-all text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-2xs"
+            className="p-2 sm:px-3 sm:py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-emerald-600 transition-all text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-2xs"
             title="Salin Tautan"
           >
             {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Share2 className="w-4 h-4" />}
