@@ -268,15 +268,16 @@ export default function Login() {
           </div>
         </motion.div>
 
-        {/* ======================= FRAME 2: INTERACTIVE FORM (Responsive on all screens) ======================= */}
+        {/* ======================= FRAME 2: INTERACTIVE FORM (Responsive 2D Modern Card) ======================= */}
         <motion.div 
           layout
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className={`w-full md:w-7/12 lg:w-7/12 h-full p-4 sm:p-6 lg:p-8 flex flex-col justify-between items-center bg-white dark:bg-slate-900 md:border-l border-slate-200/60 dark:border-slate-800/60 overflow-y-auto ${
+          className={`w-full md:w-7/12 lg:w-7/12 h-full p-4 sm:p-6 lg:p-8 flex flex-col justify-between items-center bg-[#FDFBF7] dark:bg-slate-950 md:border-l border-slate-200/60 dark:border-slate-800/60 overflow-y-auto ${
             authMode === 'signup' ? 'md:order-1' : 'md:order-2'
           }`}
         >
-          <div className="max-w-md w-full my-auto py-2">
+          {/* 2D Modern Card Box */}
+          <div className="w-full max-w-lg my-auto p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-xl shadow-slate-950/5 dark:shadow-black/20 relative">
             {/* Mobile Mode Switcher Banner */}
             <div className="md:hidden flex p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl mb-4 gap-1">
               <button
