@@ -129,14 +129,14 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#FDFBF7] dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col transition-colors duration-300 relative">
+    <div className="min-h-screen md:h-screen w-full bg-[#FDFBF7] dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col overflow-y-auto md:overflow-hidden transition-colors duration-300 relative">
       
       {/* Background Decorative Blur Orbs */}
       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-emerald-500/10 dark:bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-amber-500/10 dark:bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Top Navbar Header Full Screen */}
-      <header className="w-full px-4 sm:px-8 lg:px-12 py-3 flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md sticky top-0 z-30 h-16 shrink-0">
+      <header className="w-full px-4 sm:px-8 lg:px-12 h-14 sm:h-16 flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md shrink-0 z-30">
         <Link to="/" onClick={() => soundFx.playTap()} className="flex items-center gap-2.5 group">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-800 text-white flex items-center justify-center font-black text-sm shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform">
             DT
@@ -185,13 +185,13 @@ export default function Login() {
       </header>
 
       {/* Main Dual-Frame Split Screen (Full Page Bleed) */}
-      <div className="flex-1 w-full flex flex-col md:flex-row min-h-[calc(100vh-64px)]">
+      <div className="flex-1 h-auto md:h-[calc(100vh-3.5rem)] sm:md:h-[calc(100vh-4rem)] w-full flex flex-col md:flex-row overflow-hidden">
         
         {/* ======================= FRAME 1: WEBSITE COVER HERO (Desktop Only) ======================= */}
         <motion.div 
           layout
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className={`hidden md:flex md:w-5/12 lg:w-5/12 p-8 lg:p-12 text-white relative overflow-hidden flex-col justify-between shrink-0 ${
+          className={`hidden md:flex md:w-5/12 lg:w-5/12 h-full p-6 lg:p-10 text-white relative overflow-hidden flex-col justify-between shrink-0 ${
             authMode === 'signup' 
               ? 'md:order-2 bg-gradient-to-br from-amber-700 via-amber-800 to-slate-950' 
               : 'md:order-1 bg-gradient-to-br from-[#065F46] via-emerald-800 to-teal-950'
@@ -205,12 +205,12 @@ export default function Login() {
 
           {/* Top Brand Tag */}
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-xs font-bold text-white mb-6 border border-white/20 shadow-xs">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-bold text-white mb-3 border border-white/20 shadow-xs">
               <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
               {authMode === 'signup' ? 'Daftar Perjalanan Hijrah' : 'Portal Muhasabah & Taubat'}
             </div>
 
-            <h2 className="text-2xl lg:text-3xl font-black tracking-tight leading-tight mb-3">
+            <h2 className="text-xl lg:text-2xl font-black tracking-tight leading-tight mb-2">
               {authMode === 'signup' ? (
                 <>Mulai Langkah Baru <br /><span className="text-amber-300">Menuju Ridha-Nya.</span></>
               ) : (
@@ -218,7 +218,7 @@ export default function Login() {
               )}
             </h2>
 
-            <p className="text-sm text-white/80 leading-relaxed font-light">
+            <p className="text-xs text-white/80 leading-relaxed font-light">
               {authMode === 'signup' ? (
                 'Bergabunglah bersama ribuan pejuang istiqomah. Catat muhasabah harian, pelajari panduan taubat syar\'i, dan bangun kebiasaan taat tanpa rasa malu.'
               ) : (
@@ -228,10 +228,10 @@ export default function Login() {
           </div>
 
           {/* Middle Highlight Badges */}
-          <div className="my-6 relative z-10 space-y-2.5">
-            <div className="p-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                <LifeBuoy className="w-4 h-4 text-amber-300" />
+          <div className="my-auto py-2 relative z-10 space-y-2">
+            <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 flex items-center gap-3">
+              <div className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                <LifeBuoy className="w-3.5 h-3.5 text-amber-300" />
               </div>
               <div className="min-w-0">
                 <h4 className="text-xs font-bold text-white">Mode Darurat SOS 90-Detik</h4>
@@ -239,9 +239,9 @@ export default function Login() {
               </div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                <HeartHandshake className="w-4 h-4 text-emerald-300" />
+            <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 flex items-center gap-3">
+              <div className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                <HeartHandshake className="w-3.5 h-3.5 text-emerald-300" />
               </div>
               <div className="min-w-0">
                 <h4 className="text-xs font-bold text-white">5 Rukun Taubat Nasuha</h4>
@@ -251,13 +251,13 @@ export default function Login() {
           </div>
 
           {/* Bottom Switcher Callout */}
-          <div className="pt-4 border-t border-white/15 relative z-10 flex items-center justify-between">
+          <div className="pt-3 border-t border-white/15 relative z-10 flex items-center justify-between">
             <div className="text-xs text-white/80">
               {authMode === 'signup' ? 'Sudah memiliki akun?' : 'Belum memiliki akun?'}
             </div>
             <button
               onClick={() => toggleAuthMode(authMode === 'signup' ? 'login' : 'signup')}
-              className="px-4 py-2 rounded-xl bg-white text-slate-900 hover:bg-emerald-50 text-xs font-black transition-all active:scale-95 shadow-md flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-1.5 rounded-xl bg-white text-slate-900 hover:bg-emerald-50 text-xs font-black transition-all active:scale-95 shadow-md flex items-center gap-1.5 cursor-pointer"
             >
               {authMode === 'signup' ? (
                 <>Masuk Akun <ArrowRight className="w-3.5 h-3.5" /></>
@@ -272,16 +272,16 @@ export default function Login() {
         <motion.div 
           layout
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className={`w-full md:w-7/12 lg:w-7/12 p-4 sm:p-8 lg:p-12 flex flex-col justify-center items-center bg-white dark:bg-slate-900 md:border-l border-slate-200/60 dark:border-slate-800/60 ${
+          className={`w-full md:w-7/12 lg:w-7/12 h-full p-4 sm:p-6 lg:p-8 flex flex-col justify-between items-center bg-white dark:bg-slate-900 md:border-l border-slate-200/60 dark:border-slate-800/60 overflow-y-auto ${
             authMode === 'signup' ? 'md:order-1' : 'md:order-2'
           }`}
         >
-          <div className="max-w-md w-full py-4">
+          <div className="max-w-md w-full my-auto py-2">
             {/* Mobile Mode Switcher Banner */}
-            <div className="md:hidden flex p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl mb-6 gap-1">
+            <div className="md:hidden flex p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl mb-4 gap-1">
               <button
                 onClick={() => toggleAuthMode('login')}
-                className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all text-center ${
+                className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all text-center ${
                   authMode === 'login'
                     ? 'bg-white dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 shadow-xs'
                     : 'text-slate-500 dark:text-slate-400'
@@ -291,7 +291,7 @@ export default function Login() {
               </button>
               <button
                 onClick={() => toggleAuthMode('signup')}
-                className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all text-center ${
+                className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all text-center ${
                   authMode === 'signup'
                     ? 'bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400 shadow-xs'
                     : 'text-slate-500 dark:text-slate-400'
@@ -310,13 +310,13 @@ export default function Login() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="space-y-5"
+                  className="space-y-4"
                 >
                 <div>
-                  <h3 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
+                  <h3 className="text-lg sm:text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
                     Masuk ke Akun Anda
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                     Gunakan 1-Click Demo untuk evaluasi instan atau masukkan email personal.
                   </p>
                 </div>
@@ -328,7 +328,7 @@ export default function Login() {
                       soundFx.playTap();
                       setLoginSubTab('demo');
                     }}
-                    className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                    className={`flex-1 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                       loginSubTab === 'demo'
                         ? 'bg-white dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 shadow-xs'
                         : 'text-slate-500 dark:text-slate-400 hover:text-slate-800'
@@ -342,7 +342,7 @@ export default function Login() {
                       soundFx.playTap();
                       setLoginSubTab('email');
                     }}
-                    className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                    className={`flex-1 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                       loginSubTab === 'email'
                         ? 'bg-white dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 shadow-xs'
                         : 'text-slate-500 dark:text-slate-400 hover:text-slate-800'
@@ -355,13 +355,13 @@ export default function Login() {
 
                 {/* Status Messages */}
                 {errorMessage && (
-                  <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-2xl text-xs font-semibold text-rose-700 dark:text-rose-400 flex items-center gap-2">
+                  <div className="p-2.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-2xl text-xs font-semibold text-rose-700 dark:text-rose-400 flex items-center gap-2">
                     <ShieldAlert className="w-4 h-4 shrink-0" />
                     {errorMessage}
                   </div>
                 )}
                 {successMessage && (
-                  <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50 rounded-2xl text-xs font-semibold text-emerald-700 dark:text-emerald-400 flex items-center gap-2">
+                  <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50 rounded-2xl text-xs font-semibold text-emerald-700 dark:text-emerald-400 flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
                     {successMessage}
                   </div>
@@ -369,36 +369,45 @@ export default function Login() {
 
                 {/* SubTab 1: Demo Switcher Grid */}
                 {loginSubTab === 'demo' && (
-                  <div className="space-y-2">
-                    <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-1">
+                  <div className="space-y-1.5">
+                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
                       Pilih Role untuk Masuk:
                     </span>
-                    <div className="grid grid-cols-1 gap-2 max-h-64 overflow-y-auto pr-1">
+                    <div className="space-y-1.5 max-h-[220px] overflow-y-auto pr-1">
                       {DEMO_ACCOUNTS.map((acc) => (
                         <button
                           key={acc.id}
+                          type="button"
                           onClick={() => handleDemoSelect(acc.id)}
                           disabled={isLoading}
-                          className="p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-emerald-500/80 dark:hover:border-emerald-500/80 bg-slate-50/50 dark:bg-slate-800/40 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 text-left transition-all active:scale-98 flex items-center justify-between group cursor-pointer shadow-2xs"
+                          className="w-full p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500/50 bg-slate-50/50 dark:bg-slate-950/50 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 transition-all flex items-center justify-between group text-left cursor-pointer disabled:opacity-50"
                         >
-                          <div className="flex items-center gap-3 min-w-0">
+                          <div className="flex items-center gap-2.5 min-w-0">
                             <img
                               src={acc.avatar}
                               alt={acc.name}
-                              className="w-9 h-9 rounded-xl object-cover border border-slate-200 dark:border-slate-700"
+                              className="w-8 h-8 rounded-full object-cover border border-slate-200 dark:border-slate-700"
                             />
                             <div className="min-w-0">
-                              <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate group-hover:text-emerald-700 dark:group-hover:text-emerald-400">
-                                {acc.name}
-                              </h4>
-                              <p className="text-[10px] text-slate-400 truncate">{acc.title || acc.email}</p>
+                              <div className="flex items-center gap-1.5">
+                                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate group-hover:text-emerald-700 dark:group-hover:text-emerald-400">
+                                  {acc.name}
+                                </h4>
+                                {acc.role === 'ADMIN' && (
+                                  <Crown className="w-3 h-3 text-amber-500 shrink-0" />
+                                )}
+                              </div>
+                              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                                {acc.title}
+                              </p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-1.5 shrink-0">
-                            <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400">
-                              {acc.role === 'SUPER_ADMIN' ? 'Super Admin' : acc.role === 'CONTENT_ADMIN' ? 'Ustadz' : acc.plan !== 'FREE' ? 'PRO' : 'User'}
+                          
+                          <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                            <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-emerald-200 dark:group-hover:bg-emerald-900 group-hover:text-emerald-800 dark:group-hover:text-emerald-300 transition-colors">
+                              {acc.role}
                             </span>
-                            <ArrowRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-transform" />
+                            <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-transform" />
                           </div>
                         </button>
                       ))}
@@ -406,65 +415,72 @@ export default function Login() {
                   </div>
                 )}
 
-                {/* SubTab 2: Custom Email Form */}
+                {/* SubTab 2: Standard Email / Password Form */}
                 {loginSubTab === 'email' && (
-                  <form onSubmit={handleCustomLogin} className="space-y-3.5">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                        <Mail className="w-3.5 h-3.5 text-slate-400" />
+                  <form onSubmit={handleCustomLogin} className="space-y-3">
+                    <div>
+                      <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300 block mb-1">
                         Alamat Email
                       </label>
-                      <input
-                        type="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="nama@example.com"
-                        className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs sm:text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-600 shadow-2xs"
-                      />
+                      <div className="relative">
+                        <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        <input
+                          type="email"
+                          required
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="nama@example.com"
+                          className="w-full pl-10 pr-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
+                        />
+                      </div>
                     </div>
 
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                          <Lock className="w-3.5 h-3.5 text-slate-400" />
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
                           Password
                         </label>
+                        <a href="#forgot" className="text-[10px] text-emerald-600 dark:text-emerald-400 hover:underline">
+                          Lupa password?
+                        </a>
+                      </div>
+                      <div className="relative">
+                        <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder="••••••••"
+                          className="w-full pl-10 pr-10 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
+                        />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold hover:underline"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                         >
-                          {showPassword ? 'Sembunyikan' : 'Lihat'}
+                          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
                       </div>
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs sm:text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-600 shadow-2xs"
-                      />
                     </div>
 
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full py-3.5 rounded-2xl bg-[#065F46] hover:bg-[#044c38] dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm uppercase tracking-wider shadow-md shadow-emerald-700/20 transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                      className="w-full py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-emerald-700/20 transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                     >
                       {isLoading ? (
                         <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                       ) : (
                         <>
                           <LogIn className="w-4 h-4" />
-                          Masuk Sekarang
+                          Masuk ke Aplikasi
                         </>
                       )}
                     </button>
                   </form>
                 )}
 
-                <div className="pt-2 text-center">
+                <div className="text-center pt-1">
                   <p className="text-xs text-slate-500 dark:text-slate-400">
                     Belum punya akun?{' '}
                     <button
@@ -477,17 +493,17 @@ export default function Login() {
                 </div>
               </motion.div>
             ) : (
-              /* ================= SIGNUP FORM VIEW ================= */
+              /* ================= SIGNUP / REGISTER FORM VIEW ================= */
               <motion.div
                 key="signup-form"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
-                className="space-y-4"
+                className="space-y-3.5"
               >
                 <div>
-                  <h3 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
+                  <h3 className="text-lg sm:text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
                     Daftar Akun Taubat
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -495,83 +511,90 @@ export default function Login() {
                   </p>
                 </div>
 
+                {/* Status Messages */}
                 {errorMessage && (
-                  <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-2xl text-xs font-semibold text-rose-700 dark:text-rose-400 flex items-center gap-2">
+                  <div className="p-2.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-2xl text-xs font-semibold text-rose-700 dark:text-rose-400 flex items-center gap-2">
                     <ShieldAlert className="w-4 h-4 shrink-0" />
                     {errorMessage}
                   </div>
                 )}
+                {successMessage && (
+                  <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50 rounded-2xl text-xs font-semibold text-emerald-700 dark:text-emerald-400 flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+                    {successMessage}
+                  </div>
+                )}
 
-                <form onSubmit={handleRegister} className="space-y-3">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                      <User className="w-3.5 h-3.5 text-slate-400" />
+                <form onSubmit={handleRegister} className="space-y-2.5">
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300 block mb-1">
                       Nama Lengkap / Panggilan
                     </label>
-                    <input
-                      type="text"
-                      required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Contoh: Fulan bin Fulan"
-                      className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-2xs"
-                    />
+                    <div className="relative">
+                      <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <input
+                        type="text"
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Contoh: Fulan bin Fulan"
+                        className="w-full pl-10 pr-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-2xs"
+                      />
+                    </div>
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                      <Mail className="w-3.5 h-3.5 text-slate-400" />
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300 block mb-1">
                       Alamat Email
                     </label>
-                    <input
-                      type="email"
-                      required
-                      value={regEmail}
-                      onChange={(e) => setRegEmail(e.target.value)}
-                      placeholder="emailanda@example.com"
-                      className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-2xs"
-                    />
+                    <div className="relative">
+                      <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <input
+                        type="email"
+                        required
+                        value={regEmail}
+                        onChange={(e) => setRegEmail(e.target.value)}
+                        placeholder="emailanda@example.com"
+                        className="w-full pl-10 pr-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-2xs"
+                      />
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                        <Lock className="w-3.5 h-3.5 text-slate-400" />
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300 block mb-1">
                         Password
                       </label>
                       <input
-                        type={showPassword ? 'text' : 'password'}
+                        type="password"
                         value={regPassword}
                         onChange={(e) => setRegPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-2xs"
+                        className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-2xs"
                       />
                     </div>
-
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                        <Check className="w-3.5 h-3.5 text-slate-400" />
+                    <div>
+                      <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300 block mb-1">
                         Ulangi Password
                       </label>
                       <input
-                        type={showPassword ? 'text' : 'password'}
+                        type="password"
                         value={regConfirmPassword}
                         onChange={(e) => setRegConfirmPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-2xs"
+                        className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-2xs"
                       />
                     </div>
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300 block mb-1">
                       Fokus Perbaikan Utama
                     </label>
                     <select
                       value={initialSinGoal}
                       onChange={(e) => setInitialSinGoal(e.target.value)}
-                      className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-2xs"
+                      className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-2xs"
                     >
                       <option value="Pembersihan Hati & Lisan">Pembersihan Hati & Lisan (Ghibah, Riya', Dengki)</option>
                       <option value="Penjagaan Pandangan & Syahwat">Penjagaan Pandangan & Syahwat (Zina Mata, Pornografi)</option>
@@ -583,7 +606,7 @@ export default function Login() {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full py-3.5 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs sm:text-sm uppercase tracking-wider shadow-md shadow-amber-600/20 transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-2"
+                    className="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-amber-600/20 transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-1"
                   >
                     {isLoading ? (
                       <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -596,7 +619,7 @@ export default function Login() {
                   </button>
                 </form>
 
-                <div className="text-center pt-2">
+                <div className="text-center pt-1">
                   <p className="text-xs text-slate-500 dark:text-slate-400">
                     Sudah memiliki akun?{' '}
                     <button
@@ -611,13 +634,13 @@ export default function Login() {
             )}
           </AnimatePresence>
           </div>
+
+          {/* Integrated Footer Inside Frame 2 at the bottom */}
+          <footer className="w-full text-center text-[10px] text-slate-400 dark:text-slate-500 py-1.5 shrink-0">
+            © {new Date().getFullYear()} Dosa & Tobat™. Privasi dan kerahasiaan data dijamin aman.
+          </footer>
         </motion.div>
       </div>
-
-      {/* Footer info */}
-      <footer className="py-4 text-center text-xs text-slate-400 dark:text-slate-500 border-t border-slate-200/50 dark:border-slate-800/50 bg-white/60 dark:bg-slate-950/60">
-        © {new Date().getFullYear()} Dosa & Tobat™. Privasi dan kerahasiaan data dijamin aman.
-      </footer>
     </div>
   );
 }
