@@ -1,11 +1,46 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldAlert, CheckCircle, XCircle, ArrowLeft, Volume2, VolumeX, Sparkles } from 'lucide-react';
+import { ShieldAlert, CheckCircle, XCircle, ArrowLeft, Volume2, VolumeX, Sparkles, Music2, Square, Play, Pause, Loader2, SkipForward } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { soundFx } from '../lib/soundFx';
 import { triggerConfetti } from '../components/ui/Confetti';
 import { useStore } from '../store/useStore';
 import ReligiousCard from '../components/ui/ReligiousCard';
+
+const SOS_CALMING_PLAYLIST = [
+  {
+    id: 'rad-28',
+    title: 'QS. Ar-Ra\'d: 28 (Penenang Jiwa)',
+    arabic: 'الَّذِينَ آمَنُوا وَتَطْمَئِنُّ قُلُوبُهُمْ بِذِكْرِ اللَّهِ ۗ أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ',
+    translation: 'Ingatlah, hanya dengan mengingat Allah hati menjadi tenteram.',
+    audioUrl: 'https://everyayah.com/data/Alafasy_128kbps/013028.mp3',
+    reciter: 'Syaikh Misyari Rasyid Al-Afasy'
+  },
+  {
+    id: 'araf-200',
+    title: 'QS. Al-A\'raf: 200 (Perlindungan dari Syaitan)',
+    arabic: 'وَإِمَّا يَنْزَغَنَّكَ مِنَ الشَّيْطَانِ نَزْغٌ فَاسْتَعِذْ بِاللَّهِ ۚ إِنَّهُ سَمِيعٌ عَلِيمٌ',
+    translation: 'Dan jika syaitan mengganggumu dengan suatu godaan, maka mohonlah perlindungan kepada Allah.',
+    audioUrl: 'https://everyayah.com/data/Alafasy_128kbps/007200.mp3',
+    reciter: 'Syaikh Misyari Rasyid Al-Afasy'
+  },
+  {
+    id: 'kursi',
+    title: 'QS. Al-Baqarah: 255 (Ayat Kursi)',
+    arabic: 'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ',
+    translation: 'Allah, tidak ada Tuhan selain Dia, Yang Maha Hidup, Yang terus-menerus mengurus makhluk-Nya.',
+    audioUrl: 'https://everyayah.com/data/Alafasy_128kbps/002255.mp3',
+    reciter: 'Syaikh Misyari Rasyid Al-Afasy'
+  },
+  {
+    id: 'sayyidul-istighfar',
+    title: 'Sayyidul Istighfar (Penghulu Istighfar)',
+    arabic: 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ',
+    translation: 'Ya Allah, Engkau adalah Tuhanku, tidak ada Tuhan selain Engkau...',
+    audioUrl: 'https://cdn.jsdelivr.net/gh/sheikhhanif/Hisnul_Muslim_Database@master/audio/79hm.mp3',
+    reciter: 'Syaikh Arab (Hisnul Muslim)'
+  }
+];
 
 export default function SosMode() {
   const navigate = useNavigate();
@@ -13,6 +48,91 @@ export default function SosMode() {
   const [step, setStep] = useState(1);
   const [isBreathing, setIsBreathing] = useState(false);
   const [breathPhase, setBreathPhase] = useState<'Tarik Napas' | 'Tahan' | 'Hembuskan'>('Tarik Napas');
+  
+  // Calming Arabic Audio Player State
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+  const [audioProgress, setAudioProgress] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const currentTrack = SOS_CALMING_PLAYLIST[currentTrackIndex];
+
+  // Stop all audio on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  const playTrack = (index: number) => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
+    setIsLoadingAudio(true);
+    const track = SOS_CALMING_PLAYLIST[index];
+    const audio = new Audio(track.audioUrl);
+    audioRef.current = audio;
+
+    audio.oncanplay = () => {
+      setIsLoadingAudio(false);
+    };
+
+    audio.onplay = () => {
+      setIsAudioPlaying(true);
+      setIsLoadingAudio(false);
+    };
+
+    audio.ontimeupdate = () => {
+      if (audio.duration) {
+        setAudioProgress((audio.currentTime / audio.duration) * 100);
+      }
+    };
+
+    audio.onended = () => {
+      // Auto play next track in loop
+      const nextIndex = (index + 1) % SOS_CALMING_PLAYLIST.length;
+      setCurrentTrackIndex(nextIndex);
+      playTrack(nextIndex);
+    };
+
+    audio.onerror = () => {
+      setIsLoadingAudio(false);
+      setIsAudioPlaying(false);
+    };
+
+    audio.play().catch(() => {
+      setIsLoadingAudio(false);
+      setIsAudioPlaying(false);
+    });
+  };
+
+  const toggleArabicAudio = () => {
+    soundFx.playTap();
+    if (isAudioPlaying) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      setIsAudioPlaying(false);
+      setIsLoadingAudio(false);
+    } else {
+      playTrack(currentTrackIndex);
+    }
+  };
+
+  const handleNextTrack = () => {
+    soundFx.playTap();
+    const nextIndex = (currentTrackIndex + 1) % SOS_CALMING_PLAYLIST.length;
+    setCurrentTrackIndex(nextIndex);
+    if (isAudioPlaying) {
+      playTrack(nextIndex);
+    }
+  };
 
   const steps = [
     {
@@ -105,7 +225,7 @@ export default function SosMode() {
       className="fixed inset-0 bg-gradient-to-b from-rose-700 via-rose-800 to-rose-950 dark:from-slate-950 dark:via-rose-950 dark:to-slate-950 z-[100] flex flex-col p-4 sm:p-6 overflow-y-auto safe-area-top safe-area-bottom"
     >
       {/* Top Bar */}
-      <div className="max-w-lg mx-auto w-full flex items-center justify-between text-white/80 pb-4">
+      <div className="max-w-lg mx-auto w-full flex items-center justify-between text-white/80 pb-3">
         <button
           onClick={() => {
             soundFx.playTap();
@@ -117,17 +237,96 @@ export default function SosMode() {
           Keluar
         </button>
 
-        <span className="text-xs font-bold uppercase tracking-widest bg-rose-900/60 px-3 py-1 rounded-full border border-rose-500/30">
+        <span className="text-xs font-bold uppercase tracking-widest bg-rose-900/60 px-3 py-1 rounded-full border border-white/20">
           Mode Darurat SOS
         </span>
 
+        {/* Right Audio Button (Toggles Calming Arabic Tilawah / Murottal) */}
         <button
-          onClick={toggleSound}
-          className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors cursor-pointer"
-          title={soundEnabled ? 'Matikan Suara' : 'Nyalakan Suara'}
+          onClick={toggleArabicAudio}
+          className={`p-2 rounded-full transition-all flex items-center justify-center cursor-pointer shadow-md ${
+            isAudioPlaying
+              ? 'bg-emerald-500 text-white scale-105 ring-4 ring-emerald-400/30'
+              : 'bg-white/15 text-white hover:bg-white/25 hover:scale-105'
+          }`}
+          title={isAudioPlaying ? 'Hentikan Audio Arab Penenang' : 'Putar Audio Arab Penenang Jiwa (Syaikh Misyari Al-Afasy)'}
         >
-          {soundEnabled ? <Volume2 className="w-4 h-4 text-emerald-300" /> : <VolumeX className="w-4 h-4 text-white/50" />}
+          {isLoadingAudio ? (
+            <Loader2 className="w-4 h-4 animate-spin text-white" />
+          ) : isAudioPlaying ? (
+            <div className="flex items-center gap-0.5 px-0.5">
+              <span className="w-1 bg-white rounded-full animate-bounce h-3" style={{ animationDelay: '0ms' }} />
+              <span className="w-1 bg-white rounded-full animate-bounce h-2" style={{ animationDelay: '150ms' }} />
+              <span className="w-1 bg-white rounded-full animate-bounce h-3.5" style={{ animationDelay: '300ms' }} />
+            </div>
+          ) : (
+            <Volume2 className="w-4 h-4 text-emerald-300" />
+          )}
         </button>
+      </div>
+
+      {/* Soothing Arabic Audio Banner Player Bar */}
+      <div className="max-w-lg mx-auto w-full mb-2">
+        <div className={`p-2.5 sm:p-3 rounded-2xl border transition-all flex items-center justify-between gap-3 shadow-md ${
+          isAudioPlaying
+            ? 'bg-emerald-950/80 border-emerald-500/40 text-emerald-100 backdrop-blur-md'
+            : 'bg-black/30 border-white/15 text-white/90 backdrop-blur-sm'
+        }`}>
+          <div className="flex items-center gap-2.5 min-w-0 flex-1">
+            <button
+              onClick={toggleArabicAudio}
+              disabled={isLoadingAudio}
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-sm transition-all active:scale-95 cursor-pointer"
+              title={isAudioPlaying ? 'Jeda Audio' : 'Putar Audio'}
+            >
+              {isLoadingAudio ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : isAudioPlaying ? (
+                <Pause className="w-4 h-4 fill-current" />
+              ) : (
+                <Play className="w-4 h-4 fill-current ml-0.5" />
+              )}
+            </button>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5">
+                <Music2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <h4 className="text-xs font-bold truncate text-white">
+                  {currentTrack.title}
+                </h4>
+              </div>
+              <p className="text-[10px] text-white/70 truncate">
+                {currentTrack.reciter}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            {isAudioPlaying && (
+              <div className="flex items-end gap-0.5 h-3">
+                <span className="w-1 bg-emerald-400 rounded-full animate-bounce h-3" style={{ animationDelay: '0ms' }} />
+                <span className="w-1 bg-emerald-400 rounded-full animate-bounce h-2" style={{ animationDelay: '150ms' }} />
+                <span className="w-1 bg-emerald-400 rounded-full animate-bounce h-3.5" style={{ animationDelay: '300ms' }} />
+              </div>
+            )}
+            <button
+              onClick={handleNextTrack}
+              className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-colors cursor-pointer"
+              title="Ganti Ayat Penenang Berikutnya"
+            >
+              <SkipForward className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Audio Progress Bar */}
+        {isAudioPlaying && audioProgress > 0 && (
+          <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden mt-1.5">
+            <div 
+              className="bg-emerald-400 h-full transition-all duration-200" 
+              style={{ width: `${audioProgress}%` }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Main Container */}
