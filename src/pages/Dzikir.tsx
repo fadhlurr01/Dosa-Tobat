@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { RotateCcw, Sparkles, CheckCircle2, Flame, Volume2, VolumeX, Check, ArrowRight } from 'lucide-react';
+import { RotateCcw, Sparkles, CheckCircle2, Volume2, VolumeX, Square, Volume1 } from 'lucide-react';
 import { soundFx } from '../lib/soundFx';
 import { triggerConfetti } from '../components/ui/Confetti';
 import { useStore } from '../store/useStore';
@@ -69,6 +69,35 @@ export default function Dzikir() {
   const [target, setTarget] = useState<number>(33);
   const [isCompleted, setIsCompleted] = useState(false);
   const [totalSessionCount, setTotalSessionCount] = useState(0);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const toggleDzikirAudio = () => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+
+    if (isPlayingAudio) {
+      window.speechSynthesis.cancel();
+      setIsPlayingAudio(false);
+    } else {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(selectedPreset.arabic);
+      utterance.lang = 'ar-SA';
+      utterance.rate = 0.85;
+
+      utterance.onend = () => setIsPlayingAudio(false);
+      utterance.onerror = () => setIsPlayingAudio(false);
+
+      window.speechSynthesis.speak(utterance);
+      setIsPlayingAudio(true);
+    }
+  };
 
   const handleBeadClick = () => {
     const nextCount = count + 1;
@@ -107,6 +136,10 @@ export default function Dzikir() {
 
   const handleSelectPreset = (preset: typeof DZIKIR_PRESETS[0]) => {
     soundFx.playTap();
+    if (isPlayingAudio) {
+      window.speechSynthesis.cancel();
+      setIsPlayingAudio(false);
+    }
     setSelectedPreset(preset);
     setTarget(preset.target);
     setCount(0);
@@ -134,7 +167,7 @@ export default function Dzikir() {
         </div>
         <button
           onClick={toggleSound}
-          className="p-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors shadow-sm"
+          className="p-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors shadow-sm cursor-pointer"
           title={soundEnabled ? 'Matikan Suara Tasbih' : 'Nyalakan Suara Tasbih'}
         >
           {soundEnabled ? <Volume2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" /> : <VolumeX className="w-5 h-5 text-slate-400" />}
@@ -147,7 +180,7 @@ export default function Dzikir() {
           <button
             key={preset.id}
             onClick={() => handleSelectPreset(preset)}
-            className={`whitespace-nowrap px-4 py-2 rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+            className={`whitespace-nowrap px-4 py-2 rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
               selectedPreset.id === preset.id
                 ? 'bg-emerald-700 text-white shadow-md shadow-emerald-700/20 scale-105'
                 : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-emerald-400'
@@ -163,10 +196,30 @@ export default function Dzikir() {
       <div className="bg-gradient-to-b from-white via-white to-emerald-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20 rounded-3xl p-6 sm:p-8 border border-emerald-500/20 dark:border-emerald-500/30 shadow-xl text-center relative overflow-hidden">
         
         {/* Arabic Display */}
-        <div className="mb-6">
-          <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800/50 mb-3 inline-block">
-            {selectedPreset.title}
-          </span>
+        <div className="mb-6 relative">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800/50 inline-block">
+              {selectedPreset.title}
+            </span>
+            <button
+              onClick={toggleDzikirAudio}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 hover:bg-emerald-200 dark:bg-emerald-900/40 dark:hover:bg-emerald-900/70 text-emerald-800 dark:text-emerald-300 text-xs font-semibold transition-all cursor-pointer"
+              title="Dengarkan Lafaz Bahasa Arab"
+            >
+              {isPlayingAudio ? (
+                <>
+                  <Square className="w-3.5 h-3.5 fill-current text-rose-500 animate-pulse" />
+                  <span>Hentikan</span>
+                </>
+              ) : (
+                <>
+                  <Volume1 className="w-3.5 h-3.5" />
+                  <span>Dengar Lafaz</span>
+                </>
+              )}
+            </button>
+          </div>
+
           <p className="font-arabic text-3xl sm:text-4xl text-slate-800 dark:text-slate-100 py-3 leading-relaxed">
             {selectedPreset.arabic}
           </p>
@@ -245,7 +298,7 @@ export default function Dzikir() {
               </div>
               <button
                 onClick={handleReset}
-                className="px-3 py-1.5 rounded-xl bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800 transition-colors shrink-0"
+                className="px-3 py-1.5 rounded-xl bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800 transition-colors shrink-0 cursor-pointer"
               >
                 Ulangi
               </button>
@@ -266,7 +319,7 @@ export default function Dzikir() {
                   if (tVal > 0 && count >= tVal) setIsCompleted(true);
                   else setIsCompleted(false);
                 }}
-                className={`px-2.5 py-1 rounded-xl text-xs font-bold transition-all ${
+                className={`px-2.5 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   target === tVal
                     ? 'bg-emerald-600 text-white shadow-xs'
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
@@ -281,7 +334,7 @@ export default function Dzikir() {
             onClick={handleReset}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-950/30 text-xs font-semibold transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-950/30 text-xs font-semibold transition-colors cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Reset Hitungan

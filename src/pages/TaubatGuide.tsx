@@ -19,12 +19,28 @@ export default function TaubatGuide() {
     {
       title: "1. Al-Iqla' (Berhenti Total)",
       desc: "Hentikan perbuatan maksiat seketika ini juga tanpa menunda. Jangan buat kompromi 'sekali lagi'.",
-      advice: "Berhenti sekarang menyelamatkanmu dari terpatri dan mengerasnya hati."
+      advice: "Berhenti sekarang menyelamatkanmu dari terpatri dan mengerasnya hati.",
+      verse: {
+        type: 'AYAT' as const,
+        title: 'Perintah Taubat Nasuha',
+        arabic: 'يَا أَيُّهَا الَّذِينَ آمَنُوا تُوبُوا إِلَى اللَّهِ تَوْبَةً نَصُوحًا',
+        latin: 'Yaa ayyuhal ladziina aamanuu tuubuu ilallaahi taubatan nashuuhaa.',
+        translation: 'Wahai orang-orang yang beriman! Bertaubatlah kepada Allah dengan taubat yang semurni-murninya (taubat nasuha).',
+        reference: 'QS. At-Tahrim: 8'
+      }
     },
     {
       title: "2. An-Nadam (Menyesal Sungguh-sungguh)",
       desc: "Akui kelemahan dan dosa di hadapan Allah SWT. Rasulullah ﷺ bersabda: 'Penyesalan adalah hakikat taubat.'",
-      advice: "Air mata penyesalan di hadapan Allah mampu memadamkan api neraka."
+      advice: "Air mata penyesalan di hadapan Allah mampu memadamkan api neraka.",
+      verse: {
+        type: 'AYAT' as const,
+        title: 'Allah Menerima Taubat Hamba-Nya',
+        arabic: 'وَهُوَ الَّذِي يَقْبَلُ التَّوْبَةَ عَنْ عِبَادِهِ وَيَعْفُو عَنِ السَّيِّئَاتِ وَيَعْلَمُ مَا تَفْعَلُونَ',
+        latin: 'Wa huwal ladzii yaqbalut taubata \'an \'ibaadihii wa ya\'fuu \'anis sayyi-aati wa ya\'lamu maa taf\'aluun.',
+        translation: 'Dan Dialah yang menerima taubat dari hamba-hamba-Nya dan memaafkan kesalahan-kesalahan dan mengetahui apa yang kamu kerjakan.',
+        reference: 'QS. Asy-Syura: 25'
+      }
     },
     {
       title: "3. Al-Istighfar (Memohon Ampunan)",
@@ -35,12 +51,28 @@ export default function TaubatGuide() {
     {
       title: "4. Al-'Azm (Bertekad Kuat Tidak Mengulangi)",
       desc: "Tancapkan tekad bulat di dalam sanubari untuk tidak kembali lagi pada lubang maksiat tersebut selamanya.",
-      advice: "Buat batasan pencegahan dan tutup seluruh pintu akses menuju godaan tersebut."
+      advice: "Buat batasan pencegahan dan tutup seluruh pintu akses menuju godaan tersebut.",
+      verse: {
+        type: 'AYAT' as const,
+        title: 'Panggilan Keselamatan & Keberuntungan',
+        arabic: 'وَتُوبُوا إِلَى اللَّهِ جَمِيعًا أَيُّهَ الْمُؤْمِنُونَ لَعَلَّكُمْ تُفْلِحُونَ',
+        latin: 'Wa tuubuu ilallaahi jamii\'an ayyuhal mu\'minuuna la\'allakum tuflihuun.',
+        translation: 'Dan bertaubatlah kamu sekalian kepada Allah, hai orang-orang yang beriman supaya kamu beruntung.',
+        reference: 'QS. An-Nur: 31'
+      }
     },
     {
       title: "5. Al-Islah (Perbaiki dengan Amal Kebaikan)",
       desc: "Ikuti keburukan dengan amal sholeh yang menghapusnya (sedekah, shalat taubat 2 rakaat, dzikir, dan minta maaf jika ada hak orang lain).",
-      advice: "'Sesungguhnya perbuatan-perbuatan yang baik itu menghapuskan perbuatan-perbuatan yang buruk.' (QS. Hud: 114)"
+      advice: "'Sesungguhnya perbuatan-perbuatan yang baik itu menghapuskan perbuatan-perbuatan yang buruk.' (QS. Hud: 114)",
+      verse: {
+        type: 'AYAT' as const,
+        title: 'Kebaikan Menghapus Dosa',
+        arabic: 'إِنَّ الْحَسَنَاتِ يُذْهِبْنَ السَّيِّئَاتِ ذَٰلِكَ ذِكْرَىٰ لِلذَّاكِرِينَ',
+        latin: 'Innal hasanaati yudz-hibnas sayyi-aat, dzaalika dzikroo lidz-dzaakiriin.',
+        translation: 'Sesungguhnya perbuatan-perbuatan yang baik itu menghapuskan (dosa) perbuatan-perbuatan yang buruk. Itulah peringatan bagi orang-orang yang ingat.',
+        reference: 'QS. Hud: 114'
+      }
     }
   ];
 
@@ -87,7 +119,7 @@ export default function TaubatGuide() {
             soundFx.playTap();
             navigate(-1);
           }}
-          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           Kembali
@@ -99,7 +131,7 @@ export default function TaubatGuide() {
 
         <button
           onClick={toggleSound}
-          className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+          className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors cursor-pointer"
           title={soundEnabled ? 'Matikan Suara' : 'Nyalakan Suara'}
         >
           {soundEnabled ? <Volume2 className="w-4 h-4 text-amber-300" /> : <VolumeX className="w-4 h-4 text-white/50" />}
@@ -153,10 +185,24 @@ export default function TaubatGuide() {
                 {steps[step - 1].desc}
               </p>
 
-              <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-xs text-amber-900 dark:text-amber-300 flex items-start gap-2 mb-6">
+              <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-xs text-amber-900 dark:text-amber-300 flex items-start gap-2 mb-4">
                 <Sparkles className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                 <span>{steps[step - 1].advice}</span>
               </div>
+
+              {/* Quranic Verse Card with Audio Recitation */}
+              {steps[step - 1].verse && (
+                <div className="mb-4">
+                  <ReligiousCard 
+                    type={steps[step - 1].verse!.type}
+                    title={steps[step - 1].verse!.title}
+                    arabic={steps[step - 1].verse!.arabic}
+                    latin={steps[step - 1].verse!.latin}
+                    translation={steps[step - 1].verse!.translation}
+                    reference={steps[step - 1].verse!.reference}
+                  />
+                </div>
+              )}
               
               {steps[step - 1].hasDoa && (
                 <div className="mb-6">
@@ -166,7 +212,7 @@ export default function TaubatGuide() {
                     </span>
                     <button
                       onClick={handleCopyDoa}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
                     >
                       {copied ? <CheckCheck className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                       {copied ? 'Tersalin' : 'Salin Teks Doa'}
@@ -189,14 +235,14 @@ export default function TaubatGuide() {
             {step > 1 && (
               <button 
                 onClick={handlePrev}
-                className="px-4 py-3.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-2xl transition-all active:scale-95 text-xs"
+                className="px-4 py-3.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-2xl transition-all active:scale-95 text-xs cursor-pointer"
               >
                 Sebelumnya
               </button>
             )}
             <button 
               onClick={handleNext}
-              className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-amber-600 dark:bg-amber-600 text-white font-black rounded-2xl shadow-md hover:bg-amber-700 transition-all active:scale-95 text-sm"
+              className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-amber-600 dark:bg-amber-600 text-white font-black rounded-2xl shadow-md hover:bg-amber-700 transition-all active:scale-95 text-sm cursor-pointer"
             >
               {step < steps.length ? (
                 <>Langkah Berikutnya <ArrowRight className="w-4 h-4" /></>

@@ -38,21 +38,27 @@ const IBADAH_LIST = [
 const NASIHAT_HARIAN = [
   {
     type: 'AYAT' as const,
-    arabic: 'لَا تَقْنَطُوا مِنْ رَحْمَةِ اللَّهِ',
-    translation: 'Janganlah kamu berputus asa dari rahmat Allah.',
-    source: 'Q.S. Az-Zumar: 53'
+    title: 'Harapan & Rahmat Allah',
+    arabic: 'قُلْ يَا عِبَادِيَ الَّذِينَ أَسْرَفُوا عَلَىٰ أَنْفُسِهِمْ لَا تَقْنَطُوا مِنْ رَحْمَةِ اللَّهِ إِنَّ اللَّهَ يَغْفِرُ الذُّنُوبَ جَمِيعًا إِنَّهُ هُوَ الْغَفُورُ الرَّحِيمُ',
+    latin: "Qul yaa 'ibaadiyal ladziina asrofuu 'alaa anfusihim laa taqnathuu mir rohmatillaah, innallaaha yaghfirudz dzunuuba jamii'aa, innahuu huwal ghofuurur rohiim.",
+    translation: 'Katakanlah: Hai hamba-hamba-Ku yang melampaui batas terhadap diri mereka sendiri, janganlah kamu berputus asa dari rahmat Allah. Sesungguhnya Allah mengampuni dosa-dosa semuanya. Sesungguhnya Dia-lah Yang Maha Pengampun lagi Maha Penyayang.',
+    source: 'QS. Az-Zumar: 53'
   },
   {
     type: 'HADIS' as const,
+    title: 'Sebaik-baik Orang yang Berbuat Salah',
     arabic: 'كُلُّ بَنِي آدَمَ خَطَّاءٌ، وَخَيْرُ الْخَطَّائِينَ التَّوَّابُونَ',
+    latin: 'Kullu banii Aadama khoth-thoo-un, wa khoirul khoth-thoo-iinatt tawwaabuun.',
     translation: 'Setiap anak Adam pasti sering berbuat dosa, dan sebaik-baik orang yang berbuat dosa adalah yang bertaubat.',
-    source: 'H.R. Tirmidzi'
+    source: 'H.R. Tirmidzi no. 2499'
   },
   {
-    type: 'NASEHAT' as const,
-    arabic: 'مَنْ عَرَفَ نَفْسَهُ عَرَفَ رَبَّهُ',
-    translation: 'Taubat bukanlah akhir dari keburukan, melainkan awal dari kebaikan yang terus-menerus.',
-    source: 'Ibnu Qayyim Al-Jauziyyah'
+    type: 'AYAT' as const,
+    title: 'Kasih Sayang Allah pada Orang Bertaubat',
+    arabic: 'إِنَّ اللَّهَ يُحِبُّ التَّوَّابِينَ وَيُحِبُّ الْمُتَطَهِّرِينَ',
+    latin: 'Innallaaha yuhibbut tawwaabiina wa yuhibbul mutathohhiriin.',
+    translation: 'Sesungguhnya Allah menyukai orang-orang yang bertaubat dan menyukai orang-orang yang mensucikan diri.',
+    source: 'QS. Al-Baqarah: 222'
   }
 ];
 
@@ -520,6 +526,26 @@ export default function Home() {
           </div>
         )}
       </motion.div>
+
+      {/* Daily Verse / Nasihat with Audio Recitation */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest">
+            Ayat & Nasihat Hari Ini
+          </h2>
+          <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
+            Audio Murottal Resmi
+          </span>
+        </div>
+        <ReligiousCard 
+          type={nasihat.type}
+          title={nasihat.title}
+          arabic={nasihat.arabic}
+          latin={nasihat.latin}
+          translation={nasihat.translation}
+          reference={nasihat.source}
+        />
+      </div>
 
       <DailyReflection />
 

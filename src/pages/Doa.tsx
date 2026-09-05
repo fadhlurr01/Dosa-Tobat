@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Search, Copy, Check, Sparkles, BookOpen, Heart } from 'lucide-react';
+import { motion } from 'motion/react';
+import { Search, Copy, Check, Sparkles, Heart, BookOpen, Volume2 } from 'lucide-react';
 import ReligiousCard from '../components/ui/ReligiousCard';
 import { soundFx } from '../lib/soundFx';
 
@@ -21,16 +21,52 @@ const DOAS = [
     arabic: 'رَبَّنَا ظَلَمْنَا أَنْفُسَنَا وَإِنْ لَمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ',
     latin: 'Robbana dholamna anfusana wa inlam taghfirlana watarhamna lanakuunanna minal khosiriin.',
     translation: 'Ya Tuhan kami, kami telah menzalimi diri kami sendiri. Jika Engkau tidak mengampuni kami dan memberi rahmat kepada kami, niscaya kami termasuk orang-orang yang rugi.',
-    reference: 'Q.S. Al-A\'raf: 23'
+    reference: 'QS. Al-A\'raf: 23'
   },
   {
     id: 'doa-nabi-yunus',
-    title: 'Doa Nabi Yunus AS (Dzun Nun di Dalam Kegelapan)',
+    title: 'Doa Nabi Yunus AS (Pelepas Kesulitan & Taubat)',
     category: 'Pelepas Kesulitan & Dosa',
     arabic: 'لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ',
     latin: 'Laa ilaha illa anta subhaanaka innii kuntu minadh dholimiin.',
     translation: 'Tidak ada Tuhan selain Engkau, Maha Suci Engkau, sesungguhnya aku termasuk orang-orang yang berbuat zalim.',
-    reference: 'Q.S. Al-Anbiya: 87'
+    reference: 'QS. Al-Anbiya: 87'
+  },
+  {
+    id: 'doa-ali-imran-8',
+    title: 'Doa Keteguhan Iman Setelah Hidayah',
+    category: 'Pencegahan Maksiat',
+    arabic: 'رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً إِنَّكَ أَنْتَ الْوَهَّابُ',
+    latin: 'Robbanaa laa tuzigh quluubanaa ba\'da idz hadaitanaa wa hab lanaa mil ladunka rohmah, innaka antal wahhaab.',
+    translation: 'Ya Tuhan kami, janganlah Engkau jadikan hati kami condong kepada kesesatan sesudah Engkau beri petunjuk kepada kami, dan karuniakanlah kepada kami rahmat dari sisi-Mu.',
+    reference: 'QS. Ali \'Imran: 8'
+  },
+  {
+    id: 'doa-ali-imran-16',
+    title: 'Doa Pengakuan Iman & Permohonan Ampun',
+    category: 'Penghapus Dosa',
+    arabic: 'رَبَّنَا إِنَّنَا آمَنَّا فَاغْفِرْ لَنَا ذُنُوبَنَا وَقِنَا عَذَابَ النَّارِ',
+    latin: 'Robbanaa innanaa aamannaa faghfir lanaa dzunuubanaa waqinaa \'adzaaban naar.',
+    translation: 'Ya Tuhan kami, sesungguhnya kami telah beriman, maka ampunilah segala dosa kami dan peliharalah kami dari siksa neraka.',
+    reference: 'QS. Ali \'Imran: 16'
+  },
+  {
+    id: 'doa-sapu-jagad',
+    title: 'Doa Sapu Jagad (Kebaikan Dunia & Akhirat)',
+    category: 'Kebaikan Menyeluruh',
+    arabic: 'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ',
+    latin: 'Robbanaa aatinaa fid dunyaa hasanah wa fil aakhiroti hasanah wa qinaa \'adzaaban naar.',
+    translation: 'Ya Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat dan peliharalah kami dari siksa neraka.',
+    reference: 'QS. Al-Baqarah: 201'
+  },
+  {
+    id: 'doa-hasyr-10',
+    title: 'Doa Pembersih Hati dari Kedengkian',
+    category: 'Pembersih Hati',
+    arabic: 'رَبَّنَا اغْفِرْ لَنَا وَلِإِخْوَانِنَا الَّذِينَ سَبَقُونَا بِالْإِيمَانِ وَلَا تَجْعَلْ فِي قُلُوبِنَا غِلًّا لِلَّذِينَ آمَنُوا رَبَّنَا إِنَّكَ رَءُوفٌ رَحِيمٌ',
+    latin: 'Robbanaghfir lanaa wa li-ikhwaaninal ladziina sabaquunaa bil iimaan, wa laa taj\'al fii quluubinaa ghillal lilladziina aamanuu robbanaa innaka ro-uufur rohiim.',
+    translation: 'Ya Tuhan kami, ampunilah kami dan saudara-saudara kami yang telah beriman lebih dahulu dari kami, dan janganlah Engkau tanamkan kedengkian dalam hati kami terhadap orang-orang yang beriman.',
+    reference: 'QS. Al-Hasyr: 10'
   },
   {
     id: 'doa-keteguhan-hati',
@@ -81,12 +117,16 @@ export default function Doa() {
       transition={{ duration: 0.3 }}
       className="space-y-6 pb-12 max-w-2xl mx-auto"
     >
-      <header>
+      <header className="space-y-1">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/50 text-[11px] font-bold text-emerald-800 dark:text-emerald-300 mb-1">
+          <Volume2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+          <span>Audio Murottal Syaikh Misyari Al-Afasy (Bebas Hak Cipta / Resmi)</span>
+        </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-[#065F46] dark:text-emerald-400 tracking-tight">
           Kumpulan Doa & Munajat
         </h1>
-        <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mt-1 font-serif italic">
-          Lantunkan doa tulus untuk memohon ampunan, keteguhan hati, dan pembersihan jiwa.
+        <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm font-serif italic">
+          Lantunkan doa tulus untuk memohon ampunan, keteguhan hati, dan pembersihan jiwa dengan audio tilawah resmi.
         </p>
       </header>
 

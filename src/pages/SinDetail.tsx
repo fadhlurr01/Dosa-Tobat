@@ -163,9 +163,10 @@ export default function SinDetail() {
             <h2>Dasar Agama</h2>
           </div>
           <ReligiousCard 
-            type="AYAT"
-            translation={sin.source}
-            reference={sin.reason}
+            type={sin.source.toLowerCase().startsWith('qs') || sin.source.toLowerCase().startsWith('q.s') ? 'AYAT' : 'HADIS'}
+            title="Dalil & Landasan Syar'i"
+            translation={sin.reason}
+            reference={sin.source}
           />
         </section>
 
