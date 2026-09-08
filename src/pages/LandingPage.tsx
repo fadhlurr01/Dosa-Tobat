@@ -1,0 +1,1686 @@
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'motion/react';
+import {
+  Shield,
+  LifeBuoy,
+  HeartHandshake,
+  Sparkles,
+  Flame,
+  CheckCircle2,
+  BookOpen,
+  ArrowRight,
+  ChevronRight,
+  ShieldCheck,
+  RotateCcw,
+  Check,
+  Moon,
+  Sun,
+  Volume2,
+  VolumeX,
+  Lock,
+  Heart,
+  HelpCircle,
+  ChevronDown,
+  Layers,
+  Zap,
+  TrendingUp,
+  Smile,
+  Compass,
+  Star,
+  Users,
+  Award,
+  BookMarked,
+  ArrowUpRight,
+  Menu,
+  X,
+  Crown,
+  LogIn
+} from 'lucide-react';
+import { useStore, DEMO_ACCOUNTS } from '../store/useStore';
+import { soundFx } from '../lib/soundFx';
+import { triggerConfetti } from '../components/ui/Confetti';
+import ReligiousCard from '../components/ui/ReligiousCard';
+import { FeedbackModal } from '../components/ui/FeedbackModal';
+import { LegalModal } from '../components/ui/LegalModal';
+
+export default function LandingPage() {
+  const navigate = useNavigate();
+  const { theme, setTheme, soundEnabled, toggleSound, isAuthenticated } = useStore();
+  const [activeTab5R, setActiveTab5R] = useState(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [miniTasbihCount, setMiniTasbihCount] = useState(7);
+  const [activeCategoryDemo, setActiveCategoryDemo] = useState<'mata' | 'lisan' | 'hati' | 'ibadah'>('mata');
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authPromptOpen, setAuthPromptOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [legalModal, setLegalModal] = useState<{ isOpen: boolean; type: 'disclaimer' | 'terms' }>({
+    isOpen: false,
+    type: 'terms',
+  });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSection = (id: string) => {
+    soundFx.playTap();
+    setMobileMenuOpen(false);
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleTasbihTap = () => {
+    const nextCount = miniTasbihCount + 1;
+    setMiniTasbihCount(nextCount);
+    soundFx.playBead(1 + (nextCount % 10) * 0.04);
+    if (nextCount % 33 === 0) {
+      soundFx.playSuccess();
+      triggerConfetti();
+    }
+  };
+
+  const steps5R = [
+    {
+      num: '01',
+      tag: 'RECOGNIZE / KENALI',
+      title: 'Kenali Pola, Pemicu & Gejala Dosa',
+      desc: 'Setiap maksiat memiliki pola waktu, tempat, dan pemicu psikologis tertentu (kelelahan, kesepian, amarah, scrolling tanpa arah). Identifikasi tanda awal sebelum nafsu memuncak.',
+      example: 'Contoh: Mencatat dorongan ghibah saat sedang kumpul santai atau godaan zina mata saat larut malam di kamar sendirian.',
+      color: 'border-emerald-500 text-emerald-700 dark:text-emerald-400 bg-emerald-50/70 dark:bg-emerald-950/30',
+      badge: 'Tahap 1: Diagnosis Fiqih & Jiwa'
+    },
+    {
+      num: '02',
+      tag: 'REMOVE / SINGKIRKAN',
+      title: 'Putus Akses & Singkirkan Stimulus Pemicu',
+      desc: 'Taubat tidak akan bertahan jika sarana maksiat masih berada dalam jangkauan 1-klik. Terapkan prinsip saddu adz-dzari\'ah (menutup pintu keburukan) secara radikal dan tegas.',
+      example: 'Contoh: Blokir situs/akun pemicu, ganti rute perjalanan, atau tinggalkan majelis pembicaraan unfaedah seketika.',
+      color: 'border-teal-500 text-teal-700 dark:text-teal-400 bg-teal-50/70 dark:bg-teal-950/30',
+      badge: 'Tahap 2: Proteksi Lingkungan'
+    },
+    {
+      num: '03',
+      tag: 'REPENT / SESALI & BERSIHKAN',
+      title: 'Penuhi 5 Rukun Taubat Nasuha Syar\'i',
+      desc: 'Segera berwudhu, tunaikan Shalat Sunnah Taubat 2 Rakaat, lafalkan Sayyidul Istighfar dengan tangisan penyesalan mendalam, dan selesaikan hak adami jika berkaitan dengan manusia.',
+      example: 'Contoh: Menunaikan Shalat Taubat, memohon maaf kepada pihak yang dizalimi, dan mengembalikan hak harta jika ada.',
+      color: 'border-amber-500 text-amber-700 dark:text-amber-400 bg-amber-50/70 dark:bg-amber-950/30',
+      badge: 'Tahap 3: Pembersihan Dosa'
+    },
+    {
+      num: '04',
+      tag: 'REPLACE / GANTI KEBAIKAN',
+      title: 'Ganti Kebiasaan Buruk dengan Amal Pengganti',
+      desc: 'Sesuai firman Allah (QS. Hud: 114): "Perbuatan baik menghapus keburukan." Ganti kebiasaan maksiat dengan amal sholeh aktif seperti sedekah spontan, dzikir petang, atau tilawah.',
+      example: 'Contoh: Setiap kali terpeleset memandang yang haram, langsung bersedekah Rp20.000 atau membaca 1 lembar Al-Qur\'an.',
+      color: 'border-blue-500 text-blue-700 dark:text-blue-400 bg-blue-50/70 dark:bg-blue-950/30',
+      badge: 'Tahap 4: Penggantian Kebiasaan'
+    },
+    {
+      num: '05',
+      tag: 'REPEAT / RECOVERY',
+      title: 'Bangun Daya Tahan Spiritual Berkelanjutan',
+      desc: 'Jatuh bukan akhir segalanya. Catat riwayat di Jurnal Hijrah, pantau streak hari bersih tanpa rasa malu, dan bangkit kembali dengan tekad yang lebih kokoh.',
+      example: 'Contoh: Evaluasi mingguan terhadap pemicu yang berhasil dilewati dan penguatan benteng doa harian.',
+      color: 'border-indigo-500 text-indigo-700 dark:text-indigo-400 bg-indigo-50/70 dark:bg-indigo-950/30',
+      badge: 'Tahap 5: Ketahanan Istiqomah'
+    }
+  ];
+
+  const sinExamples = {
+    mata: {
+      title: 'Zina Mata & Konten Negatif',
+      subtitle: 'Memandang yang diharamkan, ketergantungan visual maya',
+      steps: ['Aktifkan Mode SOS 90 Detik saat dorongan muncul', 'Gunakan teknik pernapasan 4-4-4 dan basuh wajah dengan wudhu', 'Kafarat: Berdzikir istighfar 100x dan bersedekah'],
+      dalil: 'Katakanlah kepada orang laki-laki yang beriman: Hendaklah mereka menahan pandangannya... (QS. An-Nur: 30)'
+    },
+    lisan: {
+      title: 'Ghibah, Fitnah & Dusta',
+      subtitle: 'Membicarakan keburukan saudara tanpa hak syar\'i',
+      steps: ['Tinggalkan seketika majelis yang mulai mengarah pada ghibah', 'Puji kebaikan orang yang dighibahi di hadapan orang lain', 'Doakan ampunan dan kebaikan untuk orang yang dizalimi'],
+      dalil: 'Dan janganlah menggunjing satu sama lain. Adakah seorang diantara kamu yang suka memakan daging saudaranya yang sudah mati? (QS. Al-Hujurat: 12)'
+    },
+    hati: {
+      title: 'Hasad (Dengki), Ujub & Riya\'',
+      subtitle: 'Penyakit hati yang memakan amal kebaikan bagai api melahap kayu bakar',
+      steps: ['Ucapkan doa keberkahan (Barakallahu fiik) untuk orang yang mendapat nikmat', 'Lakukan amalan tersembunyi yang hanya diketahui Allah SWT', 'Muhasabah bahwa seluruh nikmat dan takdir mutlak milik Allah semata'],
+      dalil: 'Jauhilah hasad (dengki), karena hasad itu memakan kebaikan seperti api memakan kayu bakar. (HR. Abu Dawud)'
+    },
+    ibadah: {
+      title: 'Meninggalkan Shalat & Lalai Waktu',
+      subtitle: 'Menunda-nunda panggilan adzan hingga keluar batas waktu',
+      steps: ['Segera qadha shalat yang terlewat dengan penuh penyesalan', 'Pasang alarm pengingat 15 menit sebelum waktu adzan masuk', 'Jadikan shalat sebagai tempat istirahat jiwa, bukan beban kewajiban semata'],
+      dalil: 'Maka celakalah bagi orang-orang yang shalat, (yaitu) orang-orang yang lalai dari shalatnya. (QS. Al-Ma\'un: 4-5)'
+    }
+  };
+
+  const faqs = [
+    {
+      q: 'Apakah data perjalanan dan pengakuan dosa saya aman dan privat?',
+      a: 'Sangat aman. Privasi adalah prioritas mutlak kami. Data perjalanan, catatan jurnal muhasabah, dan pelacakan kebiasaan disimpan secara lokal di perangkat Anda (client-side encrypted state). Kami tidak pernah menjual, menyebarkan, atau memperlihatkan riwayat pemulihan Anda kepada pihak ketiga.'
+    },
+    {
+      q: 'Bagaimana jika saya terjatuh kembali (relapse) saat sudah mencapai streak lama?',
+      a: 'Jangan pernah berputus asa dari rahmat Allah SWT. Aplikasi ini dirancang tanpa penghakiman. Ketika Anda terjatuh, sistem menyediakan Panduan Taubat Nasuha 5 Rukun dan analisis pemicu agar Anda dapat langsung bangkit tanpa rasa putus asa. Rasulullah ﷺ bersabda: "Setiap anak Adam pasti sering berbuat salah, dan sebaik-baik orang yang bersalah adalah yang bertaubat."'
+    },
+    {
+      q: 'Apakah aplikasi ini sesuai dengan tuntunan Al-Qur\'an dan As-Sunnah?',
+      a: 'Seluruh materi rukun taubat, doa Sayyidul Istighfar, kaidah kafarat, serta adab penyucian jiwa (Tazkiyatun Nafs) disarikan dari dalil Al-Qur\'an, hadits-hadits shahih (Bukhari, Muslim, Tirmidzi), serta rujukan ulama ahlus sunnah terpercaya seperti Imam Ibnu Qayyim Al-Jauziyyah dan Imam An-Nawawi.'
+    },
+    {
+      q: 'Apa itu Mode Darurat SOS 90 Detik?',
+      a: 'Mode SOS adalah fitur intervensi krisis saat nafsu atau godaan maksiat sedang berada pada puncaknya. Secara ilmiah dan biologis, dorongan syahwat/amarah memuncak dalam 90 detik pertama. Mode ini menuntun Anda melalui 5 langkah pengalihan fisik, latihan pernapasan ketenangan 4-4-4, serta dzikir perlindungan hingga nafsu mereda.'
+    },
+    {
+      q: 'Apakah saya bisa menggunakan aplikasi ini secara gratis?',
+      a: 'Ya, 100% GRATIS! Seluruh fitur inti (Katalog Dosa, Mode Darurat SOS, Panduan Taubat Nasuha, Tasbih Dzikir, dan Pelacak Hari Bersih) dapat diakses bebas tanpa biaya untuk kemaslahatan umat. Paket Infaq/PRO bersifat sukarela untuk mendukung operasional dakwah digital.'
+    }
+  ];
+
+  const testimonials = [
+    {
+      name: 'Rian Pratama',
+      role: 'Software Engineer, Jakarta',
+      streak: '48 Hari Bersih',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
+      story: 'Fitur Mode Darurat SOS benar-benar penyelamat. Saat larut malam dorongan browsing konten haram muncul, panduan pernapasan dan ta\'awudz 90 detik memotong siklus impulsif di otak saya. Alhamdulillah kini sudah 48 hari bersih.'
+    },
+    {
+      name: 'Hafiz Az-Zubair',
+      role: 'Mahasiswa, Bandung',
+      streak: '92 Hari Istiqomah',
+      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80',
+      story: 'Metode 5R membuat saya paham bahwa sekadar berniat tidak cukup jika pemicu tidak di-remove. Dosa & Tobat memberikan kerangka pemulihan yang sangat terstruktur, aplikatif, dan menyejukkan hati.'
+    },
+    {
+      name: 'Nadia Salsabila',
+      role: 'Guru Madrasah, Yogyakarta',
+      streak: '30 Hari Terjaga',
+      avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
+      story: 'Tasbih interaktif dan catatan Jurnal Muhasabah membantu saya menjaga lisan dari ghibah di tempat kerja. Dzikir menjadi bagian tak terpisahkan dari hari-hari saya.'
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#FDFBF7] dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-emerald-500 selection:text-white transition-colors duration-300">
+      
+      {/* 1. TOP ANNOUNCEMENT & NAVIGATION HEADER */}
+      <header 
+        className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
+          isScrolled 
+            ? 'bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-emerald-500/15 shadow-lg shadow-emerald-950/5 py-2.5' 
+            : 'bg-[#FDFBF7] dark:bg-slate-950 border-b border-slate-200/40 dark:border-slate-800/40 py-3.5'
+        }`}
+      >
+        <div className="w-full px-4 sm:px-6 lg:px-10 flex items-center justify-between">
+          
+          {/* Sisi Kiri Full Pojok: Logo Brand & Menu Navigasi Berdampingan */}
+          <div className="flex items-center gap-6 xl:gap-10">
+            {/* Logo Brand */}
+            <Link 
+              to="/" 
+              onClick={() => soundFx.playTap()}
+              className="flex items-center gap-2.5 group shrink-0"
+            >
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-800 text-white flex items-center justify-center font-black text-base shadow-md shadow-emerald-900/20 group-hover:scale-105 transition-transform">
+                DT
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-black text-sm sm:text-base tracking-tight text-[#065F46] dark:text-emerald-400">
+                    DOSA & TOBAT™
+                  </span>
+                  <span className="hidden sm:inline text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300">
+                    Platform
+                  </span>
+                </div>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 font-serif italic hidden md:block">
+                  Sistem Pemulihan & Taubat Berbasis Sunnah
+                </p>
+              </div>
+            </Link>
+
+            {/* Menu Navigasi di Sisi Kiri dengan Desain Modern, Elegan & Bersih Tanpa Ikon */}
+            <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+              <button 
+                type="button" 
+                onClick={() => scrollToSection('metode-5r')} 
+                className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 cursor-pointer font-bold"
+              >
+                Metode 5R
+              </button>
+              <button 
+                type="button" 
+                onClick={() => scrollToSection('fitur')} 
+                className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 cursor-pointer font-bold"
+              >
+                Fitur
+              </button>
+              <button 
+                type="button" 
+                onClick={() => scrollToSection('katalog')} 
+                className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 cursor-pointer font-bold"
+              >
+                Katalog Dosa
+              </button>
+              <button 
+                type="button" 
+                onClick={() => scrollToSection('testimoni')} 
+                className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 cursor-pointer font-bold"
+              >
+                Kisah Taubat
+              </button>
+              <button 
+                type="button" 
+                onClick={() => scrollToSection('faq')} 
+                className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 cursor-pointer font-bold"
+              >
+                FAQ
+              </button>
+              <button 
+                type="button" 
+                onClick={() => scrollToSection('infaq')} 
+                className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 cursor-pointer font-bold"
+              >
+                Infaq
+              </button>
+            </nav>
+          </div>
+
+          {/* Sisi Kanan Full Pojok: Action Toolbar & Primary CTA Button */}
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+            {/* Quick sound toggle */}
+            <button
+              onClick={() => {
+                toggleSound();
+                soundFx.playTap();
+              }}
+              className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors"
+              title={soundEnabled ? 'Efek Suara Aktif' : 'Efek Suara Mati'}
+            >
+              {soundEnabled ? <Volume2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
+            </button>
+
+            {/* Quick theme toggle */}
+            <button
+              onClick={() => {
+                soundFx.playTap();
+                setTheme(theme === 'dark' ? 'light' : 'dark');
+              }}
+              className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors"
+              title="Ganti Tema"
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+            </button>
+
+            {/* Login / Demo Link */}
+            <Link
+              to="/login"
+              onClick={() => soundFx.playTap()}
+              className="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-emerald-700 dark:hover:text-emerald-400 px-3 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors hidden sm:inline-block"
+            >
+              Masuk / Demo
+            </Link>
+
+            {/* Direct App Entry Button */}
+            <Link
+              to={isAuthenticated ? "/app" : "/login"}
+              onClick={() => soundFx.playSuccess()}
+              className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-900/20 hover:shadow-emerald-900/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <span>{isAuthenticated ? 'Buka Dashboard' : 'Mulai Sekarang'}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+
+            {/* Hamburger Button on Mobile View (< lg) */}
+            <button
+              onClick={() => {
+                soundFx.playTap();
+                setMobileMenuOpen(true);
+              }}
+              className="lg:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:text-emerald-600 focus:outline-none"
+              title="Buka Menu"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Navigation Drawer / Sidebar */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            {/* Backdrop Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm lg:hidden"
+            />
+            
+            {/* Sliding Sidebar Panel */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+              className="fixed top-0 right-0 bottom-0 z-50 w-80 max-w-[85vw] bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800 p-6 flex flex-col justify-between shadow-2xl lg:hidden overflow-y-auto"
+            >
+              <div>
+                {/* Header with Brand & Close Button */}
+                <div className="flex items-center justify-between pb-5 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-700 text-white flex items-center justify-center font-black text-sm shadow-sm">
+                      DT
+                    </div>
+                    <div>
+                      <span className="font-black text-sm text-[#065F46] dark:text-emerald-400 block">DOSA & TOBAT™</span>
+                      <span className="text-[10px] text-slate-400 font-serif italic">Menu Mobile</span>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      soundFx.playTap();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="p-2 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Navigation Items in Sidebar */}
+                <div className="py-5 space-y-2">
+                  <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2 px-1">Menu Utama</p>
+                  {[
+                    { id: 'metode-5r', label: 'Metode 5R' },
+                    { id: 'fitur', label: 'Fitur Unggulan' },
+                    { id: 'katalog', label: 'Katalog Dosa Shahih' },
+                    { id: 'testimoni', label: 'Kisah Taubat' },
+                    { id: 'faq', label: 'Tanya Jawab (FAQ)' },
+                    { id: 'infaq', label: 'Infaq & Dukungan' },
+                  ].map((item, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => scrollToSection(item.id)}
+                      className="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors cursor-pointer"
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Bottom Quick Tools & Auth */}
+              <div className="pt-5 border-t border-slate-100 dark:border-slate-800 space-y-3">
+                <div className="flex items-center justify-between px-2 py-1 bg-slate-50 dark:bg-slate-900/60 rounded-xl">
+                  <span className="text-xs font-bold text-slate-500">Audio & Tema</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => { toggleSound(); soundFx.playTap(); }}
+                      className="p-2 rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 shadow-sm"
+                      title="Suara"
+                    >
+                      {soundEnabled ? <Volume2 className="w-4 h-4 text-emerald-600" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
+                    </button>
+                    <button
+                      onClick={() => { soundFx.playTap(); setTheme(theme === 'dark' ? 'light' : 'dark'); }}
+                      className="p-2 rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 shadow-sm"
+                      title="Tema"
+                    >
+                      {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+                
+                <Link
+                  to="/login"
+                  onClick={() => { soundFx.playTap(); setMobileMenuOpen(false); }}
+                  className="block w-full text-center py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900"
+                >
+                  Masuk / Demo
+                </Link>
+                
+                <Link
+                  to={isAuthenticated ? "/app" : "/login"}
+                  onClick={() => { soundFx.playSuccess(); setMobileMenuOpen(false); }}
+                  className="block w-full text-center py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs sm:text-sm font-bold shadow-md shadow-emerald-900/20"
+                >
+                  {isAuthenticated ? 'Buka Dashboard' : 'Mulai Sekarang'}
+                </Link>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* 2. HERO SECTION */}
+      <section className="relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-28">
+        {/* Subtle background glow */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-emerald-500/10 via-teal-500/10 to-amber-500/10 blur-3xl pointer-events-none rounded-full" />
+
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10 text-center space-y-8">
+          
+          {/* Tag Pill */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-xs font-bold shadow-sm"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            <span>Platform Pemulihan Jiwa & Panduan Taubat Nasuha Modern</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+          </motion.div>
+
+          {/* Main Headline */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="space-y-4 max-w-3xl mx-auto"
+          >
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-slate-50 tracking-tight leading-[1.15]">
+              Kembali ke Jalan Fitrah.{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-700 via-teal-600 to-emerald-500 dark:from-emerald-400 dark:to-teal-300">
+                Putus Lingkaran Dosa,
+              </span>{' '}
+              Bangkitkan Jiwa Bersih.
+            </h1>
+            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+              Ruang aman dan terstruktur tanpa penghakiman. Dilengkapi metodologi <strong>5R (Recognize, Remove, Repent, Replace, Repeat)</strong>, intervensi darurat 90-detik, katalog kafarat, dan pelacak hari bersih menuju ketenangan hakiki.
+            </p>
+          </motion.div>
+
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 pt-2"
+          >
+            <Link
+              to="/app"
+              onClick={() => {
+                soundFx.playSuccess();
+                triggerConfetti();
+              }}
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-black text-sm shadow-xl shadow-emerald-700/25 transition-all active:scale-95 flex items-center justify-center gap-2"
+            >
+              <span>Mulai Perjalanan Pemulihan (Gratis)</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+
+            <Link
+              to="/sos"
+              onClick={() => soundFx.playTap()}
+              className="w-full sm:w-auto px-6 py-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-rose-200 dark:border-rose-900/60 hover:border-rose-400 text-rose-700 dark:text-rose-400 font-bold text-sm shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2"
+            >
+              <LifeBuoy className="w-4 h-4 text-rose-600 animate-spin-slow" />
+              <span>Mode Darurat SOS (Krisis Godaan)</span>
+            </Link>
+          </motion.div>
+
+          {/* Trust Value Badges */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="pt-6 flex items-center justify-center flex-wrap gap-4 sm:gap-8 text-xs text-slate-500 dark:text-slate-400 font-medium"
+          >
+            <div className="flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <span>100% Tanpa Penghakiman</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Lock className="w-4 h-4 text-indigo-500" />
+              <span>Privasi Terenkripsi Lokal</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <BookOpen className="w-4 h-4 text-amber-500" />
+              <span>Rujukan Al-Qur'an & Sunnah</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Heart className="w-4 h-4 text-rose-500" />
+              <span>Bebas Biaya untuk Umat</span>
+            </div>
+          </motion.div>
+
+          {/* Interactive Hero Application Showcase Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.35 }}
+            className="pt-6"
+          >
+            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-4 sm:p-6 text-left max-w-4xl mx-auto overflow-hidden relative">
+              
+              {/* Card Header Simulator */}
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 mb-5">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-rose-400" />
+                  <span className="w-3 h-3 rounded-full bg-amber-400" />
+                  <span className="w-3 h-3 rounded-full bg-emerald-400" />
+                  <span className="text-xs font-mono text-slate-400 ml-2">dosa-dan-tobat.app/preview</span>
+                </div>
+                <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1 rounded-full">
+                  <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                  Streak Aktif: 14 Hari Bersih
+                </span>
+              </div>
+
+              {/* Grid Content Preview */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                
+                {/* 1. Checklist Ibadah Preview */}
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Ibadah Harian</span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">4/4 Selesai</span>
+                  </div>
+                  <div className="space-y-2 text-xs">
+                    {['Shalat 5 Waktu', 'Doa & Munajat', 'Dzikir Pagi & Petang', 'Tilawah Al-Qur\'an'].map((item, idx) => (
+                      <div key={idx} className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+                        <span className="font-semibold text-slate-700 dark:text-slate-300">{item}</span>
+                        <div className="w-4 h-4 rounded-md bg-emerald-600 text-white flex items-center justify-center text-[10px]">✓</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 2. Interactive Mini Tasbih Demo */}
+                <div className="p-4 rounded-2xl bg-gradient-to-b from-emerald-50/70 to-white dark:from-emerald-950/20 dark:to-slate-800/40 border border-emerald-200/60 dark:border-emerald-800/40 text-center flex flex-col justify-between">
+                  <div>
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-800 dark:text-emerald-400">Tasbih Interaktif</span>
+                    <p className="font-arabic text-xl text-slate-800 dark:text-slate-100 my-1">سُبْحَانَ اللَّهِ</p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">Subhanallah (Maha Suci Allah)</p>
+                  </div>
+
+                  <div className="my-3">
+                    <motion.button
+                      onClick={handleTasbihTap}
+                      whileTap={{ scale: 0.92 }}
+                      className="w-20 h-20 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white mx-auto shadow-lg flex flex-col items-center justify-center font-black"
+                    >
+                      <span className="text-xl leading-none">{miniTasbihCount}</span>
+                      <span className="text-[9px] uppercase tracking-wider text-emerald-200 mt-0.5">Ketuk</span>
+                    </motion.button>
+                  </div>
+
+                  <p className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold">
+                    Coba ketuk tasbih di atas (Audio Aktif)
+                  </p>
+                </div>
+
+                {/* 3. SOS Mode Trigger Preview */}
+                <div className="p-4 rounded-2xl bg-gradient-to-b from-rose-50/70 to-white dark:from-rose-950/20 dark:to-slate-800/40 border border-rose-200/60 dark:border-rose-800/40 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-1.5 text-rose-700 dark:text-rose-400 text-xs font-bold uppercase tracking-wide">
+                      <LifeBuoy className="w-4 h-4" />
+                      <span>SOS Emergency</span>
+                    </div>
+                    <h4 className="text-sm font-black text-slate-800 dark:text-slate-100 mt-1">
+                      Krisis Dorongan Maksiat?
+                    </h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                      Panduan 5 tahap pengalihan napas 4-4-4 & pemutus visual saat dorongan sedang tinggi.
+                    </p>
+                  </div>
+
+                  <Link
+                    to="/sos"
+                    onClick={() => soundFx.playTap()}
+                    className="w-full py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs text-center shadow-md transition-all active:scale-95 mt-3"
+                  >
+                    Buka Simulator SOS →
+                  </Link>
+                </div>
+
+              </div>
+
+            </div>
+          </motion.div>
+
+        </div>
+      </section>
+
+      {/* 3. KEY METRICS & RECOVERY IMPACT */}
+      <motion.section 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.6 }}
+        className="py-12 bg-white dark:bg-slate-900 border-y border-slate-200/80 dark:border-slate-800"
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+            
+            <div className="space-y-1">
+              <div className="text-3xl sm:text-4xl font-black text-emerald-700 dark:text-emerald-400">
+                35+
+              </div>
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                Katalog Dosa & Kafarat
+              </p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500">Lisan, Mata, Hati, & Syahwat</p>
+            </div>
+
+            <div className="space-y-1">
+              <div className="text-3xl sm:text-4xl font-black text-rose-600 dark:text-rose-400">
+                90s
+              </div>
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                Waktu Emas SOS
+              </p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500">Intervensi Puncak Dorongan</p>
+            </div>
+
+            <div className="space-y-1">
+              <div className="text-3xl sm:text-4xl font-black text-amber-600 dark:text-amber-400">
+                5R
+              </div>
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                Sistem Pemulihan
+              </p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500">Recognize to Recovery</p>
+            </div>
+
+            <div className="space-y-1">
+              <div className="text-3xl sm:text-4xl font-black text-indigo-600 dark:text-indigo-400">
+                100%
+              </div>
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                Privat & Non-Judgmental
+              </p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500">Ruang Aman Pengguna</p>
+            </div>
+
+          </div>
+        </div>
+      </motion.section>
+
+      {/* 3B. SECTION MASALAH (MERAH) & SOLUSI (HIJAU) */}
+      <section className="py-20 max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+            Perbandingan Nyata
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-slate-100">
+            Dari Lingkaran Dosa Menuju Ketenangan Fitrah
+          </h2>
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            Mengapa niat baik seringkali gagal? Karena tanpa strategi yang terstruktur, nafsu akan selalu mengecoh kembali.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+          {/* Sisi Masalah (Style Merah Tegas) */}
+          <div className="p-8 rounded-3xl bg-rose-50/60 dark:bg-rose-950/20 border-2 border-rose-500/40 dark:border-rose-500/30 space-y-6 flex flex-col justify-between shadow-sm">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2.5">
+                <span className="w-8 h-8 rounded-xl bg-rose-600 text-white flex items-center justify-center font-bold text-xs shadow-sm">
+                  ✕
+                </span>
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-widest text-rose-700 dark:text-rose-400 block">
+                    Masalah Umum
+                  </span>
+                  <h3 className="text-xl font-black text-rose-900 dark:text-rose-100">
+                    Lingkaran Setan Maksiat & Rasa Bersalah
+                  </h3>
+                </div>
+              </div>
+
+              <p className="text-xs sm:text-sm text-rose-800/90 dark:text-rose-200/90 leading-relaxed">
+                Pola berulang yang menjebak jutaan orang tanpa jalan keluar yang praktis:
+              </p>
+
+              <div className="space-y-3 text-xs text-rose-900 dark:text-rose-200 font-medium">
+                {[
+                  'Dorongan impulsif muncul mendadak tanpa pertahanan diri siap pakai.',
+                  'Hanya mengandalkan tekad abstrak tanpa menghilangkan pemicu lingkungan.',
+                  'Rasa bersalah berlebihan yang justru memicu keputusasaan dan maksiat lagi.',
+                  'Tidak mengetahui rukun kafarat pengganti dan doa penawar yang shahih.',
+                  'Merasa sendirian, takut dihakimi, dan malu mencari bantuan.'
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-start gap-2.5 p-3 rounded-2xl bg-white/70 dark:bg-slate-900/60 border border-rose-200/80 dark:border-rose-900/50">
+                    <span className="text-rose-600 font-bold">✕</span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-rose-100/70 dark:bg-rose-900/30 border border-rose-300 dark:border-rose-800 text-[11px] text-rose-800 dark:text-rose-300 italic font-serif">
+              "Dan barangsiapa berpaling dari peringatan-Ku, maka sesungguhnya baginya penghidupan yang sempit..." (QS. Thaha: 124)
+            </div>
+          </div>
+
+          {/* Sisi Solusi (Style Hijau Tegas) */}
+          <div className="p-8 rounded-3xl bg-emerald-50/60 dark:bg-emerald-950/20 border-2 border-emerald-500/40 dark:border-emerald-500/30 space-y-6 flex flex-col justify-between shadow-sm">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2.5">
+                <span className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-sm">
+                  ✓
+                </span>
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 block">
+                    Solusi Terpadu
+                  </span>
+                  <h3 className="text-xl font-black text-emerald-900 dark:text-emerald-100">
+                    Platform Pemulihan Dosa & Tobat
+                  </h3>
+                </div>
+              </div>
+
+              <p className="text-xs sm:text-sm text-emerald-800/90 dark:text-emerald-200/90 leading-relaxed">
+                Pendekatan ilmiah berpadu dengan ketulusan syariat Al-Qur'an dan Sunnah:
+              </p>
+
+              <div className="space-y-3 text-xs text-emerald-900 dark:text-emerald-200 font-medium">
+                {[
+                  'Mode Darurat SOS 90 Detik untuk meredakan dorongan di puncak krisis.',
+                  'Metode 5R (Recognize, Remove, Repent, Replace, Repeat) yang aplikatif.',
+                  'Katalog Dosa Lengkap dengan diagnosis fiqih, dalil shahih, dan kafarat.',
+                  'Jurnal Muhasabah Pribadi 100% privat dan bebas rasa dihakimi.',
+                  'Tasbih Dzikir Audio bersuara jernih (Murottal Alafasy & Hisnul Muslim).'
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-start gap-2.5 p-3 rounded-2xl bg-white/70 dark:bg-slate-900/60 border border-emerald-200/80 dark:border-emerald-900/50">
+                    <span className="text-emerald-600 font-bold">✓</span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-emerald-100/70 dark:bg-emerald-900/30 border border-emerald-300 dark:border-emerald-800 text-[11px] text-emerald-800 dark:text-emerald-300 italic font-serif">
+              "Sesungguhnya perbuatan-perbuatan yang baik itu menghapuskan (dosa) perbuatan-perbuatan yang buruk..." (QS. Hud: 114)
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3C. SECTION DEMO & SHOWCASE TOOLS (DESKTOP & MOBILE MOCKUP) */}
+      <section className="py-20 bg-slate-900 text-white relative overflow-hidden border-y border-slate-800">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12 relative z-10">
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-950/80 px-3 py-1 rounded-full border border-emerald-800">
+              Antarmuka Tools Terdepan
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
+              Tampilan Responsif Desktop & Mobile
+            </h2>
+            <p className="text-sm text-slate-400">
+              Dirancang estetik, menenangkan jiwa, dan cepat diakses di laptop maupun smartphone Anda kapan pun dibutuhkan.
+            </p>
+          </div>
+
+          {/* Desktop + Mobile Frames Mockup Showcase */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            {/* Desktop Browser Frame Mockup */}
+            <div className="lg:col-span-8 rounded-3xl bg-slate-950 border border-slate-800 shadow-2xl overflow-hidden p-1.5">
+              {/* Browser Bar */}
+              <div className="px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-rose-500/80" />
+                  <span className="w-3 h-3 rounded-full bg-amber-500/80" />
+                  <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                  <div className="ml-3 px-4 py-1 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-mono text-slate-400">
+                    https://dosa-dan-tobat.app/beranda
+                  </div>
+                </div>
+                <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                  <Flame className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                  14 Hari Bersih
+                </span>
+              </div>
+
+              {/* Tools Content Showcase Simulator */}
+              <div className="p-6 bg-slate-950 space-y-6">
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+                    <span className="text-[10px] font-bold text-emerald-400 uppercase">Fitur 1</span>
+                    <h4 className="text-sm font-bold text-white">Mode Darurat SOS</h4>
+                    <p className="text-xs text-slate-400">Pernapasan 4-4-4 & Pemutus Dorongan 90 Detik.</p>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+                    <span className="text-[10px] font-bold text-teal-400 uppercase">Fitur 2</span>
+                    <h4 className="text-sm font-bold text-white">Panduan Taubat 5R</h4>
+                    <p className="text-xs text-slate-400">Rukun Taubat Nasuha & Shalat Sunnah Taubat.</p>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+                    <span className="text-[10px] font-bold text-amber-400 uppercase">Fitur 3</span>
+                    <h4 className="text-sm font-bold text-white">Tasbih Audio Murottal</h4>
+                    <p className="text-xs text-slate-400">Sayyidul Istighfar & Kafaratul Majlis.</p>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/40 to-teal-950/40 border border-emerald-500/30 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-black">
+                      DT
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-white">Katalog Dosa & Kafarat Terbuka Lengkap</h4>
+                      <p className="text-xs text-slate-400">Diagnosis syar'i 35+ jenis dosa hati, lisan, mata, dan harta.</p>
+                    </div>
+                  </div>
+                  <Link
+                    to="/app"
+                    className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all"
+                  >
+                    Buka Preview
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Smartphone Frame Mockup */}
+            <div className="lg:col-span-4 flex justify-center">
+              <div className="w-72 rounded-[40px] bg-slate-950 border-4 border-slate-800 shadow-2xl p-3 relative">
+                {/* Phone Speaker Notch */}
+                <div className="w-24 h-4 bg-slate-800 rounded-full mx-auto mb-3" />
+
+                {/* Mobile Screen Simulator */}
+                <div className="bg-slate-900 rounded-[30px] p-4 space-y-4 border border-slate-800/80">
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                    <span className="font-black text-xs text-emerald-400">DOSA & TOBAT™</span>
+                    <span className="text-[10px] text-slate-400">Mobile Mode</span>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-emerald-950/50 border border-emerald-500/30 text-center space-y-1">
+                    <span className="text-[10px] font-bold text-emerald-400">STATUS SPIRITUAL</span>
+                    <h5 className="text-base font-black text-white">Istiqomah Terjaga</h5>
+                    <p className="text-[10px] text-slate-300">Target Harian: 33x Istighfar</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs">
+                      <span>✓ Shalat 5 Waktu</span>
+                      <span className="text-emerald-400 font-bold">100%</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs">
+                      <span>✓ Dzikir Sayyidul Istighfar</span>
+                      <span className="text-emerald-400 font-bold">Selesai</span>
+                    </div>
+                  </div>
+
+                  <Link
+                    to="/sos"
+                    className="block w-full py-2.5 text-center rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-md"
+                  >
+                    Tombol SOS Darurat 90s
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 4. THE 5R METHODOLOGY DEEP-DIVE */}
+      <motion.section 
+        id="metode-5r" 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6 }}
+        className="py-20 max-w-5xl mx-auto px-4 sm:px-6 space-y-12"
+      >
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+            Metodologi Pemulihan Jiwa
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-slate-100">
+            Sistem 5R: Transformasi Kebiasaan Berkelanjutan
+          </h2>
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            Bertaubat bukan hanya berhenti sesaat lalu mengulanginya lagi. Diperlukan sistem pertahanan berlapis dari pengenalan pemicu hingga pembentukan karakter baru.
+          </p>
+        </div>
+
+        {/* 5R Steps Interactive Navigator */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+          
+          {/* Steps List (Left) */}
+          <div className="md:col-span-5 space-y-2">
+            {steps5R.map((step, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  soundFx.playTap();
+                  setActiveTab5R(idx);
+                }}
+                className={`w-full p-4 rounded-2xl text-left transition-all flex items-center justify-between border ${
+                  activeTab5R === idx
+                    ? 'bg-white dark:bg-slate-900 border-emerald-500 shadow-md ring-1 ring-emerald-500/20'
+                    : 'bg-white/60 dark:bg-slate-900/40 border-slate-200/80 dark:border-slate-800 hover:border-slate-300'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className={`w-8 h-8 rounded-xl flex items-center justify-center font-black text-xs ${activeTab5R === idx ? 'bg-emerald-700 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}`}>
+                    {step.num}
+                  </span>
+                  <div>
+                    <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest block">
+                      {step.tag}
+                    </span>
+                    <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                      {step.title.split(':')[0]}
+                    </h4>
+                  </div>
+                </div>
+                <ChevronRight className={`w-4 h-4 transition-transform ${activeTab5R === idx ? 'text-emerald-600 translate-x-1' : 'text-slate-300'}`} />
+              </button>
+            ))}
+          </div>
+
+          {/* Active Step Detailed Card (Right) */}
+          <div className="md:col-span-7">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab5R}
+                initial={{ opacity: 0, x: 15 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -15 }}
+                transition={{ duration: 0.25 }}
+                className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-5"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                    {steps5R[activeTab5R].badge}
+                  </span>
+                  <span className="font-mono text-xs text-slate-400">
+                    Langkah {steps5R[activeTab5R].num} / 05
+                  </span>
+                </div>
+
+                <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100">
+                  {steps5R[activeTab5R].title}
+                </h3>
+
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {steps5R[activeTab5R].desc}
+                </p>
+
+                <div className={`p-4 rounded-2xl border ${steps5R[activeTab5R].color} text-xs leading-relaxed space-y-1`}>
+                  <strong className="block uppercase tracking-wider font-bold">Penerapan Praktis:</strong>
+                  <p>{steps5R[activeTab5R].example}</p>
+                </div>
+
+                <div className="pt-2 flex items-center justify-between">
+                  <Link
+                    to="/taubat"
+                    onClick={() => soundFx.playTap()}
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline"
+                  >
+                    Buka Panduan Taubat Nasuha <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+
+                  <button
+                    onClick={() => {
+                      soundFx.playTap();
+                      setActiveTab5R((activeTab5R + 1) % steps5R.length);
+                    }}
+                    className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-200"
+                  >
+                    Langkah Berikutnya →
+                  </button>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+        </div>
+      </motion.section>
+
+      {/* 5. INTERACTIVE KATALOG DOSA & SOLUSI PREVIEW */}
+      <motion.section 
+        id="katalog" 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6 }}
+        className="py-20 bg-white dark:bg-slate-900 border-y border-slate-200/80 dark:border-slate-800"
+      >
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-10">
+          
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+              Direktori Terstruktur
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-slate-100">
+              Katalog Dosa, Dalil, & Kafarat Lengkap
+            </h2>
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              Setiap kebiasaan buruk memiliki diagnosis fiqih, pemicu psikologis, dan obat penawar yang jelas dalam syariat.
+            </p>
+          </div>
+
+          {/* Category Filter Pills */}
+          <div className="flex justify-center gap-2 flex-wrap">
+            {[
+              { id: 'mata', label: 'Zina Mata / Visual', icon: LifeBuoy },
+              { id: 'lisan', label: 'Lisan (Ghibah & Dusta)', icon: BookOpen },
+              { id: 'hati', label: 'Hati (Hasad & Ujub)', icon: Heart },
+              { id: 'ibadah', label: 'Kelalaian Shalat', icon: Moon }
+            ].map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => {
+                  soundFx.playTap();
+                  setActiveCategoryDemo(cat.id as any);
+                }}
+                className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  activeCategoryDemo === cat.id
+                    ? 'bg-emerald-700 text-white shadow-md shadow-emerald-700/20'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+                }`}
+              >
+                <cat.icon className="w-3.5 h-3.5" />
+                <span>{cat.label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Selected Category Detail Card */}
+          <div className="bg-[#FDFBF7] dark:bg-slate-950 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm max-w-3xl mx-auto space-y-6">
+            <div className="space-y-1">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+                Pencegahan & Solusi Syar'i
+              </span>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100">
+                {sinExamples[activeCategoryDemo].title}
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {sinExamples[activeCategoryDemo].subtitle}
+              </p>
+            </div>
+
+            {/* Dalil Quote */}
+            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-emerald-500/20 shadow-xs space-y-2">
+              <div className="flex items-center gap-2 text-xs font-bold text-emerald-800 dark:text-emerald-400">
+                <BookOpen className="w-4 h-4" />
+                <span>Dalil Al-Qur'an & As-Sunnah</span>
+              </div>
+              <p className="text-xs italic text-slate-700 dark:text-slate-300 font-serif leading-relaxed">
+                "{sinExamples[activeCategoryDemo].dalil}"
+              </p>
+            </div>
+
+            {/* Prescribed Solution Steps */}
+            <div className="space-y-2.5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                Langkah Penawar & Kafarat:
+              </h4>
+              <div className="space-y-2">
+                {sinExamples[activeCategoryDemo].steps.map((st, i) => (
+                  <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-xs">
+                    <span className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 font-black flex items-center justify-center shrink-0 text-[10px]">
+                      {i + 1}
+                    </span>
+                    <span className="text-slate-700 dark:text-slate-300 font-medium">{st}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-2 text-center">
+              <Link
+                to="/direktori"
+                onClick={() => soundFx.playTap()}
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-emerald-700 text-white font-bold text-xs shadow-sm hover:bg-emerald-800 transition-all active:scale-95"
+              >
+                Lihat Seluruh 35+ Direktori Dosa & Solusi <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+
+        </div>
+      </motion.section>
+
+      {/* 6. COMPREHENSIVE FEATURES BENTO GRID */}
+      <motion.section 
+        id="fitur" 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6 }}
+        className="py-20 max-w-5xl mx-auto px-4 sm:px-6 space-y-12"
+      >
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+            Fitur Utama Aplikasi
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-slate-100">
+            Segala yang Kamu Butuhkan untuk Istiqomah
+          </h2>
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            Dirancang dengan prinsip empati, kesederhanaan, dan tanpa kebisingan notifikasi yang berlebihan.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          {/* Card 1: SOS Mode */}
+          <div className="p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-white to-rose-50/40 dark:from-slate-900 dark:to-rose-950/20 border border-rose-200/80 dark:border-rose-900/40 shadow-sm space-y-4 flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+                <LifeBuoy className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-black text-slate-800 dark:text-slate-100">
+                Mode Darurat SOS 90-Detik
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Panduan intervensi darurat saat dorongan maksiat memuncak. Dilengkapi breathing guide ritmis 4-4-4 dan audio penenang.
+              </p>
+            </div>
+            <Link to="/sos" onClick={() => soundFx.playTap()} className="text-xs font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1 hover:underline pt-2">
+              Jalankan Mode SOS <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          {/* Card 2: Tasbih & Dzikir */}
+          <div className="p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-white to-emerald-50/40 dark:from-slate-900 dark:to-emerald-950/20 border border-emerald-200/80 dark:border-emerald-900/40 shadow-sm space-y-4 flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
+                <Sparkles className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-black text-slate-800 dark:text-slate-100">
+                Tasbih & Dzikir Digital Interaktif
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Penghitung tasbih haptic dengan synthesizer audio realistis. Pilihan dzikir istighfar, tahmid, tahlil, dan takbir target 33x/100x.
+              </p>
+            </div>
+            <Link to="/dzikir" onClick={() => soundFx.playTap()} className="text-xs font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1 hover:underline pt-2">
+              Buka Tasbih Digital <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          {/* Card 3: Panduan Taubat Nasuha */}
+          <div className="p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-white to-amber-50/40 dark:from-slate-900 dark:to-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 shadow-sm space-y-4 flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 flex items-center justify-center">
+                <HeartHandshake className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-black text-slate-800 dark:text-slate-100">
+                Panduan Taubat 5 Rukun
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Tahapan sistematis bertaubat nasuha lengkap dengan lafaz Sayyidul Istighfar, shalat taubat, dan kafarat penghapus dosa.
+              </p>
+            </div>
+            <Link to="/taubat" onClick={() => soundFx.playTap()} className="text-xs font-bold text-amber-700 dark:text-amber-400 flex items-center gap-1 hover:underline pt-2">
+              Buka Panduan Taubat <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          {/* Card 4: Jurnal Muhasabah */}
+          <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+            <div className="w-12 h-12 rounded-2xl bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-400 flex items-center justify-center">
+              <BookMarked className="w-6 h-6" />
+            </div>
+            <h3 className="text-base font-black text-slate-800 dark:text-slate-100">
+              Jurnal Refleksi Jiwa
+            </h3>
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Catat pemicu godaan, emosi yang menyertai, dan hikmah pemulihan untuk mengenali pola kerentanan diri secara jujur.
+            </p>
+          </div>
+
+          {/* Card 5: Pelacak Streak Bersih */}
+          <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+            <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 flex items-center justify-center">
+              <Flame className="w-6 h-6 fill-amber-500 text-amber-500" />
+            </div>
+            <h3 className="text-base font-black text-slate-800 dark:text-slate-100">
+              Streak Hari Bersih
+            </h3>
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Rayakan setiap hari kemenangan melawan hawa nafsu. Bila terjatuh, bangkit kembali tanpa kehilangan motivasi.
+            </p>
+          </div>
+
+          {/* Card 6: Doa & Munajat */}
+          <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+            <div className="w-12 h-12 rounded-2xl bg-teal-100 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 flex items-center justify-center">
+              <Compass className="w-6 h-6" />
+            </div>
+            <h3 className="text-base font-black text-slate-800 dark:text-slate-100">
+              Perisai Doa Perlindungan
+            </h3>
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Koleksi doa perlindungan dari tipu daya setan, was-was hati, dan keburukan hawa nafsu dengan teks Arab dan latin.
+            </p>
+          </div>
+
+        </div>
+      </motion.section>
+
+      {/* 7. REAL STORIES / TESTIMONIALS */}
+      <motion.section 
+        id="testimoni" 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6 }}
+        className="py-20 bg-white dark:bg-slate-900 border-y border-slate-200/80 dark:border-slate-800"
+      >
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-12">
+          
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+              Kisah Hijrah & Pemulihan
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-slate-100">
+              Mereka yang Telah Menemukan Ketenangan
+            </h2>
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              Setiap langkah kecil menjauhi maksiat adalah kemenangan besar di hadapan Allah SWT.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {testimonials.map((t, i) => (
+              <div key={i} className="p-5 sm:p-6 rounded-3xl bg-[#FDFBF7] dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-1 text-amber-500">
+                    {[...Array(5)].map((_, starIdx) => (
+                      <Star key={starIdx} className="w-3.5 h-3.5 fill-amber-500" />
+                    ))}
+                  </div>
+                  <p className="text-xs text-slate-700 dark:text-slate-300 italic font-serif leading-relaxed">
+                    "{t.story}"
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+                  <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover border border-emerald-500/30 shrink-0" />
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate">{t.name}</h4>
+                    <p className="text-[10px] text-slate-400 truncate">{t.role}</p>
+                    <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1 mt-0.5">
+                      <Flame className="w-3 h-3 fill-amber-500 text-amber-500 shrink-0" /> {t.streak}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </motion.section>
+
+      {/* 8. INFAQ & MEMBER PACKAGES */}
+      <motion.section 
+        id="infaq" 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6 }}
+        className="py-20 max-w-6xl mx-auto px-4 sm:px-6 space-y-12"
+      >
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+            Dukungan Dakwah
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-slate-100">
+            Akses Penuh Gratis, Infaq Sukarela
+          </h2>
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            Aplikasi ini dibangun untuk kemaslahatan umat. Seluruh panduan esensial tersedia tanpa pungutan biaya selamanya.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+          
+          {/* Free Tier */}
+          <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-6">
+            <div className="space-y-4">
+              <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
+                Paket Umat (Free)
+              </span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-black text-slate-800 dark:text-slate-100">Rp 0</span>
+                <span className="text-xs text-slate-400">/ selamanya</span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Akses tanpa batas ke seluruh direktori dan panduan taubat.
+              </p>
+
+              <div className="space-y-2.5 pt-2 text-xs">
+                {[
+                  'Akses 35+ Katalog Dosa & Kafarat',
+                  'Mode Darurat SOS 90-Detik',
+                  'Panduan Taubat Nasuha & Sayyidul Istighfar',
+                  'Tasbih & Dzikir Digital Interaktif',
+                  'Checklist Ibadah & Pelacak Streak',
+                  'Privasi 100% Enkripsi Lokal'
+                ].map((f, i) => (
+                  <div key={i} className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>{f}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <Link
+              to="/app"
+              onClick={() => soundFx.playTap()}
+              className="w-full py-3.5 px-4 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs text-center transition-all"
+            >
+              Gunakan Gratis Sekarang
+            </Link>
+          </div>
+
+          {/* Infaq PRO Tier */}
+          <div className="p-8 rounded-3xl bg-gradient-to-b from-emerald-50/80 via-white to-emerald-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/30 border-2 border-emerald-500 shadow-xl flex flex-col justify-between space-y-6 relative overflow-hidden">
+            <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-wider shadow-sm">
+              Infaq Dakwah
+            </div>
+
+            <div className="space-y-4">
+              <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">
+                Sahabat Hijrah (PRO)
+              </span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-black text-slate-800 dark:text-slate-100">Rp 19.000</span>
+                <span className="text-xs text-slate-400">/ bulan (infaq)</span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Pahala jariyah operasional server dan pengembangan konten fiqih.
+              </p>
+
+              <div className="space-y-2.5 pt-2 text-xs">
+                {[
+                  'Semua Fitur Paket Umat (Free)',
+                  'Lencana Khusus Sahabat Hijrah PRO',
+                  'Laporan Analisis Tren Pemulihan Jiwa',
+                  'Mode Konsultasi Asatidz (Coming Soon)',
+                  'Donasi Pengembangan Dakwah Digital',
+                  'Dukungan Prioritas Pengembang'
+                ].map((f, i) => (
+                  <div key={i} className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>{f}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (!isAuthenticated) {
+                  soundFx.playTap();
+                  setAuthPromptOpen(true);
+                } else {
+                  soundFx.playSuccess();
+                  navigate('/premium');
+                }
+              }}
+              className="w-full py-3.5 px-4 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-black text-xs text-center shadow-lg shadow-emerald-700/25 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>Infaq & Upgrade PRO</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+        </div>
+      </motion.section>
+
+      {/* 9. FAQ ACCORDION */}
+      <motion.section 
+        id="faq" 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6 }}
+        className="py-20 bg-white dark:bg-slate-900 border-y border-slate-200/80 dark:border-slate-800"
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-10">
+          
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+              Pertanyaan Umum
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-slate-100">
+              Frequently Asked Questions (FAQ)
+            </h2>
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              Jawaban mengenai keamanan data, metode fiqih, dan cara terbaik menggunakan platform.
+            </p>
+          </div>
+
+          <div className="space-y-3 max-w-4xl mx-auto">
+            {faqs.map((faq, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <div
+                  key={idx}
+                  className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-[#FDFBF7] dark:bg-slate-950 overflow-hidden transition-colors"
+                >
+                  <button
+                    onClick={() => {
+                      soundFx.playTap();
+                      setOpenFaq(isOpen ? null : idx);
+                    }}
+                    className="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm text-slate-800 dark:text-slate-200"
+                  >
+                    <span>{faq.q}</span>
+                    <ChevronDown className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180 text-emerald-600' : ''}`} />
+                  </button>
+
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-slate-800/80"
+                      >
+                        {faq.a}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+
+        </div>
+      </motion.section>
+
+      {/* 10. FINAL COMPASSIONATE CALL TO ACTION */}
+      <motion.section 
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6 }}
+        className="py-20 relative overflow-hidden bg-gradient-to-br from-emerald-800 via-emerald-900 to-teal-950 text-white text-center"
+      >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 space-y-6">
+          <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto shadow-inner">
+            <HeartHandshake className="w-8 h-8 text-emerald-200" />
+          </div>
+          
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+            Pintu Taubat Masih Terbuka Seluas Langit dan Bumi.
+          </h2>
+
+          <p className="text-sm sm:text-base text-emerald-100/90 max-w-2xl mx-auto font-serif italic">
+            "Katakanlah: Hai hamba-hamba-Ku yang melampaui batas terhadap diri mereka sendiri, janganlah kamu berputus asa dari rahmat Allah. Sesungguhnya Allah mengampuni dosa-dosa semuanya." (QS. Az-Zumar: 53)
+          </p>
+
+          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              to="/app"
+              onClick={() => {
+                soundFx.playSuccess();
+                triggerConfetti();
+              }}
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white text-emerald-900 font-black text-sm shadow-2xl hover:bg-emerald-50 transition-all active:scale-95 flex items-center justify-center gap-2"
+            >
+              <span>Buka Dashboard Aplikasi Sekarang</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+
+            <Link
+              to="/login"
+              onClick={() => soundFx.playTap()}
+              className="w-full sm:w-auto px-6 py-4 rounded-2xl bg-emerald-700/60 hover:bg-emerald-700 border border-emerald-400/40 text-white font-bold text-sm transition-all active:scale-95"
+            >
+              Pilih Akun Demo & Eksplorasi
+            </Link>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* 11. FOOTER */}
+      <footer className="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 py-12 text-slate-500 dark:text-slate-400 text-xs">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-black text-sm">
+              DT
+            </div>
+            <div>
+              <span className="font-extrabold text-slate-800 dark:text-slate-200">DOSA & TOBAT™</span>
+              <p className="text-[11px] text-slate-400">
+                © {new Date().getFullYear()} Dibuat oleh{' '}
+                <a 
+                  href="https://contech.id" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline"
+                >
+                  Contech ID
+                </a>. All rights reserved.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 sm:gap-6 text-[11px] font-semibold flex-wrap justify-center">
+            <Link to="/app" onClick={() => soundFx.playTap()} className="hover:text-emerald-700 dark:hover:text-emerald-400 text-emerald-700 dark:text-emerald-400 font-bold">Buka Dashboard</Link>
+            <Link to="/direktori" onClick={() => soundFx.playTap()} className="hover:text-emerald-700 dark:hover:text-emerald-400">Direktori Dosa</Link>
+            <Link to="/sos" onClick={() => soundFx.playTap()} className="hover:text-emerald-700 dark:hover:text-emerald-400">Mode SOS</Link>
+            <Link to="/taubat" onClick={() => soundFx.playTap()} className="hover:text-emerald-700 dark:hover:text-emerald-400">Panduan Taubat</Link>
+            <button
+              type="button"
+              onClick={() => setLegalModal({ isOpen: true, type: 'disclaimer' })}
+              className="hover:text-emerald-700 dark:hover:text-emerald-400 cursor-pointer"
+            >
+              Disclaimer
+            </button>
+            <button
+              type="button"
+              onClick={() => setLegalModal({ isOpen: true, type: 'terms' })}
+              className="hover:text-emerald-700 dark:hover:text-emerald-400 cursor-pointer"
+            >
+              Syarat & Ketentuan
+            </button>
+            <button
+              type="button"
+              onClick={() => setFeedbackOpen(true)}
+              className="hover:text-emerald-700 dark:hover:text-emerald-400 text-emerald-600 dark:text-emerald-400 font-bold cursor-pointer"
+            >
+              Feedback
+            </button>
+            <Link to="/admin" onClick={() => soundFx.playTap()} className="hover:text-emerald-700 dark:hover:text-emerald-400 text-indigo-600">Admin Console</Link>
+          </div>
+        </div>
+      </footer>
+
+      {/* Center Modal: Login Required for Infaq */}
+      <AnimatePresence>
+        {authPromptOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setAuthPromptOpen(false)}
+              className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm"
+            />
+
+            {/* Modal Content */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              className="relative w-full max-w-md rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-7 text-center space-y-5 z-10"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-sm">
+                <Crown className="w-7 h-7 text-amber-500 animate-bounce" />
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
+                  Silakan Masuk Akun Terlebih Dahulu
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                  Untuk melanjutkan infaq dakwah dan mengaktifkan paket <b>Sahabat Hijrah (PRO)</b>, Anda harus masuk ke akun agar lencana, status paket, dan riwayat amal tercatat pada akun Anda.
+                </p>
+              </div>
+
+              <div className="space-y-2.5 pt-2">
+                <Link
+                  to="/login?redirect=/premium"
+                  onClick={() => {
+                    soundFx.playTap();
+                    setAuthPromptOpen(false);
+                  }}
+                  className="w-full py-3.5 px-4 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-700/25 transition-all active:scale-95"
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span>Masuk Akun / Pilih Akun Demo</span>
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFx.playTap();
+                    setAuthPromptOpen(false);
+                  }}
+                  className="w-full py-3 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all cursor-pointer"
+                >
+                  Nanti Saja
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Feedback Modal */}
+      <FeedbackModal
+        isOpen={feedbackOpen}
+        onClose={() => setFeedbackOpen(false)}
+        toolName="Landing Page"
+      />
+
+      {/* Legal Modal Dialog */}
+      <LegalModal
+        isOpen={legalModal.isOpen}
+        onClose={() => setLegalModal(prev => ({ ...prev, isOpen: false }))}
+        type={legalModal.type}
+      />
+    </div>
+  );
+}
