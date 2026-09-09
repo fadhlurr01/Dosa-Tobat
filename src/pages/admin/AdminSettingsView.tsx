@@ -21,7 +21,7 @@ import {
   Activity
 } from 'lucide-react';
 import { useStore } from '../../store/useStore';
-import { AppSettings, dbService } from '../../lib/db';
+import { AppSettings } from '../../lib/constants';
 import { api } from '../../lib/api';
 import { motion } from 'motion/react';
 import { triggerConfetti } from '../../components/ui/Confetti';
@@ -64,12 +64,11 @@ export default function AdminSettingsView() {
 
   const loadStats = async () => {
     try {
-      const logs = await dbService.getActivityLogs(100);
       let userCount = mockUsers.length;
       let cmsCount = cmsItems.length;
       let isConnected = true;
 
-      // Check live from Laragon backend
+      // Check live from backend
       try {
         const usersRes = await api.admin.getUsers();
         if (usersRes && usersRes.data) {
@@ -83,7 +82,7 @@ export default function AdminSettingsView() {
         userCount: userCount || mockUsers.length,
         cmsCount: cmsCount || cmsItems.length,
         sinCount: 35,
-        logCount: logs.length,
+        logCount: 0,
         dbStatus: isConnected ? 'TERHUBUNG (MySQL)' : 'OFFLINE'
       });
     } catch (e) {

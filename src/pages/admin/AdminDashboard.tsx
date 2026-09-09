@@ -17,18 +17,17 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { useStore } from '../../store/useStore';
-import { dbService, ActivityLog } from '../../lib/db';
+import { ActivityLog } from '../../lib/constants';
 
 export default function AdminDashboard() {
   const { mockUsers, cmsItems, appSettings, activityLogs, refreshFromDB, currentUser, role } = useStore();
-  const [logs, setLogs] = useState<ActivityLog[]>(activityLogs);
+  const [logs] = useState<ActivityLog[]>(activityLogs);
 
   const effectiveRole = currentUser?.role || role || 'USER';
   const isContentAdmin = effectiveRole === 'CONTENT_ADMIN';
 
   useEffect(() => {
     refreshFromDB();
-    dbService.getActivityLogs(8).then(setLogs).catch(() => {});
   }, []);
 
   const totalUsers = mockUsers.length;
