@@ -165,10 +165,24 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#FDFBF7] dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col md:flex-row overflow-x-hidden transition-colors duration-300">
+    <motion.div 
+      layout
+      transition={{ type: 'spring', stiffness: 220, damping: 26 }}
+      className={`min-h-screen w-full bg-[#FDFBF7] dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col ${
+        authMode === 'signup' ? 'md:flex-row-reverse' : 'md:flex-row'
+      } overflow-x-hidden transition-colors duration-300`}
+    >
       
-      {/* ======================= LEFT HERO SHOWCASE PANEL (Full Height 45% Edge-to-Edge) ======================= */}
-      <div className="w-full md:w-5/12 lg:w-[45%] bg-gradient-to-br from-emerald-950 via-slate-900 to-teal-950 text-white p-6 sm:p-10 lg:p-14 flex flex-col justify-between relative overflow-hidden border-b md:border-b-0 md:border-r border-emerald-500/20 shrink-0">
+      {/* ======================= HERO SHOWCASE PANEL (Swaps Position on Login vs Signup) ======================= */}
+      <motion.div 
+        layout
+        transition={{ type: 'spring', stiffness: 220, damping: 26 }}
+        className={`w-full md:w-5/12 lg:w-[45%] bg-gradient-to-br ${
+          authMode === 'signup' 
+            ? 'from-teal-950 via-slate-900 to-emerald-950 border-b md:border-b-0 md:border-l' 
+            : 'from-emerald-950 via-slate-900 to-teal-950 border-b md:border-b-0 md:border-r'
+        } border-emerald-500/20 text-white p-6 sm:p-10 lg:p-14 flex flex-col justify-between relative overflow-hidden shrink-0 transition-colors duration-500`}
+      >
         
         {/* Ambient Glows & Islamic Pattern Mesh */}
         <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
@@ -192,8 +206,8 @@ export default function Login() {
           {/* Dynamic Hero Heading based on Auth Mode */}
           <motion.div
             key={authMode + '-left-header'}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: authMode === 'signup' ? 15 : -15 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
             className="space-y-3 pt-2"
           >
@@ -251,18 +265,30 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Bottom Quote & Trust Footer */}
-        <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
-          <div className="flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-emerald-400" />
-            <span>Berlandaskan Al-Qur'an & As-Sunnah</span>
+        {/* Bottom Quick Switch Action & Trust Footer */}
+        <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between">
+          <div className="text-xs text-slate-300 font-medium">
+            {authMode === 'signup' ? 'Sudah memiliki akun?' : 'Belum memiliki akun?'}
           </div>
-          <span className="text-[11px] text-emerald-400/80 font-semibold">v1.0 Fullstack</span>
+          <button
+            type="button"
+            onClick={() => toggleAuthMode(authMode === 'signup' ? 'login' : 'signup')}
+            className="px-4 py-2 rounded-full bg-white hover:bg-emerald-50 text-slate-900 text-xs font-black transition-all active:scale-95 shadow-md flex items-center gap-2 cursor-pointer hover:scale-105"
+          >
+            <span>{authMode === 'signup' ? 'Masuk Akun' : 'Daftar Baru'}</span>
+            <div className="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center">
+              <ArrowRight className="w-3 h-3" />
+            </div>
+          </button>
         </div>
-      </div>
+      </motion.div>
 
-      {/* ======================= RIGHT INTERACTIVE FORM PANEL (55% Full Width/Height) ======================= */}
-      <div className="flex-1 w-full flex flex-col justify-between p-6 sm:p-10 lg:p-14 bg-white dark:bg-slate-950 relative overflow-y-auto">
+      {/* ======================= RIGHT / LEFT INTERACTIVE FORM PANEL ======================= */}
+      <motion.div 
+        layout
+        transition={{ type: 'spring', stiffness: 220, damping: 26 }}
+        className="flex-1 w-full flex flex-col justify-between p-6 sm:p-10 lg:p-14 bg-white dark:bg-slate-950 relative overflow-y-auto"
+      >
         
         {/* Top Control Bar (Landing Page Link + Theme Toggle + Audio + Buka Aplikasi) */}
         <div className="w-full flex items-center justify-between gap-3 pb-6 border-b border-slate-100 dark:border-slate-800/80">
@@ -744,7 +770,7 @@ export default function Login() {
           </div>
         </div>
 
-      </div>
+      </motion.div>
 
       {/* Legal Modal Dialog */}
       <LegalModal
@@ -752,6 +778,6 @@ export default function Login() {
         onClose={() => setLegalModal(prev => ({ ...prev, isOpen: false }))}
         type={legalModal.type}
       />
-    </div>
+    </motion.div>
   );
 }
