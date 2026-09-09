@@ -5,7 +5,7 @@
 
 export const getApiBaseUrl = (): string => {
   if (import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL;
+    return import.meta.env.VITE_API_URL.replace(/\/$/, '');
   }
   // If running locally, connect to local Laravel API
   if (typeof window !== 'undefined') {
@@ -13,15 +13,15 @@ export const getApiBaseUrl = (): string => {
     if (isLocal) {
       return 'http://127.0.0.1:8000/api/v1';
     }
+    // On live production domain (cPanel / custom domain), connect to /api/v1 on current domain
+    return `${window.location.origin}/api/v1`;
   }
-  // On external HTTPS hosting (GitHub Pages), return empty to gracefully use client IndexedDB
-  return '';
+  return '/api/v1';
 };
 
 export const isLocalLoopbackSupported = (): boolean => {
   if (typeof window === 'undefined') return false;
-  if (import.meta.env.VITE_API_URL) return true;
-  return ['localhost', '127.0.0.1', '0.0.0.0'].includes(window.location.hostname);
+  return true;
 };
 
 export const API_BASE_URL = getApiBaseUrl();
@@ -43,11 +43,6 @@ class ApiClient {
 
   private async request<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const baseUrl = getApiBaseUrl();
-    if (!baseUrl) {
-      // Remote hosting with no cloud API: return mock rejection so store uses IndexedDB
-      throw new Error('API server not configured for remote domain; using offline database.');
-    }
-
     const token = this.getToken();
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
@@ -68,7 +63,7 @@ class ApiClient {
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        const error: any = new Error(data.message || `API Error: ${response.status}`);
+        const error: any = new Error(data.message || `API Server Error (${response.status})`);
         error.status = response.status;
         error.data = data;
         throw error;
@@ -76,9 +71,7 @@ class ApiClient {
 
       return data;
     } catch (err: any) {
-      if (isLocalLoopbackSupported()) {
-        console.warn(`[API Client] Request to ${endpoint} failed:`, err.message);
-      }
+      console.warn(`[API Client] Request to ${baseUrl}${endpoint} failed:`, err.message);
       throw err;
     }
   }
