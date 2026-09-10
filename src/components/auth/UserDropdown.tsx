@@ -166,36 +166,6 @@ export default function UserDropdown() {
               </Link>
             )}
 
-            {/* Quick Demo Switch Section */}
-            <div className="my-1 border-t border-slate-100 dark:border-slate-800 pt-2">
-              <span className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">
-                Ganti Akun Demo
-              </span>
-              <div className="space-y-1">
-                {DEMO_ACCOUNTS.map((acc) => {
-                  const isActive = acc.id === currentUser.id;
-                  return (
-                    <button
-                      key={acc.id}
-                      onClick={() => handleSwitchAccount(acc.id)}
-                      className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-colors ${
-                        isActive
-                          ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-bold'
-                          : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 truncate">
-                        <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-600'}`} />
-                        <span className="truncate">{acc.name}</span>
-                      </div>
-                      <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">
-                        {acc.role === 'SUPER_ADMIN' ? 'Super' : acc.role === 'CONTENT_ADMIN' ? 'Ustadz' : acc.plan !== 'FREE' ? 'PRO' : 'Free'}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
 
             {/* Settings and Sound */}
             <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 space-y-1">

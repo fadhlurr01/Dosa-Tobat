@@ -265,8 +265,8 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Bottom Quick Switch Action & Trust Footer */}
-        <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between">
+        {/* Bottom Quick Switch Action (Desktop only to prevent collision with mobile form tabs) */}
+        <div className="hidden md:flex relative z-10 pt-4 border-t border-white/10 items-center justify-between">
           <div className="text-xs text-slate-300 font-medium">
             {authMode === 'signup' ? 'Sudah memiliki akun?' : 'Belum memiliki akun?'}
           </div>
@@ -287,21 +287,21 @@ export default function Login() {
       <motion.div 
         layout
         transition={{ type: 'spring', stiffness: 220, damping: 26 }}
-        className="flex-1 w-full flex flex-col justify-between p-6 sm:p-10 lg:p-14 bg-white dark:bg-slate-950 relative overflow-y-auto"
+        className="flex-1 w-full flex flex-col justify-between p-4 sm:p-8 lg:p-14 bg-white dark:bg-slate-950 relative overflow-y-auto"
       >
         
-        {/* Top Control Bar (Landing Page Link + Theme Toggle + Audio + Buka Aplikasi) */}
-        <div className="w-full flex items-center justify-between gap-3 pb-6 border-b border-slate-100 dark:border-slate-800/80">
+        {/* Top Control Bar (Mobile-optimized flex layout) */}
+        <div className="w-full flex items-center justify-between gap-2 pb-4 sm:pb-6 border-b border-slate-100 dark:border-slate-800/80 flex-wrap sm:flex-nowrap">
           <Link
             to="/"
             onClick={() => soundFx.playTap()}
-            className="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 rounded-full shadow-2xs transition-all inline-flex items-center gap-1.5 hover:scale-[1.02] active:scale-95"
+            className="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-full shadow-2xs transition-all inline-flex items-center gap-1.5 active:scale-95"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Landing Page</span>
+            <span>Beranda</span>
           </Link>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 shrink-0">
             {/* Theme Toggle Button */}
             <button
               onClick={() => {
