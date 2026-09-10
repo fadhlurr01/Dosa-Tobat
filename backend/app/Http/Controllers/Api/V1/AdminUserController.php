@@ -54,6 +54,14 @@ class AdminUserController extends Controller
             ]);
         }
 
+        // Security Guard: Primary Super Admin cannot be deleted
+        if (strtolower($user->email) === 'admin@taubat.app' || $user->role === 'SUPER_ADMIN') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akun Super Admin Utama dilindungi sistem dan tidak dapat dihapus.',
+            ], 403);
+        }
+
         $userName = $user->name;
         $userEmail = $user->email;
 
@@ -109,6 +117,23 @@ class AdminUserController extends Controller
             ], 404);
         }
 
+        // Security Guard: Primary Super Admin role and status are immutable
+        $isSuperAdmin = (strtolower($user->email) === 'admin@taubat.app' || $user->role === 'SUPER_ADMIN');
+        if ($isSuperAdmin) {
+            if ($request->has('role') && $request->input('role') !== 'SUPER_ADMIN') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Peran Super Admin Utama dilindungi sistem dan tidak dapat diubah.',
+                ], 403);
+            }
+            if ($request->has('status') && $request->input('status') === 'SUSPENDED') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Akun Super Admin Utama tidak dapat dinonaktifkan (anti lockout).',
+                ], 403);
+            }
+        }
+
         if ($request->has('name')) $user->name = $request->input('name');
         if ($request->has('email')) $user->email = strtolower($request->input('email'));
         if ($request->has('phone')) $user->phone = $request->input('phone');
@@ -158,6 +183,14 @@ class AdminUserController extends Controller
                 'success' => false,
                 'message' => 'User tidak ditemukan di MySQL.',
             ], 404);
+        }
+
+        // Security Guard: Primary Super Admin cannot be suspended
+        if (strtolower($user->email) === 'admin@taubat.app' || $user->role === 'SUPER_ADMIN') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akun Super Admin Utama dilindungi dan tidak dapat dinonaktifkan.',
+            ], 403);
         }
 
         $user->status = $status;

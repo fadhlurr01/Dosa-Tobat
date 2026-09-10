@@ -19,6 +19,7 @@ backend/bootstrap/cache/*
 backend/database/database.sqlite
 backend/database/database.sqlite-journal
 *.zip
+dosa_taubat.sql/
 
 !.env.example
 !backend/.env.example

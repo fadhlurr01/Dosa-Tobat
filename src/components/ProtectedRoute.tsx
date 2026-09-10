@@ -13,19 +13,15 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
-  const { role, isAuthenticated, loginDemo } = useStore();
+  const { role, currentUser, isAuthenticated } = useStore();
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  if (!allowedRoles.includes(role)) {
-    const handleQuickAdminLogin = () => {
-      soundFx.playSuccess();
-      loginDemo('demo_user_4'); // Siti Rahmah (Super Admin)
-      triggerConfetti();
-    };
+  const effectiveRole = currentUser?.role || role || 'USER';
 
+  if (!allowedRoles.includes(effectiveRole)) {
     return (
       <div className="min-h-screen bg-[#FDFBF7] dark:bg-slate-950 flex flex-col items-center justify-center p-6 text-center">
         <motion.div
@@ -39,47 +35,39 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
 
           <div className="space-y-2">
             <h2 className="text-xl font-extrabold text-slate-800 dark:text-slate-100">
-              Akses Terbatas: Admin Console
+              Akses Ditolak (403 Forbidden)
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Halaman ini membutuhkan hak akses peran Admin atau Super Admin. Akun Anda saat ini bertindak sebagai <span className="font-bold text-emerald-600 dark:text-emerald-400">{role}</span>.
+              Halaman ini dikhususkan bagi Administrator. Akun Anda saat ini ({currentUser?.name || 'Pengguna'}) terdaftar sebagai peran <span className="font-bold text-rose-600 dark:text-rose-400">{effectiveRole}</span>.
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 text-left space-y-3">
-            <div className="flex items-center gap-2 text-xs font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">
-              <Sparkles className="w-4 h-4 text-amber-500" />
-              Solusi Instan (Demo Mode)
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 text-left space-y-2">
+            <div className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Batasan Hak Akses:
             </div>
-            <p className="text-xs text-slate-600 dark:text-slate-300">
-              Anda dapat langsung beralih ke akun Super Admin Demo untuk menguji seluruh fitur Content Management & Dashboard.
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Pengguna biasa tidak diizinkan masuk atau mengelola konsol administratif tanpa izin khusus dari Super Administrator.
             </p>
-            <button
-              onClick={handleQuickAdminLogin}
-              className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-2"
-            >
-              <Check className="w-4 h-4" />
-              Beralih ke Super Admin (1-Klik)
-            </button>
           </div>
 
-          <div className="flex items-center justify-between pt-2">
+          <div className="space-y-2 pt-2">
             <Link
-              to="/"
+              to="/app"
               onClick={() => soundFx.playTap()}
-              className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
+              className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-2"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              Kembali ke Beranda
+              <ArrowLeft className="w-4 h-4" />
+              Kembali ke Dashboard Utama
             </Link>
 
             <Link
               to="/login"
               onClick={() => soundFx.playTap()}
-              className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 transition-colors"
+              className="w-full py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs transition-colors flex items-center justify-center gap-2"
             >
-              <LogIn className="w-3.5 h-3.5" />
-              Ganti Akun Lain
+              <LogIn className="w-4 h-4" />
+              Masuk dengan Akun Admin
             </Link>
           </div>
         </motion.div>

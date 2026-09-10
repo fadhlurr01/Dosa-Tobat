@@ -25,7 +25,7 @@ import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
 import { soundFx } from '../../lib/soundFx';
 
 export default function UserManagementView() {
-  const { mockUsers, updateMockUserStatus, deleteUser, editUser, refreshFromDB } = useStore();
+  const { mockUsers, updateMockUserStatus, deleteUser, editUser, refreshFromDB, currentUser } = useStore();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [planFilter, setPlanFilter] = useState<'ALL' | 'FREE' | 'PREMIUM'>('ALL');
@@ -104,6 +104,10 @@ export default function UserManagementView() {
   }, [mockUsers, searchQuery, planFilter, roleFilter]);
 
   const handleOpenStatusModal = (user: UserAccount) => {
+    // Security Guard: Cannot suspend Super Admin or self
+    if (user.role === 'SUPER_ADMIN' || user.email === 'admin@taubat.app' || user.id === currentUser.id) {
+      return;
+    }
     soundFx.playTap();
     const nextStatus = user.status === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE';
     setStatusModal({
@@ -127,6 +131,11 @@ export default function UserManagementView() {
   };
 
   const handleOpenDelete = (id: string, name: string) => {
+    const target = mockUsers.find(u => u.id === id);
+    // Security Guard: Cannot delete Super Admin or self
+    if (target?.role === 'SUPER_ADMIN' || target?.email === 'admin@taubat.app' || id === currentUser.id) {
+      return;
+    }
     soundFx.playTap();
     setDeleteModal({
       isOpen: true,
@@ -361,18 +370,27 @@ export default function UserManagementView() {
                           <Edit2 className="w-4 h-4 text-indigo-500 hover:text-indigo-600" />
                         </button>
                         
-                        <button 
-                          onClick={() => handleOpenStatusModal(user)}
-                          className={`text-xs font-semibold px-2.5 py-1 rounded-lg border transition-colors cursor-pointer ${
-                            user.status === 'ACTIVE'
-                              ? 'text-rose-600 border-rose-200 hover:bg-rose-50 dark:border-rose-900/50 dark:hover:bg-rose-950/30'
-                              : 'text-emerald-600 border-emerald-200 hover:bg-emerald-50 dark:border-emerald-900/50 dark:hover:bg-emerald-950/30'
-                          }`}
-                        >
-                          {user.status === 'ACTIVE' ? 'Suspend' : 'Aktifkan'}
-                        </button>
+                        {user.role === 'SUPER_ADMIN' || user.email === 'admin@taubat.app' || user.id === currentUser.id ? (
+                          <span 
+                            className="text-[11px] font-semibold px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800/50 cursor-not-allowed select-none"
+                            title="Akun Super Admin & akun Anda sendiri dilindungi sistem (anti lockout)"
+                          >
+                            Dilindungi
+                          </span>
+                        ) : (
+                          <button 
+                            onClick={() => handleOpenStatusModal(user)}
+                            className={`text-xs font-semibold px-2.5 py-1 rounded-lg border transition-colors cursor-pointer ${
+                              user.status === 'ACTIVE'
+                                ? 'text-rose-600 border-rose-200 hover:bg-rose-50 dark:border-rose-900/50 dark:hover:bg-rose-950/30'
+                                : 'text-emerald-600 border-emerald-200 hover:bg-emerald-50 dark:border-emerald-900/50 dark:hover:bg-emerald-950/30'
+                            }`}
+                          >
+                            {user.status === 'ACTIVE' ? 'Suspend' : 'Aktifkan'}
+                          </button>
+                        )}
 
-                        {!user.isDemo && (
+                        {!user.isDemo && user.role !== 'SUPER_ADMIN' && user.email !== 'admin@taubat.app' && user.id !== currentUser.id && (
                           <button
                             onClick={() => handleOpenDelete(user.id, user.name)}
                             className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
@@ -562,66 +580,103 @@ export default function UserManagementView() {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                      Role Pengguna
-                    </label>
-                    <select
-                      value={editFormData.role}
-                      onChange={(e) => setEditFormData({ ...editFormData, role: e.target.value as Role })}
-                      className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl font-semibold outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100 cursor-pointer"
-                    >
-                      <option value="USER">USER (Reguler)</option>
-                      <option value="CONTENT_ADMIN">CONTENT_ADMIN</option>
-                      <option value="SUPER_ADMIN">SUPER_ADMIN</option>
-                    </select>
-                  </div>
+                {(() => {
+                  const isEditingSuperAdmin = editingUser?.role === 'SUPER_ADMIN' || editingUser?.email === 'admin@taubat.app';
+                  const isEditingSelf = editingUser?.id === currentUser.id || editingUser?.email === currentUser.email;
+                  const canEditRole = currentUser.role === 'SUPER_ADMIN' && !isEditingSuperAdmin && !isEditingSelf;
+                  const canEditStatus = !isEditingSuperAdmin && !isEditingSelf;
 
-                  <div>
-                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                      Paket Langganan
-                    </label>
-                    <select
-                      value={editFormData.plan}
-                      onChange={(e) => setEditFormData({ ...editFormData, plan: e.target.value as SubscriptionPlan })}
-                      className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl font-semibold outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100 cursor-pointer"
-                    >
-                      <option value="FREE">FREE Member</option>
-                      <option value="PREMIUM_MONTHLY">PRO Bulanan</option>
-                      <option value="PREMIUM_YEARLY">PRO Tahunan</option>
-                    </select>
-                  </div>
-                </div>
+                  return (
+                    <>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                            Role Pengguna
+                          </label>
+                          <select
+                            value={editFormData.role}
+                            disabled={!canEditRole}
+                            onChange={(e) => setEditFormData({ ...editFormData, role: e.target.value as Role })}
+                            className={`w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl font-semibold outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100 ${
+                              !canEditRole ? 'opacity-60 cursor-not-allowed bg-slate-100 dark:bg-slate-900' : 'cursor-pointer'
+                            }`}
+                          >
+                            <option value="USER">USER (Reguler)</option>
+                            <option value="CONTENT_ADMIN">CONTENT_ADMIN</option>
+                            <option value="SUPER_ADMIN">SUPER_ADMIN</option>
+                          </select>
+                          {isEditingSuperAdmin && (
+                            <p className="text-[10px] text-amber-600 dark:text-amber-400 font-medium mt-1">
+                              🔒 Akun Super Admin Utama dilindungi sistem dan perannya tidak dapat diubah.
+                            </p>
+                          )}
+                          {!isEditingSuperAdmin && isEditingSelf && (
+                            <p className="text-[10px] text-amber-600 dark:text-amber-400 font-medium mt-1">
+                              🔒 Anda tidak dapat mengubah peran akun Anda sendiri.
+                            </p>
+                          )}
+                          {!isEditingSuperAdmin && !isEditingSelf && currentUser.role !== 'SUPER_ADMIN' && (
+                            <p className="text-[10px] text-slate-500 mt-1">
+                              🔒 Hanya Super Admin yang berhak mempromosikan atau mengubah hak akses pengguna lain.
+                            </p>
+                          )}
+                        </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                      Status Akun
-                    </label>
-                    <select
-                      value={editFormData.status}
-                      onChange={(e) => setEditFormData({ ...editFormData, status: e.target.value as AccountStatus })}
-                      className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl font-semibold outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100 cursor-pointer"
-                    >
-                      <option value="ACTIVE">ACTIVE (Aktif)</option>
-                      <option value="SUSPENDED">SUSPENDED (Diblokir)</option>
-                    </select>
-                  </div>
+                        <div>
+                          <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                            Paket Langganan
+                          </label>
+                          <select
+                            value={editFormData.plan}
+                            onChange={(e) => setEditFormData({ ...editFormData, plan: e.target.value as SubscriptionPlan })}
+                            className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl font-semibold outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100 cursor-pointer"
+                          >
+                            <option value="FREE">FREE Member</option>
+                            <option value="PREMIUM_MONTHLY">PRO Bulanan</option>
+                            <option value="PREMIUM_YEARLY">PRO Tahunan</option>
+                          </select>
+                        </div>
+                      </div>
 
-                  <div>
-                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                      Gelar / Level Keistiqomahan
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Pejuang Istiqomah"
-                      value={editFormData.title}
-                      onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
-                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl font-semibold outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100"
-                    />
-                  </div>
-                </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                            Status Akun
+                          </label>
+                          <select
+                            value={editFormData.status}
+                            disabled={!canEditStatus}
+                            onChange={(e) => setEditFormData({ ...editFormData, status: e.target.value as AccountStatus })}
+                            className={`w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl font-semibold outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100 ${
+                              !canEditStatus ? 'opacity-60 cursor-not-allowed bg-slate-100 dark:bg-slate-900' : 'cursor-pointer'
+                            }`}
+                          >
+                            <option value="ACTIVE">ACTIVE (Aktif)</option>
+                            <option value="SUSPENDED">SUSPENDED (Diblokir)</option>
+                          </select>
+                          {!canEditStatus && (
+                            <p className="text-[10px] text-amber-600 dark:text-amber-400 font-medium mt-1">
+                              🔒 Akun Super Admin & akun Anda sendiri tidak dapat dinonaktifkan (anti lockout).
+                            </p>
+                          )}
+                        </div>
+
+                        <div>
+                          <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                            Gelar / Level Keistiqomahan
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="e.g. Pejuang Istiqomah"
+                            value={editFormData.title}
+                            onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
+                            className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl font-semibold outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100"
+                          />
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()}
 
                 <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2.5">
                   <button

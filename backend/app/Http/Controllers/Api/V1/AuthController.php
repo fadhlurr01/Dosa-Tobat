@@ -133,6 +133,20 @@ class AuthController extends Controller
             ], 403);
         }
 
+        // Verify authentic password
+        if ($request->filled('password')) {
+            if (!Hash::check($validated['password'], $user->password)) {
+                $isDemoPass = $user->is_demo && in_array($validated['password'], ['password', 'password123', 'admin123']);
+                if (!$isDemoPass) {
+                    return response()->json([
+                        'success' => false,
+                        'error' => 'INVALID_PASSWORD',
+                        'message' => 'Password yang Anda masukkan salah. Silakan coba lagi.'
+                    ], 401);
+                }
+            }
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -146,19 +160,24 @@ class AuthController extends Controller
     }
 
     /**
-     * 1-Click Demo Login Switcher
+     * 1-Click Demo Login Switcher (Only Content Admin & Super Admin)
      */
     public function demoLogin(string $id): JsonResponse
     {
-        $idMap = [
-            'demo_user_1' => 1,
-            'demo_user_2' => 2,
-            'demo_user_3' => 3,
-            'demo_user_4' => 4,
-        ];
+        $user = null;
+        if ($id === 'demo_user_3') {
+            $user = User::where('email', 'farhan@taubat.app')->first();
+        } elseif ($id === 'demo_user_4') {
+            $user = User::where('email', 'admin@taubat.app')->first();
+        }
 
-        $numericId = $idMap[$id] ?? (is_numeric($id) ? (int)$id : 1);
-        $user = User::find($numericId) ?? User::first();
+        if (!$user && is_numeric($id)) {
+            $user = User::find((int)$id);
+        }
+
+        if (!$user) {
+            $user = User::where('role', 'SUPER_ADMIN')->first() ?? User::first();
+        }
 
         if (!$user) {
             return response()->json(['success' => false, 'message' => 'Akun demo tidak ditemukan'], 404);

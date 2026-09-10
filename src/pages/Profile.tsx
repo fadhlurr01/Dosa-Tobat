@@ -29,7 +29,10 @@ import {
   MessageSquare,
   FileText,
   Save,
-  Phone
+  Phone,
+  Camera,
+  X,
+  UploadCloud
 } from 'lucide-react';
 import { notificationService, NotificationFrequency } from '../services/notificationService';
 import { soundFx } from '../lib/soundFx';
@@ -69,6 +72,7 @@ export default function Profile() {
 
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const deviceAvatarInputRef = useRef<HTMLInputElement>(null);
 
   // Profile Edit States
   const [editName, setEditName] = useState(currentUser.name);
@@ -84,6 +88,70 @@ export default function Profile() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [passwordMessage, setPasswordMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleDeviceAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setProfileMessage({ type: 'error', text: 'File harus berupa gambar (JPG, PNG, WebP).' });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setProfileMessage({ type: 'error', text: 'Ukuran foto maksimal 5MB.' });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxDim = 256;
+        let w = img.width;
+        let h = img.height;
+        if (w > h) {
+          if (w > maxDim) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          }
+        } else {
+          if (h > maxDim) {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+        }
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, w, h);
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.85);
+        setEditAvatar(compressedBase64);
+        soundFx.playTap();
+        setProfileMessage({ type: 'success', text: 'Foto berhasil dimuat dari perangkat! Klik Simpan Perubahan di bawah.' });
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleCancelProfile = () => {
+    soundFx.playTap();
+    setEditName(currentUser.name);
+    setEditEmail(currentUser.email);
+    setEditPhone(currentUser.phone || '');
+    setEditAvatar(currentUser.avatar || AVATAR_PRESETS[0]);
+    setProfileMessage(null);
+  };
+
+  const handleCancelPassword = () => {
+    soundFx.playTap();
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+    setPasswordMessage(null);
+  };
 
   // Backup / Restore / Reset States
   const [seedSuccess, setSeedSuccess] = useState(false);
@@ -328,18 +396,62 @@ export default function Profile() {
             </div>
           )}
 
-          {/* Ganti Foto Profil (Pilihan Avatar) */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
-              Pilih Foto Profil (Avatar)
-            </label>
-            <div className="flex items-center gap-3 overflow-x-auto pb-2 hide-scrollbar">
+          {/* Ganti Foto Profil (Pilihan Avatar & Upload Perangkat) */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                Foto Profil (Avatar)
+              </label>
+              <button
+                type="button"
+                onClick={() => {
+                  soundFx.playTap();
+                  deviceAvatarInputRef.current?.click();
+                }}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs font-bold hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-all cursor-pointer shadow-2xs"
+              >
+                <Camera className="w-3.5 h-3.5" />
+                <span>Pilih dari Perangkat / Galeri</span>
+              </button>
+            </div>
+
+            <input
+              ref={deviceAvatarInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleDeviceAvatarUpload}
+              className="hidden"
+            />
+
+            {/* Avatar Selection Row */}
+            <div className="flex items-center gap-3 overflow-x-auto pb-2 hide-scrollbar pt-1">
+              {/* Custom Device Upload Preview if selected */}
+              {!AVATAR_PRESETS.includes(editAvatar) && (
+                <button
+                  type="button"
+                  onClick={() => {}}
+                  className="relative p-0.5 rounded-2xl ring-2 ring-emerald-500 scale-105 shadow-md shrink-0 cursor-default"
+                >
+                  <img src={editAvatar} alt="Foto Perangkat" className="w-12 h-12 rounded-2xl object-cover" />
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 text-white rounded-full flex items-center justify-center text-[10px]">
+                    <Check className="w-2.5 h-2.5" />
+                  </div>
+                  <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-[9px] bg-emerald-600 text-white px-1.5 py-0.5 rounded-full font-bold whitespace-nowrap shadow-xs">
+                    Perangkat
+                  </span>
+                </button>
+              )}
+
+              {/* Website Built-in Preset Avatars */}
               {AVATAR_PRESETS.map((avatarUrl, idx) => (
                 <button
                   key={idx}
                   type="button"
-                  onClick={() => setEditAvatar(avatarUrl)}
-                  className={`relative p-0.5 rounded-2xl transition-all ${
+                  onClick={() => {
+                    soundFx.playTap();
+                    setEditAvatar(avatarUrl);
+                  }}
+                  className={`relative p-0.5 rounded-2xl transition-all shrink-0 cursor-pointer ${
                     editAvatar === avatarUrl 
                       ? 'ring-2 ring-emerald-500 scale-105 shadow-md' 
                       : 'opacity-70 hover:opacity-100 hover:scale-100'
@@ -426,14 +538,25 @@ export default function Profile() {
             </div>
           </div>
 
-          <div className="flex justify-end pt-2">
+          {/* Action Buttons: Save & Cancel for Profile Form */}
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+            <button
+              type="button"
+              onClick={handleCancelProfile}
+              disabled={isSavingProfile}
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold transition-all cursor-pointer disabled:opacity-50 active:scale-95"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Batal</span>
+            </button>
+
             <button
               type="submit"
               disabled={isSavingProfile}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-600/20 disabled:opacity-50 transition-all"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-600/20 disabled:opacity-50 transition-all cursor-pointer active:scale-95"
             >
               <Save className="w-4 h-4" />
-              {isSavingProfile ? 'Menyimpan...' : 'Simpan Perubahan Profil'}
+              <span>{isSavingProfile ? 'Menyimpan...' : 'Simpan Perubahan'}</span>
             </button>
           </div>
         </form>
@@ -497,14 +620,25 @@ export default function Profile() {
             </div>
           </div>
 
-          <div className="flex justify-end pt-2">
+          {/* Action Buttons: Save & Cancel for Password Form */}
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+            <button
+              type="button"
+              onClick={handleCancelPassword}
+              disabled={isChangingPassword}
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold transition-all cursor-pointer disabled:opacity-50 active:scale-95"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Batal</span>
+            </button>
+
             <button
               type="submit"
               disabled={isChangingPassword}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white text-xs font-bold shadow-sm disabled:opacity-50 transition-all"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white text-xs font-bold shadow-sm disabled:opacity-50 transition-all cursor-pointer active:scale-95"
             >
               <Lock className="w-4 h-4" />
-              {isChangingPassword ? 'Memperbarui...' : 'Ubah Password'}
+              <span>{isChangingPassword ? 'Memperbarui...' : 'Simpan Password Baru'}</span>
             </button>
           </div>
         </form>
@@ -567,48 +701,7 @@ export default function Profile() {
         </div>
       </section>
 
-      {/* 4. Demo Accounts Switcher Section */}
-      <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-500" /> Ganti Akun Demo Pengujian
-          </h2>
-          <Link to="/login" onClick={() => soundFx.playTap()} className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
-            Halaman Login
-          </Link>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          {DEMO_ACCOUNTS.map((acc) => {
-            const isActive = acc.id === currentUser.id;
-            return (
-              <button
-                key={acc.id}
-                onClick={() => handleSwitchDemo(acc.id)}
-                className={`p-3 rounded-2xl border text-left transition-all flex items-center gap-3 cursor-pointer ${
-                  isActive 
-                    ? 'border-emerald-500 bg-emerald-50/70 dark:bg-emerald-950/40 shadow-xs' 
-                    : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300'
-                }`}
-              >
-                <img src={acc.avatar} alt={acc.name} className="w-10 h-10 rounded-xl object-cover" />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1">
-                    <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{acc.name}</h3>
-                    {acc.role === 'SUPER_ADMIN' && <Crown className="w-3 h-3 text-amber-500 shrink-0" />}
-                  </div>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 capitalize">{acc.role.toLowerCase().replace('_', ' ')}</span>
-                </div>
-                {isActive && (
-                  <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs shadow-xs">
-                    <Check className="w-3 h-3" />
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </section>
 
       {/* 5. Theme & Appearance */}
       <section className="space-y-4">
@@ -750,32 +843,13 @@ export default function Profile() {
         </div>
       </section>
 
-      {/* 9. Developer & Admin Section */}
-      <section className="space-y-4">
-        <h2 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-2">
-          <ShieldAlert className="w-4 h-4" /> Mode Pengembang & Demo
-        </h2>
-        <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-3">
-          {seedSuccess && (
-            <motion.div
-              initial={{ opacity: 0, y: -5 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center gap-2 border border-emerald-200 dark:border-emerald-800"
-            >
-              <CheckCircle2 className="w-4 h-4" />
-              Data demo perjalanan & jurnal berhasil dimuat!
-            </motion.div>
-          )}
-
-          <button 
-            onClick={handleSeedData}
-            className="w-full flex items-center justify-center gap-2 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 py-3 rounded-xl font-bold text-xs shadow-sm transition-all hover:bg-emerald-200 dark:hover:bg-emerald-900/50"
-          >
-            <Zap className="w-4 h-4" />
-            Muat Data Demo Lengkap (Seed Data)
-          </button>
-
-          {(currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'ADMIN' || currentUser.role === 'CONTENT_ADMIN') && (
+      {/* 9. Admin Console Access (Hanya untuk Admin / Asatidz) */}
+      {(currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'ADMIN' || currentUser.role === 'CONTENT_ADMIN') && (
+        <section className="space-y-4">
+          <h2 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-2">
+            <ShieldAlert className="w-4 h-4 text-indigo-500" /> Konsol Administrator & Manajemen
+          </h2>
+          <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-3">
             <Link 
               to="/admin"
               onClick={() => soundFx.playTap()}
@@ -784,9 +858,9 @@ export default function Profile() {
               <ShieldAlert className="w-4 h-4 inline-block" />
               Buka Admin Console (CMS & Users)
             </Link>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* Feedback Modal */}
       <FeedbackModal

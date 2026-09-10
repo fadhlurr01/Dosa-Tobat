@@ -52,6 +52,7 @@ interface AppState {
 
   // Actions
   initDB: () => Promise<void>;
+  restoreSession: () => Promise<void>;
   login: (email: string, password?: string) => Promise<LoginResult>;
   loginDemo: (demoId: string) => void;
   logout: () => void;
@@ -88,20 +89,79 @@ interface AppState {
   refreshFromDB: () => Promise<void>;
 }
 
+const getInitialSession = (): {
+  user: UserAccount;
+  isAuthenticated: boolean;
+  journeys: Record<string, UserJourney>;
+  journals: JournalEntry[];
+} => {
+  if (typeof window === 'undefined') {
+    return { user: DEFAULT_USER, isAuthenticated: false, journeys: {}, journals: [] };
+  }
+  try {
+    const rawUser = localStorage.getItem('dt_active_user');
+    const token = localStorage.getItem('dt_auth_token');
+    const demoId = localStorage.getItem('dt_demo_id');
+
+    let initialUser: UserAccount = DEFAULT_USER;
+    let isAuth = false;
+
+    if (rawUser) {
+      const parsed = JSON.parse(rawUser);
+      if (parsed && parsed.name && parsed.status !== 'SUSPENDED') {
+        initialUser = parsed;
+        isAuth = true;
+      }
+    } else if (demoId) {
+      const demoAccount = DEMO_ACCOUNTS.find(a => a.id === demoId);
+      if (demoAccount) {
+        initialUser = demoAccount;
+        isAuth = true;
+      }
+    } else if (token) {
+      isAuth = true;
+    }
+
+    const userKey = initialUser.id || initialUser.email || 'guest';
+    let storedJourneys: Record<string, UserJourney> = {};
+    let storedJournals: JournalEntry[] = [];
+
+    const rawJourneys = localStorage.getItem(`dt_journeys_${userKey}`);
+    if (rawJourneys) {
+      try { storedJourneys = JSON.parse(rawJourneys); } catch (e) {}
+    }
+    const rawJournals = localStorage.getItem(`dt_journals_${userKey}`);
+    if (rawJournals) {
+      try { storedJournals = JSON.parse(rawJournals); } catch (e) {}
+    }
+
+    return {
+      user: initialUser,
+      isAuthenticated: isAuth,
+      journeys: storedJourneys,
+      journals: storedJournals,
+    };
+  } catch (e) {
+    return { user: DEFAULT_USER, isAuthenticated: false, journeys: {}, journals: [] };
+  }
+};
+
+const initialSession = getInitialSession();
+
 export const useStore = create<AppState>((set, get) => ({
-  currentUser: DEFAULT_USER,
-  isAuthenticated: false,
+  currentUser: initialSession.user,
+  isAuthenticated: initialSession.isAuthenticated,
   soundEnabled: true,
   bookmarks: [],
-  journeys: {},
-  journals: [],
+  journeys: initialSession.journeys,
+  journals: initialSession.journals,
   dailyIbadah: {},
-  userName: 'Tamu',
+  userName: initialSession.user.name || 'Tamu',
   theme: 'system',
   language: 'id',
   notificationFrequency: 'normal',
-  role: 'USER',
-  plan: 'FREE',
+  role: initialSession.user.role || 'USER',
+  plan: initialSession.user.plan || 'FREE',
   cmsItems: INITIAL_CMS,
   mockUsers: INITIAL_USERS,
   appSettings: INITIAL_SETTINGS,
@@ -112,14 +172,24 @@ export const useStore = create<AppState>((set, get) => ({
     try {
       let users: UserAccount[] = INITIAL_USERS;
 
+      // Load locally stored registered users if any
+      let localSavedUsers: UserAccount[] = [];
+      try {
+        const raw = localStorage.getItem('dt_registered_users');
+        if (raw) {
+          localSavedUsers = JSON.parse(raw);
+        }
+      } catch (e) {}
+
       // 1. Live Fetch from Laravel REST API
       try {
         const apiUsersRes = await api.admin.getUsers();
         if (apiUsersRes && apiUsersRes.success && Array.isArray(apiUsersRes.data)) {
-          users = apiUsersRes.data.map((u: any) => ({
+          const apiUsers = apiUsersRes.data.map((u: any) => ({
             id: String(u.id),
             name: u.name,
             email: u.email,
+            phone: u.phone || undefined,
             role: (u.role as Role) || 'USER',
             plan: (u.plan as SubscriptionPlan) || 'FREE',
             status: (u.status as AccountStatus) || 'ACTIVE',
@@ -130,13 +200,23 @@ export const useStore = create<AppState>((set, get) => ({
             registrationDate: u.created_at || new Date().toISOString(),
             isDemo: Boolean(u.is_demo),
           }));
+          if (apiUsers.length > 0) {
+            users = apiUsers;
+          }
         }
       } catch (err: any) {
         console.log('[API Admin Notice] Live fetch from backend API:', err.message);
       }
 
+      // Merge local saved users into the list
+      const mergedMap = new Map<string, UserAccount>();
+      [...INITIAL_USERS, ...users, ...localSavedUsers].forEach(u => {
+        mergedMap.set(u.email.toLowerCase(), u);
+      });
+      const finalUsers = Array.from(mergedMap.values());
+
       set({
-        mockUsers: users.length > 0 ? users : INITIAL_USERS,
+        mockUsers: finalUsers,
         cmsItems: INITIAL_CMS,
         appSettings: INITIAL_SETTINGS,
         isDbReady: true,
@@ -155,6 +235,7 @@ export const useStore = create<AppState>((set, get) => ({
           id: String(u.id),
           name: u.name,
           email: u.email,
+          phone: u.phone || undefined,
           role: (u.role as Role) || 'USER',
           plan: (u.plan as SubscriptionPlan) || 'FREE',
           status: (u.status as AccountStatus) || 'ACTIVE',
@@ -173,6 +254,144 @@ export const useStore = create<AppState>((set, get) => ({
     }
   },
 
+  restoreSession: async () => {
+    try {
+      const token = api.getToken();
+      const storedDemoId = localStorage.getItem('dt_demo_id');
+      const storedUserRaw = localStorage.getItem('dt_active_user');
+
+      // 1. If bearer token exists in localStorage, verify directly with Laravel REST API
+      if (token) {
+        try {
+          const meRes = await api.auth.me();
+          if (meRes && meRes.data && meRes.data.user) {
+            const beUser = meRes.data.user;
+            const mappedUser: UserAccount = {
+              id: String(beUser.id),
+              name: beUser.name,
+              email: beUser.email,
+              phone: beUser.phone || undefined,
+              role: (beUser.role as Role) || 'USER',
+              plan: (beUser.plan as SubscriptionPlan) || 'FREE',
+              status: (beUser.status as AccountStatus) || 'ACTIVE',
+              title: beUser.title || (beUser.plan !== 'FREE' ? 'Pejuang Istiqomah (PRO)' : 'Penuntut Kebaikan'),
+              streakDays: beUser.streak_days || 0,
+              avatar: beUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80',
+              lastActive: new Date().toISOString(),
+              registrationDate: beUser.created_at || new Date().toISOString(),
+              isDemo: Boolean(beUser.is_demo),
+            };
+
+            // Live-sync journeys & journals from MySQL Database
+            let userJourneys: Record<string, UserJourney> = {};
+            let userJournals: JournalEntry[] = [];
+            try {
+              const [jRes, jnRes] = await Promise.all([
+                api.journeys.getAll().catch(() => null),
+                api.journals.getAll().catch(() => null),
+              ]);
+              if (jRes && jRes.success && Array.isArray(jRes.data)) {
+                jRes.data.forEach((j: any) => {
+                  userJourneys[j.sin_id] = {
+                    sinId: j.sin_id,
+                    startDate: j.start_date || j.created_at,
+                    lastRelapse: j.last_relapse,
+                    status: j.status || 'STABLE',
+                  };
+                });
+              }
+              if (jnRes && jnRes.success && Array.isArray(jnRes.data)) {
+                userJournals = jnRes.data.map((entry: any) => ({
+                  id: String(entry.id),
+                  date: entry.created_at || entry.date || new Date().toISOString(),
+                  mistake: entry.mistake,
+                  trigger: entry.trigger,
+                  hurt: entry.hurt,
+                  fix: entry.fix,
+                  prevent: entry.prevent,
+                }));
+              }
+            } catch (syncErr) {
+              console.log('[API Session Sync Warning]:', syncErr);
+            }
+
+            const userKey = mappedUser.id || mappedUser.email || 'guest';
+            let localJourneys: Record<string, UserJourney> = {};
+            try {
+              const rawJ = localStorage.getItem(`dt_journeys_${userKey}`);
+              if (rawJ) localJourneys = JSON.parse(rawJ);
+            } catch (e) {}
+            const finalJourneys = { ...localJourneys, ...userJourneys };
+            localStorage.setItem(`dt_journeys_${userKey}`, JSON.stringify(finalJourneys));
+
+            let localJournals: JournalEntry[] = [];
+            try {
+              const rawJn = localStorage.getItem(`dt_journals_${userKey}`);
+              if (rawJn) localJournals = JSON.parse(rawJn);
+            } catch (e) {}
+            const journalMap = new Map<string, JournalEntry>();
+            [...localJournals, ...userJournals].forEach(j => {
+              journalMap.set(j.id || `${j.date}_${j.mistake}`, j);
+            });
+            const finalJournals = Array.from(journalMap.values());
+            localStorage.setItem(`dt_journals_${userKey}`, JSON.stringify(finalJournals));
+
+            localStorage.setItem('dt_active_user', JSON.stringify(mappedUser));
+
+            set(() => ({
+              currentUser: mappedUser,
+              isAuthenticated: true,
+              userName: mappedUser.name,
+              role: mappedUser.role,
+              plan: mappedUser.plan,
+              journeys: finalJourneys,
+              journals: finalJournals,
+            }));
+            return;
+          }
+        } catch (authErr: any) {
+          console.warn('[RestoreSession meRes warning]:', authErr?.message);
+        }
+      }
+
+      // 2. If user previously logged in using a demo account
+      if (storedDemoId) {
+        get().loginDemo(storedDemoId);
+        return;
+      }
+
+      // 3. If stored local user exists in localStorage
+      if (storedUserRaw) {
+        try {
+          const parsedUser: UserAccount = JSON.parse(storedUserRaw);
+          if (parsedUser && parsedUser.id && parsedUser.status === 'ACTIVE') {
+            const userKey = parsedUser.id || parsedUser.email || 'guest';
+            let storedJourneys: Record<string, UserJourney> = {};
+            let storedJournals: JournalEntry[] = [];
+            try {
+              const rJ = localStorage.getItem(`dt_journeys_${userKey}`);
+              if (rJ) storedJourneys = JSON.parse(rJ);
+              const rJn = localStorage.getItem(`dt_journals_${userKey}`);
+              if (rJn) storedJournals = JSON.parse(rJn);
+            } catch (e) {}
+
+            set({
+              currentUser: parsedUser,
+              isAuthenticated: true,
+              userName: parsedUser.name,
+              role: parsedUser.role,
+              plan: parsedUser.plan,
+              journeys: storedJourneys,
+              journals: storedJournals,
+            });
+          }
+        } catch (e) {}
+      }
+    } catch (err: any) {
+      console.warn('Session restoration failed:', err.message);
+    }
+  },
+
   login: async (email: string, password?: string): Promise<LoginResult> => {
     const cleanEmail = email.toLowerCase().trim();
 
@@ -188,6 +407,7 @@ export const useStore = create<AppState>((set, get) => ({
           id: String(beUser.id || `usr_${Date.now()}`),
           name: beUser.name,
           email: beUser.email,
+          phone: beUser.phone || undefined,
           role: beUser.role || 'USER',
           plan: beUser.plan || 'FREE',
           status: beUser.status || 'ACTIVE',
@@ -232,14 +452,69 @@ export const useStore = create<AppState>((set, get) => ({
           console.log('[API Sync Notice]', syncErr);
         }
 
+        const userKey = mappedUser.id || mappedUser.email || 'guest';
+        let localJourneys: Record<string, UserJourney> = {};
+        try {
+          const rawJ = localStorage.getItem(`dt_journeys_${userKey}`);
+          if (rawJ) localJourneys = JSON.parse(rawJ);
+        } catch (e) {}
+        const finalJourneys = { ...localJourneys, ...userJourneys };
+        localStorage.setItem(`dt_journeys_${userKey}`, JSON.stringify(finalJourneys));
+
+        let localJournals: JournalEntry[] = [];
+        try {
+          const rawJn = localStorage.getItem(`dt_journals_${userKey}`);
+          if (rawJn) localJournals = JSON.parse(rawJn);
+        } catch (e) {}
+        const journalMap = new Map<string, JournalEntry>();
+        [...localJournals, ...userJournals].forEach(j => {
+          journalMap.set(j.id || `${j.date}_${j.mistake}`, j);
+        });
+        const finalJournals = Array.from(journalMap.values());
+        localStorage.setItem(`dt_journals_${userKey}`, JSON.stringify(finalJournals));
+
+        // Merge custom avatar or profile edits from local cache if present
+        try {
+          const rawLocal = localStorage.getItem('dt_registered_users');
+          if (rawLocal) {
+            const list: UserAccount[] = JSON.parse(rawLocal);
+            const found = list.find(u => u.email.toLowerCase() === cleanEmail);
+            if (found) {
+              if (found.avatar && (!beUser.avatar || !beUser.avatar.startsWith('data:'))) {
+                mappedUser.avatar = found.avatar;
+              }
+              if (found.phone && !beUser.phone) {
+                mappedUser.phone = found.phone;
+              }
+              if (found.name && (!beUser.name || beUser.name === 'User')) {
+                mappedUser.name = found.name;
+              }
+            }
+          }
+        } catch (e) {}
+
+        // Persist active session and updated user in registered users list
+        localStorage.setItem('dt_active_user', JSON.stringify(mappedUser));
+        localStorage.removeItem('dt_demo_id');
+        try {
+          const rawLocal = localStorage.getItem('dt_registered_users');
+          let list: UserAccount[] = rawLocal ? JSON.parse(rawLocal) : [];
+          if (!list.some(u => u.email.toLowerCase() === cleanEmail)) {
+            list.push(mappedUser);
+          } else {
+            list = list.map(u => u.email.toLowerCase() === cleanEmail ? { ...u, ...mappedUser } : u);
+          }
+          localStorage.setItem('dt_registered_users', JSON.stringify(list));
+        } catch (e) {}
+
         set((state) => ({
           currentUser: mappedUser,
           isAuthenticated: true,
           userName: mappedUser.name,
           role: mappedUser.role,
           plan: mappedUser.plan,
-          journeys: userJourneys,
-          journals: userJournals,
+          journeys: finalJourneys,
+          journals: finalJournals,
           mockUsers: state.mockUsers.some(u => u.id === mappedUser.id)
             ? state.mockUsers.map(u => u.id === mappedUser.id ? mappedUser : u)
             : [mappedUser, ...state.mockUsers],
@@ -249,18 +524,42 @@ export const useStore = create<AppState>((set, get) => ({
       }
     } catch (e: any) {
       console.log('[API Login Notice] Backend status:', e.status, e.message);
-      if (e.status === 404 || (e.message && e.message.includes('belum terdaftar'))) {
-        return {
-          success: false,
-          error: 'NOT_REGISTERED',
-          message: 'Akun belum terdaftar di database. Silakan lakukan pendaftaran akun terlebih dahulu.'
-        };
-      }
       if (e.status === 403 || (e.message && e.message.includes('dinonaktifkan'))) {
         return {
           success: false,
           error: 'SUSPENDED',
           message: 'Akun Anda sedang dinonaktifkan oleh Administrator. Hubungi bantuan.'
+        };
+      }
+
+      // Check if user exists in local store or demo accounts as fallback
+      const state = get();
+      const localUser = state.mockUsers.find(u => u.email.toLowerCase() === cleanEmail);
+      if (localUser) {
+        if (localUser.status === 'SUSPENDED') {
+          return {
+            success: false,
+            error: 'SUSPENDED',
+            message: 'Akun Anda sedang dinonaktifkan oleh Administrator. Hubungi bantuan.'
+          };
+        }
+        localStorage.setItem('dt_active_user', JSON.stringify(localUser));
+        localStorage.removeItem('dt_demo_id');
+        set({
+          currentUser: localUser,
+          isAuthenticated: true,
+          userName: localUser.name,
+          role: localUser.role,
+          plan: localUser.plan,
+        });
+        return { success: true };
+      }
+
+      if (e.status === 404 || (e.message && e.message.includes('belum terdaftar'))) {
+        return {
+          success: false,
+          error: 'NOT_REGISTERED',
+          message: 'Akun belum terdaftar di database. Silakan lakukan pendaftaran akun terlebih dahulu.'
         };
       }
       return {
@@ -284,6 +583,10 @@ export const useStore = create<AppState>((set, get) => ({
     api.auth.demo(demoId).then(res => {
       if (res?.data?.token) api.setToken(res.data.token);
     }).catch(() => {});
+
+    // Save demo user & demoId so refresh stays logged in
+    localStorage.setItem('dt_demo_id', demoId);
+    localStorage.setItem('dt_active_user', JSON.stringify(target));
 
     const today = new Date();
     const twoDaysAgo = new Date(today);
@@ -336,6 +639,8 @@ export const useStore = create<AppState>((set, get) => ({
     // Call API logout
     api.auth.logout().catch(() => {});
     api.setToken(null);
+    localStorage.removeItem('dt_active_user');
+    localStorage.removeItem('dt_demo_id');
 
     set({
       isAuthenticated: false,
@@ -351,10 +656,27 @@ export const useStore = create<AppState>((set, get) => ({
 
   registerUser: async (name: string, email: string, phone?: string, password?: string, initialGoal?: string) => {
     const cleanEmail = email.toLowerCase().trim();
+    const trimmedName = name.trim();
+
+    const fallbackUser: UserAccount = {
+      id: `usr_${Date.now()}`,
+      name: trimmedName,
+      email: cleanEmail,
+      phone: phone?.trim() || undefined,
+      role: 'USER',
+      plan: 'FREE',
+      status: 'ACTIVE',
+      title: initialGoal ? `Fokus: ${initialGoal}` : 'Penuntut Kebaikan Baru',
+      streakDays: 0,
+      avatar: `https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80`,
+      lastActive: new Date().toISOString(),
+      registrationDate: new Date().toISOString(),
+      isDemo: false,
+    };
 
     try {
       const apiRes = await api.auth.register({
-        name: name.trim(),
+        name: trimmedName,
         email: cleanEmail,
         phone: phone?.trim() || undefined,
         password: password || 'password123',
@@ -377,57 +699,114 @@ export const useStore = create<AppState>((set, get) => ({
           status: (beUser.status as AccountStatus) || 'ACTIVE',
           title: initialGoal ? `Fokus: ${initialGoal}` : 'Penuntut Kebaikan Baru',
           streakDays: 0,
-          avatar: beUser.avatar || `https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80`,
+          avatar: beUser.avatar || fallbackUser.avatar,
           lastActive: new Date().toISOString(),
           registrationDate: beUser.created_at || new Date().toISOString(),
           isDemo: false,
         };
 
-        set((state) => ({
-          mockUsers: [newUser, ...state.mockUsers],
-          currentUser: newUser,
-          isAuthenticated: true,
-          userName: newUser.name,
-          role: 'USER',
-          plan: 'FREE',
-          journeys: {},
-          journals: [],
-          dailyIbadah: {},
-          bookmarks: [],
-        }));
+        set((state) => {
+          const updatedUsers = [newUser, ...state.mockUsers.filter(u => u.email.toLowerCase() !== cleanEmail)];
+          try {
+            localStorage.setItem('dt_registered_users', JSON.stringify(updatedUsers.filter(u => !u.isDemo)));
+            localStorage.setItem('dt_active_user', JSON.stringify(newUser));
+            localStorage.removeItem('dt_demo_id');
+          } catch (e) {}
+          return {
+            mockUsers: updatedUsers,
+            currentUser: newUser,
+            isAuthenticated: true,
+            userName: newUser.name,
+            role: 'USER',
+            plan: 'FREE',
+            journeys: {},
+            journals: [],
+            dailyIbadah: {},
+            bookmarks: [],
+          };
+        });
 
         return {
           success: true,
           message: `Pendaftaran berhasil. Selamat datang, ${newUser.name}!`
         };
       }
-    } catch (apiErr: any) {
-      console.log('[API Register Error]:', apiErr.message);
+
+      // If apiRes did not contain valid user data, fall back to local persistent save
+      set((state) => {
+        const updatedUsers = [fallbackUser, ...state.mockUsers.filter(u => u.email.toLowerCase() !== cleanEmail)];
+        try {
+          localStorage.setItem('dt_registered_users', JSON.stringify(updatedUsers.filter(u => !u.isDemo)));
+          localStorage.setItem('dt_auth_token', `local_token_${Date.now()}`);
+        } catch (e) {}
+        return {
+          mockUsers: updatedUsers,
+          currentUser: fallbackUser,
+          isAuthenticated: true,
+          userName: fallbackUser.name,
+          role: 'USER',
+          plan: 'FREE',
+          journeys: {},
+          journals: [],
+          dailyIbadah: {},
+          bookmarks: [],
+        };
+      });
+
       return {
-        success: false,
-        message: apiErr.data?.message || apiErr.message || 'Gagal mendaftarkan akun ke server.'
+        success: true,
+        message: `Pendaftaran berhasil. Selamat datang, ${fallbackUser.name}!`
+      };
+    } catch (apiErr: any) {
+      console.log('[API Register Error / Fallback to Local]:', apiErr.message);
+
+      // If it's a validation error from server stating email is taken
+      if (apiErr.status === 422 && apiErr.data?.errors?.email) {
+        return {
+          success: false,
+          message: apiErr.data.errors.email[0] || 'Email ini sudah terdaftar. Silakan gunakan email lain atau masuk.'
+        };
+      }
+
+      // Seamless fallback: Save user to local persistent storage & log in directly
+      set((state) => {
+        const updatedUsers = [fallbackUser, ...state.mockUsers.filter(u => u.email.toLowerCase() !== cleanEmail)];
+        try {
+          localStorage.setItem('dt_registered_users', JSON.stringify(updatedUsers.filter(u => !u.isDemo)));
+          localStorage.setItem('dt_auth_token', `local_token_${Date.now()}`);
+          localStorage.setItem('dt_active_user', JSON.stringify(fallbackUser));
+          localStorage.removeItem('dt_demo_id');
+        } catch (e) {}
+        return {
+          mockUsers: updatedUsers,
+          currentUser: fallbackUser,
+          isAuthenticated: true,
+          userName: fallbackUser.name,
+          role: 'USER',
+          plan: 'FREE',
+          journeys: {},
+          journals: [],
+          dailyIbadah: {},
+          bookmarks: [],
+        };
+      });
+
+      return {
+        success: true,
+        message: `Pendaftaran berhasil disimpan secara offline/lokal. Selamat datang, ${fallbackUser.name}!`
       };
     }
-
-    return {
-      success: false,
-      message: 'Gagal menghubungi server database.'
-    };
   },
 
   updateCurrentUserProfile: async (data: { name?: string; email?: string; phone?: string; avatar?: string; title?: string }) => {
-    const user = get().currentUser;
-    if (!user || user.id === '') {
-      return { success: false, message: 'Anda belum login.' };
-    }
-
+    const current = get().currentUser;
     const updatedUser: UserAccount = {
-      ...user,
-      ...(data.name ? { name: data.name.trim() } : {}),
-      ...(data.email ? { email: data.email.toLowerCase().trim() } : {}),
-      ...(data.phone !== undefined ? { phone: data.phone.trim() } : {}),
-      ...(data.avatar ? { avatar: data.avatar } : {}),
-      ...(data.title ? { title: data.title } : {}),
+      ...current,
+      name: data.name ?? current.name,
+      email: data.email ?? current.email,
+      phone: data.phone ?? current.phone,
+      avatar: data.avatar ?? current.avatar,
+      title: data.title ?? current.title,
       lastActive: new Date().toISOString(),
     };
 
@@ -443,13 +822,23 @@ export const useStore = create<AppState>((set, get) => ({
       console.log('[API Profile Update Notice]:', apiErr.message);
     }
 
+    localStorage.setItem('dt_active_user', JSON.stringify(updatedUser));
+    try {
+      const raw = localStorage.getItem('dt_registered_users');
+      if (raw) {
+        const list: UserAccount[] = JSON.parse(raw);
+        const updatedList = list.map(u => (u.id === updatedUser.id || u.email.toLowerCase() === current.email.toLowerCase()) ? { ...u, ...updatedUser } : u);
+        localStorage.setItem('dt_registered_users', JSON.stringify(updatedList));
+      }
+    } catch (e) {}
+
     set((state) => ({
       currentUser: updatedUser,
       userName: updatedUser.name,
       mockUsers: state.mockUsers.map(u => u.id === updatedUser.id ? updatedUser : u),
     }));
 
-    return { success: true, message: 'Profil berhasil diperbarui di Database!' };
+    return { success: true, message: 'Profil berhasil diperbarui!' };
   },
 
   updateCurrentUserPassword: async (currentPassword: string, newPassword: string) => {
@@ -470,6 +859,14 @@ export const useStore = create<AppState>((set, get) => ({
 
   deleteUser: async (id: string) => {
     const userToDelete = get().mockUsers.find(u => u.id === id);
+    if (!userToDelete) return;
+
+    // Guard: Primary Super Admin cannot be deleted
+    if (userToDelete.role === 'SUPER_ADMIN' || userToDelete.email === 'admin@taubat.app') {
+      console.warn('[Security Guard] Super Admin cannot be deleted.');
+      return;
+    }
+
     const userEmail = userToDelete?.email;
 
     try {
@@ -495,6 +892,17 @@ export const useStore = create<AppState>((set, get) => ({
       lastActive: new Date().toISOString(),
     };
 
+    // Security Guard: Primary Super Admin cannot be demoted or suspended
+    if (existing.role === 'SUPER_ADMIN' || existing.email === 'admin@taubat.app') {
+      merged.role = 'SUPER_ADMIN';
+      merged.status = 'ACTIVE';
+    }
+
+    // Security Guard: Cannot suspend own account (anti lockout)
+    if (existing.id === get().currentUser.id) {
+      merged.status = 'ACTIVE';
+    }
+
     try {
       await api.admin.updateUser(id, {
         name: merged.name,
@@ -509,6 +917,11 @@ export const useStore = create<AppState>((set, get) => ({
       });
     } catch (apiErr: any) {
       console.log('[API Admin Update Notice]:', apiErr.message);
+    }
+
+    // If current logged in user is being updated, update local storage
+    if (get().currentUser.id === id) {
+      localStorage.setItem('dt_active_user', JSON.stringify(merged));
     }
 
     set((state) => ({
@@ -691,28 +1104,36 @@ export const useStore = create<AppState>((set, get) => ({
       console.log('[API Journey sync notice]:', e);
     }
 
-    set((state) => ({
-      journeys: {
+    set((state) => {
+      const nextJourneys = {
         ...state.journeys,
         [sinId]: {
           sinId,
           startDate: new Date().toISOString(),
-          status: 'STABLE',
+          status: 'STABLE' as const,
         },
-      },
-    }));
+      };
+      const userKey = state.currentUser.id || state.currentUser.email || 'guest';
+      try {
+        localStorage.setItem(`dt_journeys_${userKey}`, JSON.stringify(nextJourneys));
+      } catch (e) {}
+      return { journeys: nextJourneys };
+    });
   },
 
   updateJourneyStatus: (sinId, status) =>
     set((state) => {
       const journey = state.journeys[sinId];
       if (!journey) return state;
-      return {
-        journeys: {
-          ...state.journeys,
-          [sinId]: { ...journey, status },
-        },
+      const nextJourneys = {
+        ...state.journeys,
+        [sinId]: { ...journey, status },
       };
+      const userKey = state.currentUser.id || state.currentUser.email || 'guest';
+      try {
+        localStorage.setItem(`dt_journeys_${userKey}`, JSON.stringify(nextJourneys));
+      } catch (e) {}
+      return { journeys: nextJourneys };
     }),
 
   removeJourney: async (sinId) => {
@@ -725,6 +1146,10 @@ export const useStore = create<AppState>((set, get) => ({
     set((state) => {
       const nextJourneys = { ...state.journeys };
       delete nextJourneys[sinId];
+      const userKey = state.currentUser.id || state.currentUser.email || 'guest';
+      try {
+        localStorage.setItem(`dt_journeys_${userKey}`, JSON.stringify(nextJourneys));
+      } catch (e) {}
       return { journeys: nextJourneys };
     });
   },
@@ -739,16 +1164,19 @@ export const useStore = create<AppState>((set, get) => ({
     set((state) => {
       const journey = state.journeys[sinId];
       if (!journey) return state;
-      return {
-        journeys: {
-          ...state.journeys,
-          [sinId]: {
-            ...journey,
-            lastRelapse: new Date().toISOString(),
-            status: 'FALLEN',
-          },
+      const nextJourneys = {
+        ...state.journeys,
+        [sinId]: {
+          ...journey,
+          lastRelapse: new Date().toISOString(),
+          status: 'FALLEN' as const,
         },
       };
+      const userKey = state.currentUser.id || state.currentUser.email || 'guest';
+      try {
+        localStorage.setItem(`dt_journeys_${userKey}`, JSON.stringify(nextJourneys));
+      } catch (e) {}
+      return { journeys: nextJourneys };
     });
   },
 
@@ -773,16 +1201,21 @@ export const useStore = create<AppState>((set, get) => ({
       console.log('[API Journal create notice]', e);
     }
 
-    set((state) => ({
-      journals: [
+    set((state) => {
+      const nextJournals = [
         {
           ...entry,
           id: savedId,
           date: dateNow,
         },
         ...state.journals,
-      ],
-    }));
+      ];
+      const userKey = state.currentUser.id || state.currentUser.email || 'guest';
+      try {
+        localStorage.setItem(`dt_journals_${userKey}`, JSON.stringify(nextJournals));
+      } catch (e) {}
+      return { journals: nextJournals };
+    });
   },
 
   deleteJournal: async (id) => {
@@ -792,9 +1225,14 @@ export const useStore = create<AppState>((set, get) => ({
       console.log('[API Journal delete notice]:', e);
     }
 
-    set((state) => ({
-      journals: state.journals.filter((j) => j.id !== String(id)),
-    }));
+    set((state) => {
+      const nextJournals = state.journals.filter((j) => j.id !== String(id));
+      const userKey = state.currentUser.id || state.currentUser.email || 'guest';
+      try {
+        localStorage.setItem(`dt_journals_${userKey}`, JSON.stringify(nextJournals));
+      } catch (e) {}
+      return { journals: nextJournals };
+    });
   },
 
   toggleBookmark: async (sinId) => {

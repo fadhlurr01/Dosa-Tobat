@@ -163,36 +163,9 @@ export default function Home() {
                 Streak Bersih
               </div>
               <div className="text-lg font-black text-slate-800 dark:text-slate-100 leading-tight">
-                {currentUser.streakDays || 5} Hari
+                {currentUser.streakDays ?? 0} Hari
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Quick Demo Switch Pill Bar */}
-        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between flex-wrap gap-2 text-xs">
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1 font-medium">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            Demo Switcher:
-          </span>
-          <div className="flex items-center gap-1.5 flex-wrap">
-            {DEMO_ACCOUNTS.map((acc) => (
-              <button
-                key={acc.id}
-                onClick={() => {
-                  soundFx.playTap();
-                  loginDemo(acc.id);
-                  triggerConfetti();
-                }}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all ${
-                  acc.id === currentUser.id
-                    ? 'bg-emerald-700 text-white shadow-xs'
-                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-emerald-500'
-                }`}
-              >
-                {acc.name.split(' ')[0]} ({acc.role === 'SUPER_ADMIN' ? 'Admin' : acc.role === 'CONTENT_ADMIN' ? 'Ust' : acc.plan !== 'FREE' ? 'PRO' : 'Free'})
-              </button>
-            ))}
           </div>
         </div>
       </div>

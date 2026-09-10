@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   FileText, 
@@ -20,7 +20,8 @@ import { soundFx } from '../../lib/soundFx';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function AdminLayout() {
-  const { theme, setTheme, setRole, currentUser, role, soundEnabled, toggleSound } = useStore();
+  const navigate = useNavigate();
+  const { theme, setTheme, currentUser, role, soundEnabled, toggleSound } = useStore();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -70,7 +71,7 @@ export default function AdminLayout() {
 
   const handleLogoutAdmin = () => {
     soundFx.playTap();
-    setRole('USER');
+    navigate('/app');
   };
 
   const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
@@ -206,10 +207,10 @@ export default function AdminLayout() {
           {/* Exit Admin Mode */}
           <button 
             onClick={handleLogoutAdmin}
-            className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 w-full transition-colors cursor-pointer border border-rose-200/50 dark:border-rose-900/30"
+            className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 w-full transition-colors cursor-pointer border border-slate-200 dark:border-slate-800"
           >
             <LogOut className="w-3.5 h-3.5" />
-            <span>Keluar Admin</span>
+            <span>Kembali ke Aplikasi</span>
           </button>
         </div>
       </aside>

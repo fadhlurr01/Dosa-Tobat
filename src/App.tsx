@@ -29,7 +29,13 @@ import AdminSettingsView from './pages/admin/AdminSettingsView';
 import ConfettiCelebration from './components/ui/Confetti';
 
 export default function App() {
-  const { theme } = useStore();
+  const { theme, initDB, restoreSession } = useStore();
+
+  useEffect(() => {
+    // Restore persistent session & database state on refresh/mount
+    initDB();
+    restoreSession();
+  }, [initDB, restoreSession]);
 
   useEffect(() => {
     const root = window.document.documentElement;

@@ -50,15 +50,28 @@ class ApiClient {
       ...(options.headers as Record<string, string>),
     };
 
+    let finalUrl = `${baseUrl}${endpoint}`;
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
+      headers['X-Authorization'] = `Bearer ${token}`;
+      headers['X-Auth-Token'] = token;
+      
+      const separator = finalUrl.includes('?') ? '&' : '?';
+      finalUrl = `${finalUrl}${separator}token=${encodeURIComponent(token)}`;
     }
 
     try {
-      const response = await fetch(`${baseUrl}${endpoint}`, {
+      const response = await fetch(finalUrl, {
         ...options,
         headers,
       });
+
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        const error: any = new Error(`API Server tidak tersedia (${response.status})`);
+        error.status = 404;
+        throw error;
+      }
 
       const data = await response.json().catch(() => ({}));
 

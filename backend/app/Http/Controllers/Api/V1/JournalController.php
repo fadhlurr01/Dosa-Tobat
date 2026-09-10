@@ -44,7 +44,7 @@ class JournalController extends Controller
         $journal = JournalEntry::create([
             'user_id' => $request->user()->id,
             'sin_id' => $validated['sin_id'] ?? null,
-            'date' => $validated['date'] ?? now()->format('Y-m-d'),
+            'date' => !empty($validated['date']) ? date('Y-m-d', strtotime($validated['date'])) : now()->format('Y-m-d'),
             'mistake' => $validated['mistake'],
             'trigger' => $validated['trigger'],
             'hurt' => $validated['hurt'],

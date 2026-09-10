@@ -503,6 +503,9 @@ export default function Login() {
                         <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
                           type="email"
+                          name="email"
+                          id="login-email"
+                          autoComplete="username"
                           required
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
@@ -532,6 +535,9 @@ export default function Login() {
                         <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
                           type={showPassword ? 'text' : 'password'}
+                          name="password"
+                          id="login-password"
+                          autoComplete="current-password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="••••••••"
@@ -596,6 +602,9 @@ export default function Login() {
                         <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
                           type="text"
+                          name="name"
+                          id="reg-name"
+                          autoComplete="name"
                           required
                           value={name}
                           onChange={(e) => setName(e.target.value)}
@@ -613,6 +622,9 @@ export default function Login() {
                         <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
                           type="email"
+                          name="email"
+                          id="reg-email"
+                          autoComplete="email"
                           required
                           value={regEmail}
                           onChange={(e) => setRegEmail(e.target.value)}
@@ -633,6 +645,9 @@ export default function Login() {
                         <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
                           type="tel"
+                          name="tel"
+                          id="reg-phone"
+                          autoComplete="tel"
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           placeholder="081234567890"
@@ -648,6 +663,8 @@ export default function Login() {
                       <div className="relative">
                         <Compass className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <select
+                          name="focus_goal"
+                          id="reg-focus"
                           value={initialSinGoal}
                           onChange={(e) => setInitialSinGoal(e.target.value)}
                           className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs cursor-pointer truncate"
@@ -671,6 +688,9 @@ export default function Login() {
                         <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
                           type={showPassword ? 'text' : 'password'}
+                          name="new-password"
+                          id="reg-password"
+                          autoComplete="new-password"
                           value={regPassword}
                           onChange={(e) => setRegPassword(e.target.value)}
                           placeholder="Minimal 6 karakter"
@@ -687,6 +707,9 @@ export default function Login() {
                         <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
                           type={showPassword ? 'text' : 'password'}
+                          name="confirm-password"
+                          id="reg-confirm-password"
+                          autoComplete="new-password"
                           value={regConfirmPassword}
                           onChange={(e) => setRegConfirmPassword(e.target.value)}
                           placeholder="Ulangi password"

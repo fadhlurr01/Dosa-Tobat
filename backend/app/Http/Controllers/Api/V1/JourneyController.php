@@ -32,14 +32,30 @@ class JourneyController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'sin_id' => 'required|string|exists:sins,id',
+            'sin_id' => 'required|string',
             'notes' => 'nullable|string',
         ]);
+
+        $sinId = strtolower(trim($validated['sin_id']));
+
+        // Ensure sin exists in database so foreign key never fails
+        $sin = Sin::find($sinId);
+        if (!$sin) {
+            $firstCategory = \App\Models\Category::first();
+            $sin = Sin::create([
+                'id' => $sinId,
+                'category_id' => $firstCategory ? $firstCategory->id : 'syubhat',
+                'name' => ucwords(str_replace('-', ' ', $sinId)),
+                'definition' => 'Katalog pemulihan taubat untuk ' . $sinId,
+                'source' => 'Al-Qur\'an dan As-Sunnah',
+                'level' => 'SEDANG',
+            ]);
+        }
 
         $journey = UserJourney::updateOrCreate(
             [
                 'user_id' => $request->user()->id,
-                'sin_id' => $validated['sin_id'],
+                'sin_id' => $sinId,
             ],
             [
                 'start_date' => now(),
